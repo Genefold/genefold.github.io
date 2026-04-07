@@ -116,7 +116,7 @@ canvas { display: block; }
   gap: 1.5rem;
   align-items: end;
   min-height: 90vh;
-  padding: 4.5rem 0 2rem;
+  padding: -2.5rem 0 2rem;
 }
 
 .hero__bg {
@@ -164,11 +164,12 @@ canvas { display: block; }
 
 .hero-logo-panel {
   position: relative;
-  width: min(100%, 38rem);
-  margin: 0 0 1.6rem;
-  padding: 0.9rem;
+  width: min(100%, 72rem);
+  aspect-ratio: 1342 / 264;
+  margin: 0 auto 1.8rem;
+  padding: 0.6rem;
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: 22px;
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
@@ -178,9 +179,11 @@ canvas { display: block; }
 .hero-logo-panel::after {
   content: "";
   position: absolute;
-  inset: auto 8% -16% 8%;
-  height: 38%;
-  background: radial-gradient(circle, rgba(255, 112, 135, 0.28), transparent 70%);
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 34%;
+  background: radial-gradient(ellipse at center, rgba(255, 112, 135, 0.30), transparent 72%);
   filter: blur(28px);
   pointer-events: none;
 }
@@ -191,8 +194,9 @@ canvas { display: block; }
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 20px;
+  border-radius: 16px;
   object-fit: cover;
+  object-position: center;
   border: 1px solid rgba(255,255,255,0.06);
 }
 
