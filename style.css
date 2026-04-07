@@ -162,44 +162,6 @@ canvas { display: block; }
   z-index: 2;
 }
 
-.hero-logo-panel {
-  position: relative;
-  width: min(100%, 72rem);
-  aspect-ratio: 1342 / 264;
-  margin: 0 auto 1.8rem;
-  padding: 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-  backdrop-filter: blur(18px);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.hero-logo-panel::after {
-  content: "";
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: -14%;
-  height: 34%;
-  background: radial-gradient(ellipse at center, rgba(255, 112, 135, 0.30), transparent 72%);
-  filter: blur(28px);
-  pointer-events: none;
-}
-
-.hero-logo-image {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-  object-fit: cover;
-  object-position: center;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
 .eyebrow {
   margin-bottom: 1rem;
   color: var(--primary);
