@@ -175,11 +175,7 @@
               directly from the Genefold team.
             </p>
           </div>
-          <form
-            id="waitlist-form"
-            class="waitlist-form"
-            novalidate
-          >
+          <form id="waitlist-form" class="waitlist-form">
             <!-- Web3Forms access key -->
             <input type="hidden" name="access_key" value="a548e72f-1213-41a7-852b-cf01b2c4c1d2" />
             <!-- Honeypot spam filter -->
@@ -257,11 +253,9 @@
       const canvas = document.getElementById('signal-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-
       let mouse = { x: 0.5, y: 0.5 };
       let smooth = { x: 0.5, y: 0.5 };
       let nodes = [], edges = [];
-
       const hero = canvas.closest('.hero__bg') || canvas.parentElement;
 
       document.addEventListener('mousemove', (e) => {
@@ -325,14 +319,10 @@
         smooth.x += (mouse.x - smooth.x) * 0.04;
         smooth.y += (mouse.y - smooth.y) * 0.04;
         const mx = smooth.x * W, my = smooth.y * H;
-
         nodes.forEach((n) => {
-          n.x = n.bx + Math.sin(t * n.speed + n.phase) * 6
-                  + (smooth.x - n.bx / W) * n.mass * 28;
-          n.y = n.by + Math.cos(t * n.speed * 0.7 + n.phase * 1.3) * 5
-                  + (smooth.y - n.by / H) * n.mass * 28;
+          n.x = n.bx + Math.sin(t * n.speed + n.phase) * 6 + (smooth.x - n.bx / W) * n.mass * 28;
+          n.y = n.by + Math.cos(t * n.speed * 0.7 + n.phase * 1.3) * 5 + (smooth.y - n.by / H) * n.mass * 28;
         });
-
         [
           { a:0, b:6, c:1, col:'rgba(255,122,143,', al:0.55, lw:1.2 },
           { a:6, b:2, c:4, col:'rgba(255,168,153,', al:0.38, lw:0.9 },
@@ -342,16 +332,9 @@
           const na = nodes[a], nb = nodes[b], nc = nodes[c], p = 0.12;
           ctx.beginPath();
           ctx.moveTo(-20, nc.y);
-          ctx.bezierCurveTo(
-            na.x*(1-p)+mx*p, na.y*(1-p)+my*p,
-            nb.x*(1-p)+mx*p, nb.y*(1-p)+my*p,
-            W+20, nc.y + 30 * Math.sin(t * 0.0005)
-          );
-          ctx.strokeStyle = col + al + ')';
-          ctx.lineWidth = lw;
-          ctx.stroke();
+          ctx.bezierCurveTo(na.x*(1-p)+mx*p, na.y*(1-p)+my*p, nb.x*(1-p)+mx*p, nb.y*(1-p)+my*p, W+20, nc.y + 30 * Math.sin(t * 0.0005));
+          ctx.strokeStyle = col + al + ')'; ctx.lineWidth = lw; ctx.stroke();
         });
-
         edges.forEach(([i, j]) => {
           const a = nodes[i], b = nodes[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
@@ -359,12 +342,10 @@
           const al = (1 - d/320) * 0.45;
           const boost = Math.max(0, 1 - Math.hypot(mx-(a.x+b.x)/2, my-(a.y+b.y)/2) / 200) * 0.3;
           const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-          g.addColorStop(0, `rgba(255,100,130,${al+boost})`);
-          g.addColorStop(1, `rgba(255,200,185,${al*0.5+boost*0.5})`);
+          g.addColorStop(0, `rgba(255,100,130,${al+boost})`); g.addColorStop(1, `rgba(255,200,185,${al*0.5+boost*0.5})`);
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
           ctx.strokeStyle = g; ctx.lineWidth = 0.8 + boost * 1.5; ctx.stroke();
         });
-
         nodes.forEach((n) => {
           const glow = Math.max(0, 1 - Math.hypot(mx-n.x, my-n.y)/180);
           if (glow > 0.05) {
@@ -372,39 +353,62 @@
             ctx.fillStyle = `rgba(255,122,143,${glow*0.18})`; ctx.fill();
           }
           const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r*2);
-          gr.addColorStop(0, `rgba(255,122,143,${0.85+glow*0.15})`);
-          gr.addColorStop(1, 'rgba(255,184,168,0)');
-          ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
-          ctx.fillStyle = gr; ctx.fill();
-          ctx.beginPath(); ctx.arc(n.x, n.y, n.r*0.45, 0, Math.PI*2);
-          ctx.fillStyle = 'rgba(255,122,143,1)'; ctx.fill();
+          gr.addColorStop(0, `rgba(255,122,143,${0.85+glow*0.15})`); gr.addColorStop(1, 'rgba(255,184,168,0)');
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fillStyle = gr; ctx.fill();
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r*0.45, 0, Math.PI*2); ctx.fillStyle = 'rgba(255,122,143,1)'; ctx.fill();
         });
-
         requestAnimationFrame(draw);
       }
 
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        resize();
-        requestAnimationFrame(draw);
-        window.addEventListener('resize', resize);
+        resize(); requestAnimationFrame(draw); window.addEventListener('resize', resize);
       }
     })();
-
   })();
 
-  // Waitlist form — Web3Forms AJAX
+  // Waitlist form — Web3Forms AJAX with client-side email validation
   (() => {
-    const form = document.getElementById('waitlist-form');
+    const form     = document.getElementById('waitlist-form');
+    const input    = document.getElementById('waitlist-email');
     const feedback = document.getElementById('waitlist-feedback');
-    const btn = form.querySelector('.waitlist-btn');
+    const btn      = form.querySelector('.waitlist-btn');
     if (!form) return;
+
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    function showError(msg) {
+      feedback.className = 'waitlist-feedback is-error';
+      feedback.textContent = msg;
+      input.classList.add('has-error');
+      input.focus();
+    }
+
+    function clearError() {
+      feedback.className = 'waitlist-feedback';
+      feedback.textContent = '';
+      input.classList.remove('has-error');
+    }
+
+    // Clear error as user types
+    input.addEventListener('input', clearError);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      clearError();
+
+      const email = input.value.trim();
+
+      if (!email) {
+        showError('Please enter your email address.');
+        return;
+      }
+      if (!EMAIL_RE.test(email)) {
+        showError('Please enter a valid email address (e.g. name@domain.com).');
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = 'Sending…';
-      feedback.className = 'waitlist-feedback';
-      feedback.textContent = '';
 
       try {
         const res = await fetch('https://api.web3forms.com/submit', {
@@ -416,16 +420,15 @@
         if (res.ok && data.success) {
           form.reset();
           btn.textContent = '✓ You\'re in!';
-          feedback.classList.add('is-success');
+          feedback.className = 'waitlist-feedback is-success';
           feedback.textContent = 'Welcome aboard — we will be in touch soon.';
         } else {
-          throw new Error(data?.message || 'Submission failed');
+          throw new Error(data?.message || 'Submission failed.');
         }
       } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Get early access →';
-        feedback.classList.add('is-error');
-        feedback.textContent = err.message || 'Something went wrong. Please try again.';
+        showError(err.message || 'Something went wrong. Please try again.');
       }
     });
   })();
