@@ -32,7 +32,7 @@
             diagnostics, drift detection, OOD monitoring, and data valuation across ML and LLM workflows.
           </p>
           <div class="hero__actions">
-            <a class="button button--primary" href="#contact">Talk to the founders</a>
+            <a class="button button--primary" href="#waitlist">Join the Waitlist</a>
             <a class="button button--ghost" href="#papers">Read the science</a>
           </div>
           <ul class="hero__stats" role="list">
@@ -164,6 +164,45 @@
         </div>
       </section>
 
+      <!-- WAITLIST SECTION -->
+      <section class="section waitlist reveal" id="waitlist">
+        <div class="waitlist-panel glass-panel">
+          <div class="waitlist-copy">
+            <p class="eyebrow">Early access</p>
+            <h2>Stay ahead of the curve.</h2>
+            <p>
+              Leave your email to receive updates, early access invitations, and news
+              directly from the Genefold team.
+            </p>
+          </div>
+          <div class="waitlist-form-wrap">
+            <div data-fs-success class="waitlist-fs-success"></div>
+            <div data-fs-error class="waitlist-fs-error"></div>
+
+            <form id="waitlist-form" class="waitlist-form">
+              <div class="waitlist-input-row">
+                <label for="waitlist-email" class="sr-only">Email address</label>
+                <input
+                  id="waitlist-email"
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  required
+                  autocomplete="email"
+                  class="waitlist-input"
+                  data-fs-field
+                />
+                <span data-fs-error="email" class="waitlist-field-error"></span>
+                <button type="submit" class="button button--primary waitlist-btn" data-fs-submit-btn>
+                  Join the Waitlist
+                </button>
+              </div>
+              <p class="waitlist-privacy">No spam. Unsubscribe at any time.</p>
+            </form>
+          </div>
+        </div>
+      </section>
+
       <section class="section contact reveal" id="contact">
         <div class="contact-panel glass-panel">
           <div>
@@ -182,6 +221,13 @@
       </section>
     </main>
   </div>
+
+  <!-- Formspree Ajax SDK (CDN, no bundler needed) -->
+  <script>
+    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+    formspree('initForm', { formElement: '#waitlist-form', formId: 'xeepyljv' });
+  </script>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
   <script>
     (() => {
