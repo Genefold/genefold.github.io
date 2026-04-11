@@ -178,10 +178,13 @@
           <form
             id="waitlist-form"
             class="waitlist-form"
-            action="https://formspree.io/f/xeepyljv"
-            method="POST"
             novalidate
           >
+            <!-- Web3Forms access key -->
+            <input type="hidden" name="access_key" value="a548e72f-1213-41a7-852b-cf01b2c4c1d2" />
+            <!-- Honeypot spam filter -->
+            <input type="checkbox" name="botcheck" style="display:none" />
+
             <div class="waitlist-input-row">
               <label for="waitlist-email" class="sr-only">Email address</label>
               <input
@@ -279,22 +282,20 @@
       }
 
       function buildGraph(W, H) {
-        // Spectral node layout — right-biased to frame the hero card,
-        // sparse outliers left, mimicking graph-Laplacian eigenvector spread
         const seed = [
-          { fx:0.72, fy:0.42, r:5.5, mass:1.8 }, // main hub
+          { fx:0.72, fy:0.42, r:5.5, mass:1.8 },
           { fx:0.81, fy:0.28, r:3.8, mass:1.1 },
           { fx:0.62, fy:0.55, r:4.2, mass:1.3 },
           { fx:0.88, fy:0.50, r:3.0, mass:0.9 },
           { fx:0.76, fy:0.65, r:2.8, mass:0.8 },
           { fx:0.90, fy:0.35, r:2.2, mass:0.7 },
-          { fx:0.52, fy:0.35, r:3.5, mass:1.2 }, // bridge
+          { fx:0.52, fy:0.35, r:3.5, mass:1.2 },
           { fx:0.44, fy:0.60, r:2.5, mass:0.8 },
-          { fx:0.22, fy:0.30, r:2.0, mass:0.6 }, // sparse left
+          { fx:0.22, fy:0.30, r:2.0, mass:0.6 },
           { fx:0.14, fy:0.55, r:1.6, mass:0.5 },
           { fx:0.30, fy:0.72, r:1.8, mass:0.55 },
           { fx:0.08, fy:0.72, r:1.4, mass:0.45 },
-          { fx:0.58, fy:0.80, r:2.2, mass:0.7 }, // bottom
+          { fx:0.58, fy:0.80, r:2.2, mass:0.7 },
           { fx:0.70, fy:0.85, r:1.8, mass:0.55 },
         ];
         nodes = seed.map((s, i) => ({
@@ -325,7 +326,6 @@
         smooth.y += (mouse.y - smooth.y) * 0.04;
         const mx = smooth.x * W, my = smooth.y * H;
 
-        // Animate nodes: organic drift + mouse parallax
         nodes.forEach((n) => {
           n.x = n.bx + Math.sin(t * n.speed + n.phase) * 6
                   + (smooth.x - n.bx / W) * n.mass * 28;
@@ -333,7 +333,6 @@
                   + (smooth.y - n.by / H) * n.mass * 28;
         });
 
-        // Eigenvector-style sweep curves spanning full canvas width
         [
           { a:0, b:6, c:1, col:'rgba(255,122,143,', al:0.55, lw:1.2 },
           { a:6, b:2, c:4, col:'rgba(255,168,153,', al:0.38, lw:0.9 },
@@ -353,7 +352,6 @@
           ctx.stroke();
         });
 
-        // Graph edges with mouse-proximity brightness boost
         edges.forEach(([i, j]) => {
           const a = nodes[i], b = nodes[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
@@ -367,7 +365,6 @@
           ctx.strokeStyle = g; ctx.lineWidth = 0.8 + boost * 1.5; ctx.stroke();
         });
 
-        // Nodes with mouse-proximity glow
         nodes.forEach((n) => {
           const glow = Math.max(0, 1 - Math.hypot(mx-n.x, my-n.y)/180);
           if (glow > 0.05) {
@@ -395,7 +392,7 @@
 
   })();
 
-  // Waitlist form — custom AJAX to Formspree
+  // Waitlist form — Web3Forms AJAX
   (() => {
     const form = document.getElementById('waitlist-form');
     const feedback = document.getElementById('waitlist-feedback');
@@ -410,19 +407,19 @@
       feedback.textContent = '';
 
       try {
-        const res = await fetch('https://formspree.io/f/xeepyljv', {
+        const res = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           body: new FormData(form),
           headers: { Accept: 'application/json' }
         });
-        if (res.ok) {
+        const data = await res.json();
+        if (res.ok && data.success) {
           form.reset();
           btn.textContent = '✓ You\'re in!';
           feedback.classList.add('is-success');
           feedback.textContent = 'Welcome aboard — we will be in touch soon.';
         } else {
-          const data = await res.json();
-          throw new Error(data?.errors?.[0]?.message || 'Submission failed');
+          throw new Error(data?.message || 'Submission failed');
         }
       } catch (err) {
         btn.disabled = false;
