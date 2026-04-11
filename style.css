@@ -558,6 +558,17 @@ h1 {
   box-shadow: 0 0 0 3px rgba(104,240,211,0.12);
 }
 
+.waitlist-input.has-error {
+  border-color: #ff7a8a;
+  background: rgba(255,122,143,0.06);
+  box-shadow: 0 0 0 3px rgba(255,122,143,0.14);
+}
+
+.waitlist-input.has-error:focus {
+  border-color: #ff7a8a;
+  box-shadow: 0 0 0 3px rgba(255,122,143,0.22);
+}
+
 .waitlist-btn {
   flex-shrink: 0;
   white-space: nowrap;
