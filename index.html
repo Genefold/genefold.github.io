@@ -175,31 +175,31 @@
               directly from the Genefold team.
             </p>
           </div>
-          <div class="waitlist-form-wrap">
-            <div data-fs-success class="waitlist-fs-success"></div>
-            <div data-fs-error class="waitlist-fs-error"></div>
-
-            <form id="waitlist-form" class="waitlist-form">
-              <div class="waitlist-input-row">
-                <label for="waitlist-email" class="sr-only">Email address</label>
-                <input
-                  id="waitlist-email"
-                  type="email"
-                  name="email"
-                  placeholder="your@email.com"
-                  required
-                  autocomplete="email"
-                  class="waitlist-input"
-                  data-fs-field
-                />
-                <span data-fs-error="email" class="waitlist-field-error"></span>
-                <button type="submit" class="button button--primary waitlist-btn" data-fs-submit-btn>
-                  Join the Waitlist
-                </button>
-              </div>
-              <p class="waitlist-privacy">No spam. Unsubscribe at any time.</p>
-            </form>
-          </div>
+          <form
+            id="waitlist-form"
+            class="waitlist-form"
+            action="https://formspree.io/f/xeepyljv"
+            method="POST"
+            novalidate
+          >
+            <div class="waitlist-input-row">
+              <label for="waitlist-email" class="sr-only">Email address</label>
+              <input
+                id="waitlist-email"
+                type="email"
+                name="email"
+                placeholder="your@email.com"
+                required
+                autocomplete="email"
+                class="waitlist-input"
+              />
+              <button type="submit" class="button button--primary waitlist-btn">
+                Get early access →
+              </button>
+            </div>
+            <p class="waitlist-privacy">No spam. Unsubscribe at any time.</p>
+            <p class="waitlist-feedback" id="waitlist-feedback" aria-live="polite"></p>
+          </form>
         </div>
       </section>
 
@@ -215,22 +215,16 @@
           </div>
           <div class="contact-actions">
             <a class="button button--primary" href="mailto:tommaso@genefold.ai?subject=Genefold%20inquiry">Contact</a>
-            <a class="button button--ghost" href="https://github.com/tuned-org-uk" target="_blank" rel="noopener noreferrer">View GitHub Pages repo</a>
+            <a class="button button--ghost" href="https://github.com/tuned-org-uk" target="_blank" rel="noopener noreferrer">View GitHub</a>
           </div>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- Formspree Ajax SDK (CDN, no bundler needed) -->
-  <script>
-    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
-    formspree('initForm', { formElement: '#waitlist-form', formId: 'xeepyljv' });
-  </script>
-  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
-
   <script>
     (() => {
+      // Scroll reveal
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) entry.target.classList.add('is-visible');
@@ -238,6 +232,7 @@
       }, { threshold: 0.14 });
       document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
+      // Tilt cards
       const cards = document.querySelectorAll('.tilt-card');
       cards.forEach((card) => {
         card.addEventListener('pointermove', (event) => {
@@ -245,10 +240,8 @@
           const rect = card.getBoundingClientRect();
           const px = (event.clientX - rect.left) / rect.width;
           const py = (event.clientY - rect.top) / rect.height;
-          const rx = (0.5 - py) * 10;
-          const ry = (px - 0.5) * 12;
-          card.style.setProperty('--rx', `${rx}deg`);
-          card.style.setProperty('--ry', `${ry}deg`);
+          card.style.setProperty('--rx', `${(0.5 - py) * 10}deg`);
+          card.style.setProperty('--ry', `${(px - 0.5) * 12}deg`);
         });
         card.addEventListener('pointerleave', () => {
           card.style.setProperty('--rx', '0deg');
@@ -256,6 +249,7 @@
         });
       });
 
+      // Canvas signal wave
       const canvas = document.getElementById('signal-canvas');
       const ctx = canvas.getContext('2d');
       let points = [];
@@ -281,32 +275,65 @@
         const h = canvas.parentElement.clientHeight;
         ctx.clearRect(0, 0, w, h);
         ctx.lineWidth = 1.4;
-        const gradients = [
+        [
           ['rgba(255,122,143,0.88)', 'rgba(255,184,168,0.12)'],
-          ['rgba(255,86,112,0.68)', 'rgba(255,122,143,0.06)'],
+          ['rgba(255,86,112,0.68)',  'rgba(255,122,143,0.06)'],
           ['rgba(255,206,187,0.58)', 'rgba(255,255,255,0.03)']
-        ];
-
-        gradients.forEach((pair, layer) => {
+        ].forEach((pair, layer) => {
           ctx.beginPath();
-          points.forEach((point, index) => {
-            const y = point.baseY + Math.sin(time * 0.0008 + point.phase + layer * 0.8) * point.amp * (1 + layer * 0.35);
-            if (index === 0) ctx.moveTo(point.x, y);
-            else ctx.lineTo(point.x, y);
+          points.forEach((p, i) => {
+            const y = p.baseY + Math.sin(time * 0.0008 + p.phase + layer * 0.8) * p.amp * (1 + layer * 0.35);
+            i === 0 ? ctx.moveTo(p.x, y) : ctx.lineTo(p.x, y);
           });
-          const gradient = ctx.createLinearGradient(0, 0, w, h);
-          gradient.addColorStop(0, pair[0]);
-          gradient.addColorStop(1, pair[1]);
-          ctx.strokeStyle = gradient;
+          const g = ctx.createLinearGradient(0, 0, w, h);
+          g.addColorStop(0, pair[0]); g.addColorStop(1, pair[1]);
+          ctx.strokeStyle = g;
           ctx.stroke();
         });
-
         requestAnimationFrame(draw);
       }
 
       resize();
       requestAnimationFrame(draw);
       window.addEventListener('resize', resize);
+    })();
+
+    // Waitlist form — custom AJAX to Formspree
+    (() => {
+      const form = document.getElementById('waitlist-form');
+      const feedback = document.getElementById('waitlist-feedback');
+      const btn = form.querySelector('.waitlist-btn');
+      if (!form) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        feedback.className = 'waitlist-feedback';
+        feedback.textContent = '';
+
+        try {
+          const res = await fetch('https://formspree.io/f/xeepyljv', {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' }
+          });
+          if (res.ok) {
+            form.reset();
+            btn.textContent = '✓ You\'re in!';
+            feedback.classList.add('is-success');
+            feedback.textContent = 'Welcome aboard — we will be in touch soon.';
+          } else {
+            const data = await res.json();
+            throw new Error(data?.errors?.[0]?.message || 'Submission failed');
+          }
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = 'Get early access →';
+          feedback.classList.add('is-error');
+          feedback.textContent = err.message || 'Something went wrong. Please try again.';
+        }
+      });
     })();
   </script>
 </body>
