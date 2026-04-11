@@ -175,33 +175,31 @@
               directly from the Genefold team.
             </p>
           </div>
-          <form
-            class="waitlist-form"
-            action="https://formspree.io/f/YOUR_FORM_ID"
-            method="POST"
-            novalidate
-            id="waitlist-form"
-          >
-            <div class="waitlist-input-row">
-              <label for="waitlist-email" class="sr-only">Email address</label>
-              <input
-                id="waitlist-email"
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                required
-                autocomplete="email"
-                class="waitlist-input"
-              />
-              <button type="submit" class="button button--primary waitlist-btn">
-                Join the Waitlist
-              </button>
-            </div>
-            <p class="waitlist-privacy">
-              No spam. Unsubscribe at any time.
-            </p>
-            <p class="waitlist-success" id="waitlist-success" aria-live="polite"></p>
-          </form>
+          <div class="waitlist-form-wrap">
+            <div data-fs-success class="waitlist-fs-success"></div>
+            <div data-fs-error class="waitlist-fs-error"></div>
+
+            <form id="waitlist-form" class="waitlist-form">
+              <div class="waitlist-input-row">
+                <label for="waitlist-email" class="sr-only">Email address</label>
+                <input
+                  id="waitlist-email"
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  required
+                  autocomplete="email"
+                  class="waitlist-input"
+                  data-fs-field
+                />
+                <span data-fs-error="email" class="waitlist-field-error"></span>
+                <button type="submit" class="button button--primary waitlist-btn" data-fs-submit-btn>
+                  Join the Waitlist
+                </button>
+              </div>
+              <p class="waitlist-privacy">No spam. Unsubscribe at any time.</p>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -223,6 +221,13 @@
       </section>
     </main>
   </div>
+
+  <!-- Formspree Ajax SDK (CDN, no bundler needed) -->
+  <script>
+    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+    formspree('initForm', { formElement: '#waitlist-form', formId: 'xeepyljv' });
+  </script>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
   <script>
     (() => {
@@ -302,43 +307,6 @@
       resize();
       requestAnimationFrame(draw);
       window.addEventListener('resize', resize);
-    })();
-
-    // Waitlist form AJAX submission
-    (() => {
-      const form = document.getElementById('waitlist-form');
-      const successMsg = document.getElementById('waitlist-success');
-      if (!form) return;
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = form.querySelector('.waitlist-btn');
-        btn.disabled = true;
-        btn.textContent = 'Sending...';
-
-        try {
-          const response = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { 'Accept': 'application/json' }
-          });
-
-          if (response.ok) {
-            form.reset();
-            successMsg.textContent = '✓ You are on the list! We will be in touch soon.';
-            successMsg.classList.add('is-success');
-            btn.textContent = 'Joined!';
-          } else {
-            btn.disabled = false;
-            btn.textContent = 'Join the Waitlist';
-            successMsg.textContent = 'Something went wrong. Please try again.';
-          }
-        } catch {
-          btn.disabled = false;
-          btn.textContent = 'Join the Waitlist';
-          successMsg.textContent = 'Something went wrong. Please try again.';
-        }
-      });
     })();
   </script>
 </body>
