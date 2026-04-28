@@ -1,3 +1,23 @@
+/* =========================================================
+   Genefold landing page styles
+   Sections:
+     1. Tokens & resets
+     2. Layout shell & utilities
+     3. Hero
+     4. Typography & shared text rules
+     5. Buttons
+     6. Cards & panels (hero-card, feature, paper, glass)
+     7. Sections (manifesto, science, papers)
+     8. Waitlist & contact
+     9. Site social header (top-right pill)
+    10. Site footer
+    11. Animations & motion
+    12. Responsive breakpoints
+   ========================================================= */
+
+
+/* 1. Tokens & resets ====================================== */
+
 :root,
 [data-theme="light"] {
   --bg: #0a1020;
@@ -21,6 +41,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -37,6 +58,9 @@ body {
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 canvas { display: block; }
+
+
+/* 2. Layout shell & utilities ============================= */
 
 .skip-link {
   position: absolute;
@@ -57,59 +81,20 @@ canvas { display: block; }
   padding-bottom: 4rem;
 }
 
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 1rem 1.2rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(5, 8, 20, 0.5);
-  backdrop-filter: blur(18px);
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  min-height: 44px;
-}
 
-.brand-logo {
-  display: block;
-  width: clamp(9rem, 15vw, 13rem);
-  height: auto;
-  filter: drop-shadow(0 0 18px rgba(255, 116, 138, 0.35));
-}
-
-.nav {
-  display: flex;
-  gap: 1.2rem;
-  color: var(--muted);
-}
-
-.nav a:hover,
-.nav a:focus-visible,
-.text-link:hover,
-.text-link:focus-visible {
-  color: var(--primary);
-}
-
-.theme-toggle {
-  min-width: 44px;
-  min-height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,0.04);
-  color: var(--text);
-}
+/* 3. Hero ================================================= */
 
 .hero {
   position: relative;
@@ -118,7 +103,7 @@ canvas { display: block; }
   gap: 1.5rem;
   align-items: end;
   min-height: 90vh;
-  padding: -2.5rem 0 2rem;
+  padding: 2rem 0;
 }
 
 .hero__bg {
@@ -138,10 +123,10 @@ canvas { display: block; }
 
 .grid-wave {
   background-image:
-    linear-gradient(rgba(255,119,139,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,119,139,0.08) 1px, transparent 1px);
+    linear-gradient(rgba(255, 119, 139, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 119, 139, 0.08) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: linear-gradient(180deg, transparent, rgba(0,0,0,0.8), transparent);
+  mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.8), transparent);
 }
 
 .orb {
@@ -163,6 +148,46 @@ canvas { display: block; }
   position: relative;
   z-index: 2;
 }
+
+.hero__lede {
+  max-width: 62ch;
+  margin: 1.5rem 0 0;
+}
+
+.hero__actions,
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.hero__stats li {
+  padding: 1rem;
+  border-radius: var(--radius-m);
+}
+.hero__stats strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.45rem;
+}
+.hero__stats span {
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.45;
+}
+
+
+/* 4. Typography & shared text rules ======================= */
 
 .eyebrow {
   margin-bottom: 1rem;
@@ -196,18 +221,22 @@ h1 {
   font-size: 1.05rem;
 }
 
-.hero__lede {
-  max-width: 62ch;
-  margin: 1.5rem 0 0;
+.text-link {
+  display: inline-flex;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
-.hero__actions,
-.contact-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 2rem;
+.nav a:hover,
+.nav a:focus-visible,
+.text-link:hover,
+.text-link:focus-visible {
+  color: var(--primary);
 }
+
+
+/* 5. Buttons ============================================== */
 
 .button {
   display: inline-flex;
@@ -225,9 +254,7 @@ h1 {
 }
 
 .button:hover,
-.button:focus-visible,
-.theme-toggle:hover,
-.theme-toggle:focus-visible {
+.button:focus-visible {
   transform: translateY(-2px);
   border-color: rgba(109, 243, 216, 0.55);
 }
@@ -235,53 +262,32 @@ h1 {
 .button--primary {
   color: #0d1f15;
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  box-shadow: 0 4px 24px rgba(104,240,211,0.22), 0 1px 4px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 24px rgba(104, 240, 211, 0.22), 0 1px 4px rgba(0, 0, 0, 0.18);
   border-color: transparent;
 }
 
 .button--primary:hover,
 .button--primary:focus-visible {
-  box-shadow: 0 8px 32px rgba(104,240,211,0.36), 0 2px 8px rgba(0,0,0,0.22);
+  box-shadow: 0 8px 32px rgba(104, 240, 211, 0.36), 0 2px 8px rgba(0, 0, 0, 0.22);
   border-color: transparent;
 }
 
 .button--ghost {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text);
 }
 
-.hero__stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-  padding: 0;
-  list-style: none;
-}
+
+/* 6. Cards & panels ======================================= */
 
 .hero__stats li,
 .glass-panel,
 .feature-card,
 .paper-card {
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
-}
-
-.hero__stats li {
-  padding: 1rem;
-  border-radius: var(--radius-m);
-}
-.hero__stats strong {
-  display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.45rem;
-}
-.hero__stats span {
-  color: var(--muted);
-  font-size: 0.93rem;
-  line-height: 1.45;
 }
 
 .hero-card {
@@ -298,6 +304,16 @@ h1 {
   justify-content: space-between;
   align-items: center;
   gap: 0.8rem;
+}
+
+.hero-card h2 {
+  margin-top: 1rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.hero-card p {
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .badge {
@@ -320,48 +336,64 @@ h1 {
   height: 0.7rem;
   border-radius: 50%;
   background: var(--primary);
-  box-shadow: 0 0 0 0 rgba(255,122,143,0.7);
+  box-shadow: 0 0 0 0 rgba(255, 122, 143, 0.7);
   animation: pulse 1.8s infinite;
 }
 
-.hero-card h2 {
-  margin-top: 1rem;
-  font-size: clamp(2rem, 4vw, 3rem);
+.feature-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-m);
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 180ms ease, border-color 180ms ease, translate 180ms ease;
 }
 
-.hero-card p {
-  color: var(--muted);
-  line-height: 1.7;
+.feature-card:hover,
+.paper-card:hover {
+  border-color: rgba(109, 243, 216, 0.45);
+  translate: 0 -2px;
 }
 
-.signal-panel,
-.mini-flow {
-  display: grid;
-  gap: 0.85rem;
-  margin-top: 1.4rem;
+.feature-card--accent {
+  background: linear-gradient(180deg, rgba(255, 122, 143, 0.14), rgba(255, 255, 255, 0.04));
 }
 
-.signal-panel > div,
-.mini-flow > div {
-  position: relative;
-  padding: 0.95rem 1rem;
-  border-radius: 18px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,0.04);
-}
-
-.signal-panel span,
 .feature-index,
 .paper-year {
   color: var(--muted);
   font-size: 0.84rem;
 }
 
-.signal-panel strong {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 1rem;
+.feature-index {
+  display: inline-block;
+  margin-bottom: 1rem;
 }
+
+.feature-card h3,
+.paper-card h3,
+.science-panel h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.glass-panel,
+.contact-panel {
+  padding: 1.5rem;
+  border-radius: var(--radius-l);
+}
+
+.paper-card {
+  padding: 1.4rem;
+  border-radius: var(--radius-m);
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 180ms ease, border-color 180ms ease, translate 180ms ease;
+}
+
+.paper-card--spotlight {
+  background: linear-gradient(180deg, rgba(255, 122, 143, 0.16), rgba(255, 255, 255, 0.04));
+}
+
+
+/* 7. Sections ============================================= */
 
 .section {
   margin-top: 2rem;
@@ -391,54 +423,28 @@ h1 {
   grid-template-columns: repeat(12, 1fr);
 }
 
-.feature-card {
-  padding: 1.5rem;
-  border-radius: var(--radius-m);
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 180ms ease, border-color 180ms ease, translate 180ms ease;
-}
-
-.feature-card:hover,
-.paper-card:hover {
-  border-color: rgba(109,243,216,0.45);
-  translate: 0 -2px;
-}
-
 .feature-card:nth-child(1),
 .feature-card:nth-child(2),
 .feature-card:nth-child(3) { grid-column: span 4; }
 .feature-card.wide { grid-column: span 12; }
-.feature-card--accent {
-  background: linear-gradient(180deg, rgba(255,122,143,0.14), rgba(255,255,255,0.04));
-}
-
-.feature-index {
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
-.feature-card h3,
-.paper-card h3,
-.science-panel h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-}
 
 .science-layout {
   grid-template-columns: 1.15fr 0.85fr;
 }
 
-.glass-panel,
-.contact-panel {
-  padding: 1.5rem;
-  border-radius: var(--radius-l);
-}
-
 .mini-flow {
-  grid-template-columns: repeat(5, minmax(0,1fr));
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.4rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .mini-flow > div {
+  position: relative;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
   text-align: center;
   font-weight: 600;
 }
@@ -473,23 +479,8 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.paper-card {
-  padding: 1.4rem;
-  border-radius: var(--radius-m);
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 180ms ease, border-color 180ms ease, translate 180ms ease;
-}
 
-.paper-card--spotlight {
-  background: linear-gradient(180deg, rgba(255, 122, 143, 0.16), rgba(255,255,255,0.04));
-}
-
-.text-link {
-  display: inline-flex;
-  margin-top: 1rem;
-  font-weight: 600;
-  color: var(--text);
-}
+/* 8. Waitlist & contact =================================== */
 
 .contact-panel {
   display: grid;
@@ -498,14 +489,13 @@ h1 {
   gap: 1.5rem;
 }
 
-/* ── Waitlist section ───────────────────────────────────── */
 .waitlist-panel {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   align-items: center;
   gap: 2rem;
-  background: linear-gradient(135deg, rgba(104,240,211,0.07), rgba(137,168,255,0.06));
-  border-color: rgba(104,240,211,0.22);
+  background: linear-gradient(135deg, rgba(104, 240, 211, 0.07), rgba(137, 168, 255, 0.06));
+  border-color: rgba(104, 240, 211, 0.22);
 }
 
 .waitlist-copy h2 {
@@ -540,7 +530,7 @@ h1 {
   padding: 0.9rem 1.3rem;
   border-radius: 999px;
   border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text);
   font-family: inherit;
   font-size: 1rem;
@@ -555,19 +545,19 @@ h1 {
 
 .waitlist-input:focus {
   border-color: var(--primary);
-  background: rgba(104,240,211,0.06);
-  box-shadow: 0 0 0 3px rgba(104,240,211,0.12);
+  background: rgba(104, 240, 211, 0.06);
+  box-shadow: 0 0 0 3px rgba(104, 240, 211, 0.12);
 }
 
 .waitlist-input.has-error {
   border-color: #ff7a8a;
-  background: rgba(255,122,143,0.06);
-  box-shadow: 0 0 0 3px rgba(255,122,143,0.14);
+  background: rgba(255, 122, 143, 0.06);
+  box-shadow: 0 0 0 3px rgba(255, 122, 143, 0.14);
 }
 
 .waitlist-input.has-error:focus {
   border-color: #ff7a8a;
-  box-shadow: 0 0 0 3px rgba(255,122,143,0.22);
+  box-shadow: 0 0 0 3px rgba(255, 122, 143, 0.22);
 }
 
 .waitlist-btn {
@@ -596,146 +586,12 @@ h1 {
   padding-left: 0.2rem;
 }
 
-.waitlist-feedback.is-success {
-  color: var(--primary);
-}
+.waitlist-feedback.is-success { color: var(--primary); }
+.waitlist-feedback.is-error   { color: #ff7a8a; }
 
-.waitlist-feedback.is-error {
-  color: #ff7a8a;
-}
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-/* ────────────────────────────────────────────────────────── */
+/* 9. Site social header (top-right pill) ================== */
 
-.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 700ms ease, transform 700ms cubic-bezier(.22,1,.36,1);
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,122,143,0.6); }
-  70% { box-shadow: 0 0 0 12px rgba(255,122,143,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,122,143,0); }
-}
-
-@media (max-width: 1080px) {
-  .hero,
-  .science-layout,
-  .contact-panel,
-  .papers-grid,
-  .hero__stats,
-  .mini-flow,
-  .waitlist-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .hero {
-    min-height: auto;
-    padding-top: 3rem;
-  }
-
-  .feature-card:nth-child(1),
-  .feature-card:nth-child(2),
-  .feature-card:nth-child(3),
-  .feature-card.wide {
-    grid-column: span 12;
-  }
-}
-
-@media (max-width: 760px) {
-  .site-shell {
-    width: min(calc(100% - 1rem), 100%);
-  }
-
-  .site-header {
-    flex-wrap: wrap;
-    border-radius: 28px;
-    justify-content: center;
-  }
-
-  .nav {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .hero__stats {
-    grid-template-columns: 1fr;
-  }
-
-  h1 {
-    max-width: 12ch;
-    font-size: clamp(2.8rem, 16vw, 4.4rem);
-  }
-
-  .section-heading h2,
-  .hero-card h2 {
-    font-size: clamp(2rem, 9vw, 3rem);
-  }
-
-  .button,
-  .theme-toggle {
-    width: 100%;
-  }
-
-  .theme-toggle {
-    max-width: 4rem;
-  }
-
-  .contact-actions,
-  .hero__actions {
-    flex-direction: column;
-  }
-
-  .waitlist-input-row {
-    flex-direction: column;
-  }
-
-  .waitlist-btn {
-    width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (max-width: 760px) {
-  .hero-logo-panel {
-    padding: 0.65rem;
-    border-radius: 22px;
-  }
-
-  .brand-logo {
-    width: clamp(8rem, 36vw, 11rem);
-  }
-}
-
-/* ------- Social header (top-right of the site shell) ------- */
 .site-social {
   position: absolute;
   top: 1.4rem;
@@ -771,24 +627,9 @@ h1 {
   outline: none;
 }
 
-@media (max-width: 640px) {
-  .site-social {
-    top: 1rem;
-    right: 1rem;
-    padding: 0.3rem 0.4rem;
-    gap: 0.35rem;
-  }
-  .site-social .social-icon {
-    width: 32px;
-    height: 32px;
-  }
-  .site-social .social-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-}
 
-/* ------- Site footer ------- */
+/* 10. Site footer ========================================= */
+
 .site-footer {
   margin-top: 3rem;
   padding: 1.8rem 1.2rem;
@@ -833,4 +674,114 @@ h1 {
   border-color: var(--line-strong);
   transform: translateY(-1px);
   outline: none;
+}
+
+
+/* 11. Animations & motion ================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 700ms ease, transform 700ms cubic-bezier(.22, 1, .36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(255, 122, 143, 0.6); }
+  70%  { box-shadow: 0 0 0 12px rgba(255, 122, 143, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(255, 122, 143, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* 12. Responsive breakpoints ============================== */
+
+@media (max-width: 1080px) {
+  .hero,
+  .science-layout,
+  .contact-panel,
+  .papers-grid,
+  .hero__stats,
+  .mini-flow,
+  .waitlist-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 3rem;
+  }
+
+  .feature-card:nth-child(1),
+  .feature-card:nth-child(2),
+  .feature-card:nth-child(3),
+  .feature-card.wide {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-shell {
+    width: min(calc(100% - 1rem), 100%);
+  }
+
+  .hero__stats {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    max-width: 12ch;
+    font-size: clamp(2.8rem, 16vw, 4.4rem);
+  }
+
+  .section-heading h2,
+  .hero-card h2 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .contact-actions,
+  .hero__actions {
+    flex-direction: column;
+  }
+
+  .waitlist-input-row {
+    flex-direction: column;
+  }
+
+  .waitlist-btn {
+    width: 100%;
+  }
+
+  .site-social {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.3rem 0.4rem;
+    gap: 0.35rem;
+  }
+  .site-social .social-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .site-social .social-icon svg {
+    width: 18px;
+    height: 18px;
+  }
 }
