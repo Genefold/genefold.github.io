@@ -7,7 +7,7 @@
      4. Typography & shared text rules
      5. Buttons
      6. Cards & panels (hero-card, feature, paper, glass)
-     7. Sections (manifesto, science, papers)
+     7. Sections (manifesto, science, papers, company AI)
      8. Waitlist & contact
      9. Site social header (top-right pill)
     10. Site footer
@@ -479,6 +479,37 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* AI Profile Section */
+.ai-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.ai-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,122,143,0.3);
+  flex-shrink: 0;
+}
+
+.ai-copy h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .ai-panel {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
 
 /* 8. Waitlist & contact =================================== */
 
