@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260428-2" />
+  <link rel="stylesheet" href="style.css?v=20260604-1" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -203,7 +203,7 @@
                 Get early access →
               </button>
             </div>
-            <p class="waitlist-privacy">No spam. Unsubscribe at any time.</p>
+            <p class="waitlist-privacy">No spam. Unsubscribe at any time. By joining you agree to our <a href="/privacy.html" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
             <p class="waitlist-feedback" id="waitlist-feedback" aria-live="polite"></p>
           </form>
         </div>
@@ -211,7 +211,7 @@
 
       <section class="section papers reveal" id="papers">
         <div class="section-heading">
-          <p class="eyebrow">Science & explainers</p>
+          <p class="eyebrow">Science &amp; explainers</p>
         </div>
         <div class="papers-grid">
           <article class="paper-card tilt-card">
@@ -278,7 +278,6 @@
         <a class="social-icon" href="https://github.com/genefold-ai"
           target="_blank" rel="noopener noreferrer"
           aria-label="Genefold AI on GitHub">
-          <!-- Use a robot/bot icon or a second GitHub icon with a label -->
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="3" y="11" width="18" height="10" rx="2"/>
@@ -289,8 +288,46 @@
           </svg>
         </a>
       </div>
-      <p class="site-footer__copy">© <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+      <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+      <p style="font-size:0.75rem; margin-top:0.4rem;">
+        <a href="/privacy.html" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Privacy Policy &amp; Terms</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#" id="cookie-settings-link" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Cookie settings</a>
+      </p>
     </footer>
+  </div>
+
+  <!-- ===== COOKIE CONSENT BANNER ===== -->
+  <div id="cookie-banner" role="dialog" aria-modal="true" aria-label="Cookie consent" style="
+    position:fixed; bottom:1.25rem; left:50%; transform:translateX(-50%);
+    width:min(96vw, 640px); z-index:9999;
+    background:rgba(18,13,15,0.92); backdrop-filter:blur(16px) saturate(1.4);
+    border:1px solid rgba(255,122,143,0.18); border-radius:14px;
+    padding:1.25rem 1.5rem; display:flex; flex-wrap:wrap; gap:1rem;
+    align-items:center; justify-content:space-between;
+    box-shadow:0 8px 32px rgba(0,0,0,0.55); font-family:Inter,sans-serif;
+    transition:opacity .35s ease, transform .35s ease;">
+    <div style="flex:1; min-width:200px;">
+      <p style="margin:0 0 .3rem; font-size:.8rem; font-weight:600; color:#f2eded; letter-spacing:.04em; text-transform:uppercase;">&#x1F36A; Cookie notice</p>
+      <p style="margin:0; font-size:.82rem; line-height:1.55; color:#b5abab;">
+        We use essential cookies to operate this site, and optional analytics cookies to understand how visitors use it.
+        <a href="/privacy.html" style="color:#ff7a8f; text-decoration:none;">Learn more</a>
+      </p>
+    </div>
+    <div style="display:flex; gap:.6rem; flex-shrink:0; flex-wrap:wrap;">
+      <button id="cookie-reject" style="
+        padding:.45rem 1rem; border-radius:8px; font-size:.8rem; font-weight:500; cursor:pointer;
+        border:1px solid rgba(255,255,255,0.15); background:transparent; color:#b5abab;
+        transition:background .15s,color .15s;">
+        Essential only
+      </button>
+      <button id="cookie-accept" style="
+        padding:.45rem 1.25rem; border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer;
+        border:none; background:#ff7a8f; color:#0d0a0b;
+        transition:background .15s, transform .12s;">
+        Accept all
+      </button>
+    </div>
   </div>
 
 <script>
@@ -490,7 +527,7 @@
         const data = await res.json();
         if (res.ok && data.success) {
           form.reset();
-          btn.textContent = '✓ You\'re in!';
+          btn.textContent = '\u2713 You\'re in!';
           feedback.className = 'waitlist-feedback is-success';
           feedback.textContent = 'Welcome aboard — we will be in touch soon.';
         } else {
@@ -502,6 +539,31 @@
         showError(err.message || 'Something went wrong. Please try again.');
       }
     });
+  })();
+
+  // ===== COOKIE CONSENT =====
+  (function(){
+    var COOKIE_KEY = 'gf_cookie_consent';
+    function getCookie(n){var m=document.cookie.match('(?:^|; )'+n+'=([^;]*)');return m?decodeURIComponent(m[1]):null;}
+    function setCookie(n,v,days){var d=new Date();d.setTime(d.getTime()+days*86400000);document.cookie=n+'='+encodeURIComponent(v)+';expires='+d.toUTCString()+';path=/;SameSite=Lax;Secure';}
+    var banner = document.getElementById('cookie-banner');
+    var existing = getCookie(COOKIE_KEY);
+    if(existing){ if(banner) banner.style.display='none'; return; }
+    function dismiss(choice){
+      setCookie(COOKIE_KEY, choice, 365);
+      if(banner){ banner.style.opacity='0'; banner.style.transform='translateX(-50%) translateY(20px)'; setTimeout(function(){banner.style.display='none';},380); }
+    }
+    document.getElementById('cookie-accept').addEventListener('click',function(){ dismiss('all'); });
+    document.getElementById('cookie-reject').addEventListener('click',function(){ dismiss('essential'); });
+    // Cookie settings link re-opens banner
+    var settingsLink = document.getElementById('cookie-settings-link');
+    if(settingsLink){
+      settingsLink.addEventListener('click',function(e){
+        e.preventDefault();
+        setCookie(COOKIE_KEY,'',0);
+        if(banner){ banner.style.display='flex'; banner.style.opacity='1'; banner.style.transform='translateX(-50%)'; }
+      });
+    }
   })();
 </script>
 </body>
