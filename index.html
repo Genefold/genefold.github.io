@@ -498,6 +498,7 @@
       input.classList.remove('has-error');
     }
 
+    // Clear error as user types
     input.addEventListener('input', clearError);
 
     form.addEventListener('submit', async (e) => {
@@ -527,6 +528,7 @@
         const data = await res.json();
         if (res.ok && data.success) {
           form.reset();
+          btn.textContent = '✓ You\'re in!';
           btn.textContent = '\u2713 You\'re in!';
           feedback.className = 'waitlist-feedback is-success';
           feedback.textContent = 'Welcome aboard — we will be in touch soon.';
