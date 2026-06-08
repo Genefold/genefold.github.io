@@ -7,8 +7,8 @@
   <meta name="description" content="Genefold turns embedding corpora into reusable structural artifacts for search, diagnostics, drift detection, and data valuation." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260604-2" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260604-3" />
   <style>
     /* ── OSS Section ───────────────────────────────────────────── */
     .oss-grid {
@@ -132,6 +132,31 @@
       50% { opacity:.4; transform:scale(.7); }
     }
 
+    /* ── Hero stats card (inside hero-card aside) ──────────────── */
+    .hero__stats--card {
+      margin-top: 1.25rem;
+      padding: 0;
+      list-style: none;
+    }
+    .hero__stats--item {
+      margin-bottom: .85rem;
+    }
+    .hero__stats--item:last-child {
+      margin-bottom: 0;
+    }
+    .hero__stats--label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      color: #ff7a8f;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .hero__stats--value {
+      font-size: .8rem;
+      color: #9a8e8e;
+    }
+
     /* ── Spectral Intelligence platform section ────────────────── */
     .platform-intro {
       max-width: 60ch;
@@ -151,6 +176,10 @@
       .feature-card--anchor { grid-row: auto !important; }
     }
     .feature-card--anchor { grid-row: span 2; }
+    .feature-card--full-width { grid-column: span 2; }
+    @media (max-width: 680px) {
+      .feature-card--full-width { grid-column: span 1; }
+    }
 
     /* ── Waitlist privacy micro-copy ───────────────────────────── */
     .waitlist-privacy-inline {
@@ -171,11 +200,11 @@
     .footer-contact-strip {
       text-align: center;
       font-size: .8rem;
-      color: #6e6060;
+      color: #9a8e8e;
       margin-bottom: .75rem;
     }
     .footer-contact-strip a {
-      color: #9a8e8e;
+      color: #b5abab;
       text-decoration: none;
       transition: color .15s;
     }
@@ -237,18 +266,18 @@
             Datasets and pipelines are the structural memory of your company: compact,
             inspectable, reusable, and productizable.
           </p>
-          <ul class="hero__stats" role="list" style="margin-top:1.25rem; padding:0; list-style:none;">
-            <li style="margin-bottom:.85rem;">
-              <strong style="display:block; font-size:.8rem; font-weight:700; color:#ff7a8f; text-transform:uppercase; letter-spacing:.05em;">Singular artifact</strong>
-              <span style="font-size:.8rem; color:#9a8e8e;">One Laplacian foundation for many downstream tasks</span>
+          <ul class="hero__stats--card" role="list">
+            <li class="hero__stats--item">
+              <strong class="hero__stats--label">Singular artifact</strong>
+              <span class="hero__stats--value">One Laplacian foundation for many downstream tasks</span>
             </li>
-            <li style="margin-bottom:.85rem;">
-              <strong style="display:block; font-size:.8rem; font-weight:700; color:#ff7a8f; text-transform:uppercase; letter-spacing:.05em;">Search &amp; compression</strong>
-              <span style="font-size:.8rem; color:#9a8e8e;">Manifold-coherent retrieval — beyond nearest neighbours</span>
+            <li class="hero__stats--item">
+              <strong class="hero__stats--label">Search &amp; compression</strong>
+              <span class="hero__stats--value">Manifold-coherent retrieval — beyond nearest neighbours</span>
             </li>
-            <li>
-              <strong style="display:block; font-size:.8rem; font-weight:700; color:#ff7a8f; text-transform:uppercase; letter-spacing:.05em;">Measurable intelligence</strong>
-              <span style="font-size:.8rem; color:#9a8e8e;">Generated insight quantified in structural information units</span>
+            <li class="hero__stats--item">
+              <strong class="hero__stats--label">Measurable intelligence</strong>
+              <span class="hero__stats--value">Generated insight quantified in structural information units</span>
             </li>
           </ul>
         </aside>
@@ -283,7 +312,7 @@
             <h3>Early drift detection</h3>
             <p>Reusable spectral signatures as an early warning system for domain shift and OOD behaviour.</p>
           </article>
-          <article class="feature-card wide tilt-card" style="grid-column: span 2;">
+          <article class="feature-card wide tilt-card feature-card--full-width">
             <span class="feature-index">04</span>
             <h3>A platform, not a point solution</h3>
             <p>Search, anomaly detection, diffusion workflows, dimensionality reduction, quality diagnostics, and data valuation — one Laplacian artifact, many operations.</p>
@@ -343,7 +372,7 @@
               Serves structured embedding operations over a binary columnar protocol — zero serialisation overhead.
             </p>
             <div class="repo-card__meta">
-              <span><span class="lang-dot" style="background:#3178c6;"></span>TypeScript</span>
+              <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
               <span>MIT licence</span>
             </div>
           </a>
@@ -359,7 +388,7 @@
               The structural memory layer for embedding pipelines — durable, queryable, replayable.
             </p>
             <div class="repo-card__meta">
-              <span><span class="lang-dot" style="background:#3178c6;"></span>TypeScript</span>
+              <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
               <span>MIT licence</span>
             </div>
           </a>
@@ -372,6 +401,7 @@
             alt="genefold-ai GitHub avatar"
             width="44" height="44"
             loading="lazy"
+            decoding="async"
           />
           <div class="oss-team-row__copy">
             <h4>genefold-ai</h4>
