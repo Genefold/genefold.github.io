@@ -165,20 +165,54 @@
       color: #9a8e8e;
       margin: .75rem 0 2rem;
     }
+
+    /* Override legacy style.css nth-child span rules that bleed into this grid */
+    .manifesto-grid--v2 > .feature-card:nth-child(1),
+    .manifesto-grid--v2 > .feature-card:nth-child(2),
+    .manifesto-grid--v2 > .feature-card:nth-child(3),
+    .manifesto-grid--v2 > .feature-card.wide {
+      grid-column: unset;
+    }
+
     .manifesto-grid--v2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
       gap: 1.25rem;
     }
-    @media (max-width: 680px) {
-      .manifesto-grid--v2 { grid-template-columns: 1fr; }
-      .feature-card--anchor { grid-row: auto !important; }
+
+    /* Card 01: explicit placement in col 1, spanning both rows */
+    .manifesto-grid--v2 > .feature-card--anchor {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      overflow: hidden;
     }
-    .feature-card--anchor { grid-row: span 2; }
-    .feature-card--full-width { grid-column: span 2; }
+
+    /* Cards 02 + 03: explicit placement in col 2 */
+    .manifesto-grid--v2 > .feature-card:nth-child(2) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .manifesto-grid--v2 > .feature-card:nth-child(3) {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    /* Card 04: full width on row 3 */
+    .feature-card--full-width {
+      grid-column: 1 / -1 !important;
+    }
+
     @media (max-width: 680px) {
-      .feature-card--full-width { grid-column: span 1; }
+      .manifesto-grid--v2 {
+        grid-template-columns: 1fr;
+      }
+      .manifesto-grid--v2 > .feature-card--anchor,
+      .manifesto-grid--v2 > .feature-card:nth-child(2),
+      .manifesto-grid--v2 > .feature-card:nth-child(3),
+      .feature-card--full-width {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+      }
     }
 
     /* ── Waitlist privacy micro-copy ───────────────────────────── */
@@ -296,22 +330,25 @@
           a first-class operational asset.
         </p>
         <div class="manifesto-grid manifesto-grid--v2">
-          <!-- card 01 spans 2 rows — asymmetric anchor -->
+          <!-- card 01: col 1, rows 1–2 -->
           <article class="feature-card tilt-card feature-card--accent feature-card--anchor">
             <span class="feature-index">01</span>
             <h3>Structural visibility</h3>
             <p>See redundancy, coherence, hidden correlations, and manifold shape across massive embedding datasets. Know your data the way no cosine index can tell you.</p>
           </article>
+          <!-- card 02: col 2, row 1 -->
           <article class="feature-card tilt-card">
             <span class="feature-index">02</span>
             <h3>Retrieval with topology</h3>
             <p>Recover coherent long-tail items aligned with global geometry — not just nearest neighbours.</p>
           </article>
+          <!-- card 03: col 2, row 2 -->
           <article class="feature-card tilt-card">
             <span class="feature-index">03</span>
             <h3>Early drift detection</h3>
             <p>Reusable spectral signatures as an early warning system for domain shift and OOD behaviour.</p>
           </article>
+          <!-- card 04: full width, row 3 -->
           <article class="feature-card wide tilt-card feature-card--full-width">
             <span class="feature-index">04</span>
             <h3>A platform, not a point solution</h3>
