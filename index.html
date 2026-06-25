@@ -19,7 +19,7 @@
     }
     .repo-card {
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,122,143,0.14);
+      border: 1px solid rgba(var(--accent-rgb),0.14);
       border-radius: 12px;
       padding: 1.4rem 1.6rem;
       transition: border-color .2s, background .2s;
@@ -29,8 +29,8 @@
       gap: .6rem;
     }
     .repo-card:hover {
-      background: rgba(255,122,143,0.06);
-      border-color: rgba(255,122,143,0.34);
+      background: rgba(var(--accent-rgb),0.06);
+      border-color: rgba(var(--accent-rgb),0.34);
     }
     .repo-card__name {
       font-size: .95rem;
@@ -98,7 +98,7 @@
       align-items: center;
       gap: .4rem;
       font-size: .82rem;
-      color: #ff7a8f;
+      color: var(--accent);
       text-decoration: none;
       margin-top: 2rem;
       transition: color .15s;
@@ -114,16 +114,16 @@
       font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: #ff7a8f;
-      background: rgba(255,122,143,.1);
-      border: 1px solid rgba(255,122,143,.22);
+      color: var(--accent);
+      background: rgba(var(--accent-rgb),.1);
+      border: 1px solid rgba(var(--accent-rgb),.22);
       border-radius: 999px;
       padding: .3rem .85rem;
       margin-bottom: 1.1rem;
     }
     .hero__badge-dot {
       width: 6px; height: 6px;
-      background: #ff7a8f;
+      background: var(--accent);
       border-radius: 50%;
       animation: pulse-dot 2s ease-in-out infinite;
     }
@@ -148,7 +148,7 @@
       display: block;
       font-size: .8rem;
       font-weight: 700;
-      color: #ff7a8f;
+      color: var(--accent);
       text-transform: uppercase;
       letter-spacing: .05em;
     }
@@ -166,55 +166,7 @@
       margin: .75rem 0 2rem;
     }
 
-    /* Override legacy style.css nth-child span rules that bleed into this grid */
-    .manifesto-grid--v2 > .feature-card:nth-child(1),
-    .manifesto-grid--v2 > .feature-card:nth-child(2),
-    .manifesto-grid--v2 > .feature-card:nth-child(3),
-    .manifesto-grid--v2 > .feature-card.wide {
-      grid-column: unset;
-    }
-
-    .manifesto-grid--v2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-    }
-
-    /* Card 01: explicit placement in col 1, spanning both rows */
-    .manifesto-grid--v2 > .feature-card--anchor {
-      grid-column: 1;
-      grid-row: 1 / span 2;
-      overflow: hidden;
-    }
-
-    /* Cards 02 + 03: explicit placement in col 2 */
-    .manifesto-grid--v2 > .feature-card:nth-child(2) {
-      grid-column: 2;
-      grid-row: 1;
-    }
-    .manifesto-grid--v2 > .feature-card:nth-child(3) {
-      grid-column: 2;
-      grid-row: 2;
-    }
-
-    /* Card 04: full width on row 3 */
-    .feature-card--full-width {
-      grid-column: 1 / -1 !important;
-    }
-
-    @media (max-width: 680px) {
-      .manifesto-grid--v2 {
-        grid-template-columns: 1fr;
-      }
-      .manifesto-grid--v2 > .feature-card--anchor,
-      .manifesto-grid--v2 > .feature-card:nth-child(2),
-      .manifesto-grid--v2 > .feature-card:nth-child(3),
-      .feature-card--full-width {
-        grid-column: 1 !important;
-        grid-row: auto !important;
-      }
-    }
-
+    /* .manifesto-grid--v2 now in style.css */
     /* ── Waitlist privacy micro-copy ───────────────────────────── */
     .waitlist-privacy-inline {
       display: flex;
@@ -225,7 +177,7 @@
       margin-top: .55rem;
     }
     .waitlist-privacy-inline a {
-      color: #ff7a8f;
+      color: var(--accent);
       text-decoration: none;
     }
     .waitlist-privacy-inline a:hover { text-decoration: underline; }
