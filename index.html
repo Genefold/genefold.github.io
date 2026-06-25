@@ -104,6 +104,67 @@
       transition: color .15s;
     }
     .oss-org-link:hover { color: #ffaabc; }
+    .oss-community-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      padding: 1.4rem 1.6rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .oss-community-row__copy h4 {
+      font-size: .9rem;
+      font-weight: 600;
+      color: #f2eded;
+      margin: 0 0 .2rem;
+    }
+    .oss-community-row__copy p {
+      font-size: .78rem;
+      color: #8a7e7e;
+      margin: 0;
+      max-width: 55ch;
+    }
+    .oss-community-row__actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .oss-community-row__actions .button--ghost {
+      font-size: .82rem;
+      padding: .45rem 1rem;
+      color: var(--accent);
+      border: 1px solid rgba(var(--accent-rgb),.25);
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .oss-community-row__actions .button--ghost:hover {
+      border-color: var(--accent);
+      background: rgba(var(--accent-rgb),.08);
+    }
+    .oss-contributor-cta {
+      font-size: .78rem;
+      color: #8a7e7e;
+      margin-top: .75rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+    }
+    .oss-contributor-cta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .oss-contributor-cta a:hover {
+      text-decoration: underline;
+    }
+
 
     /* ── Hero compaction ───────────────────────────────────────── */
     .hero__badge {
@@ -357,10 +418,12 @@
               pyarrowspace
             </span>
             <p class="repo-card__desc">
-              <code>arrowspace</code> for Python — a graph analysis and vector search library. Spectral indexing, bounded scores, and manifold-coherent retrieval from one import.
+              <code>arrowspace</code> for Python &mdash; graph analysis and vector search. <strong>pip install arrowspace</strong> for spectral indexing, bounded scores, and manifold-coherent retrieval.
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
+              <span>v0.26.2</span>
+              <span>⬇️ 1.1k / month</span>
             </div>
           </a>
 
@@ -371,10 +434,12 @@
               arrowspace-rs
             </span>
             <p class="repo-card__desc">
-              Vector analytics and search using dispersion models. Graph analysis, vector search, and energy-distribution statistics for your vectors in one package.
+              Vector analytics and search using dispersion models. <strong>cargo add arrowspace</strong> for graph analysis, search, and energy-distribution statistics.
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#DEA584;"></span>Rust</span>
+              <span>v0.26.2</span>
+              <span>⬇️ 6.7k total</span>
               <span>Apache-2.0</span>
             </div>
           </a>
@@ -452,6 +517,18 @@
           </a>
         </div>
 
+        <!-- community callout -->
+        <div class="oss-community-row">
+          <div class="oss-community-row__copy">
+            <h4>Building with embeddings?</h4>
+            <p>Try ArrowSpace, open an issue, star the repo, or tell us how spectral search fits your stack. We read every message.</p>
+          </div>
+          <div class="oss-community-row__actions">
+            <a class="button button--ghost" href="https://github.com/Genefold/arrowspace/discussions" target="_blank" rel="noopener noreferrer">GitHub Discussions</a>
+            <a class="button button--ghost" href="mailto:hello@genefold.ai?subject=ArrowSpace%20inquiry">hello@genefold.ai</a>
+          </div>
+        </div>
+
         <!-- genefold-ai team member row -->
         <div class="oss-team-row">
           <img
@@ -467,6 +544,12 @@
           </div>
           <a class="oss-org-link" href="https://github.com/genefold-ai" target="_blank" rel="noopener noreferrer" style="margin-top:0; white-space:nowrap;">Profile →</a>
         </div>
+
+        <p class="oss-contributor-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Found a bug? <a href="https://github.com/Genefold/arrowspace/issues" target="_blank" rel="noopener noreferrer">Open an issue</a>
+          &nbsp;&middot;&nbsp; Want to contribute? <a href="https://github.com/Genefold/arrowspace/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Read the contributing guide</a>
+        </p>
 
         <a class="oss-org-link" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
