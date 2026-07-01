@@ -493,6 +493,151 @@ h1 {
   }
 }
 
+/* 7b. Live demo =========================================== */
+
+.demo-card {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(104, 240, 211, 0.05), rgba(137, 168, 255, 0.04));
+}
+
+.demo-card__copy p {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 1.05rem;
+  margin: 0 0 1.25rem;
+}
+
+.demo-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.demo-card__features li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text);
+  font-size: 0.96rem;
+}
+
+.demo-card__features li svg {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.demo-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.demo-card__visual {
+  min-height: 260px;
+  padding: 1.25rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.demo-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.demo-search__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.demo-search__bar svg {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.demo-search__results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.demo-result {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.demo-result__id {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.demo-result__title {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.demo-result__tag {
+  justify-self: start;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.demo-result__tag--spectral {
+  color: var(--primary);
+  border-color: rgba(104, 240, 211, 0.35);
+  background: rgba(104, 240, 211, 0.08);
+}
+
+@media (max-width: 1080px) {
+  .demo-card {
+    grid-template-columns: 1fr;
+  }
+  .demo-card__visual {
+    order: -1;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .demo-card__actions {
+    flex-direction: column;
+  }
+  .demo-card__actions .button {
+    width: 100%;
+  }
+}
+
+
 /* 8. Waitlist & contact =================================== */
 .waitlist-panel {
   display: grid;

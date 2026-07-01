@@ -403,6 +403,70 @@
         </div>
       </section>
 
+      <!-- ═══════════════════ LIVE DEMO ═══════════════════ -->
+      <section class="section demo reveal" id="demo">
+        <div class="section-heading">
+          <p class="eyebrow">Live demo</p>
+          <h2>Try spectral search on real vulnerability data.</h2>
+        </div>
+        <div class="demo-card glass-panel">
+          <div class="demo-card__copy">
+            <p>
+              The CVE Search Engine indexes the National Vulnerability Database with
+              ArrowSpace spectral retrieval. Search across ~360k CVE records and see how
+              manifold-aware ranking surfaces relevant vulnerabilities that cosine-only
+              baselines miss.
+            </p>
+            <ul class="demo-card__features" role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                ~360k CVE records from NVD
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Live tau modulation: spectral, hybrid, or cosine-like
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Compare spectral and baseline results side by side
+              </li>
+            </ul>
+            <div class="demo-card__actions">
+              <a class="button button--primary" href="https://cve-search-engine.genefold.ai/" target="_blank" rel="noopener noreferrer">
+                Open demo
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="margin-left:.35rem"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              <a class="button button--ghost" href="https://github.com/Genefold/arro-cve-search" target="_blank" rel="noopener noreferrer">View source</a>
+            </div>
+          </div>
+          <div class="demo-card__visual" aria-hidden="true">
+            <div class="demo-search">
+              <div class="demo-search__bar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <span>Buffer overflow in TLS handshake</span>
+              </div>
+              <div class="demo-search__results">
+                <div class="demo-result">
+                  <span class="demo-result__id">CVE-2014-0160</span>
+                  <span class="demo-result__title">Heartbleed — OpenSSL information disclosure</span>
+                  <span class="demo-result__tag demo-result__tag--spectral">Spectral match</span>
+                </div>
+                <div class="demo-result">
+                  <span class="demo-result__id">CVE-2021-3449</span>
+                  <span class="demo-result__title">OpenSSL CA certificate denial of service</span>
+                  <span class="demo-result__tag">Baseline</span>
+                </div>
+                <div class="demo-result">
+                  <span class="demo-result__id">CVE-2022-4304</span>
+                  <span class="demo-result__title">OpenSSL BN_mod_sqrt timing side-channel</span>
+                  <span class="demo-result__tag demo-result__tag--spectral">Spectral match</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ═══════════════════ OPEN SOURCE ═══════════════════ -->
       <section class="section reveal" id="opensource">
         <div class="section-heading">
