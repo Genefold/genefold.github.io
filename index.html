@@ -370,45 +370,34 @@
         </div>
       </section>
 
-      <!-- ═══════════════════ SCIENTIFIC CORE ═══════════════════ -->
-      <section class="section science reveal" id="science">
-        <div class="section-heading">
-          <p class="eyebrow">Scientific core</p>
-          <h2>A compact container for embeddings, algorithms and pipelines.</h2>
-        </div>
-        <div class="science-layout">
-          <article class="glass-panel science-panel">
-            <h3>Core insight</h3>
-            <p>
-              Cluster embeddings, build a feature-space Laplacian, compute Rayleigh or λ-based scores,
-              and obtain an artifact that uniquely identifies your dataset at any given time — then apply
-              transformations from different algorithm families.
-            </p>
-            <div class="mini-flow" aria-label="Scientific workflow">
-              <div>Embeddings</div>
-              <div>Graph wiring</div>
-              <div>Laplacian</div>
-              <div>Spectral scores</div>
-              <div>Reusable artifact</div>
-            </div>
-          </article>
-          <article class="glass-panel science-panel">
-            <h3>Why it matters</h3>
-            <ul role="list" class="science-list">
-              <li>Compact representation of domain structure for production ML systems</li>
-              <li>Diagnostics such as compression, spectral gap and Rayleigh variability</li>
-              <li>Reusable substrate for search, compression, anomaly detection, and data lifecycle analysis</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
       <!-- ═══════════════════ LIVE DEMO ═══════════════════ -->
       <section class="section demo reveal" id="demo">
         <div class="section-heading">
-          <p class="eyebrow">Live demo</p>
+          <p class="eyebrow">
+            <span class="live-badge">
+              <span class="live-badge__dot"></span>
+              Live
+            </span>
+            Demo
+          </p>
           <h2>Try spectral search on real vulnerability data.</h2>
         </div>
+
+        <div class="demo-stats" aria-label="Demo statistics">
+          <div class="demo-stat">
+            <span class="demo-stat__value">~360k</span>
+            <span class="demo-stat__label">CVE records</span>
+          </div>
+          <div class="demo-stat">
+            <span class="demo-stat__value">&lt;100ms</span>
+            <span class="demo-stat__label">Search latency</span>
+          </div>
+          <div class="demo-stat">
+            <span class="demo-stat__value">NVD</span>
+            <span class="demo-stat__label">Data source</span>
+          </div>
+        </div>
+
         <div class="demo-card glass-panel">
           <div class="demo-card__copy">
             <p>
@@ -439,7 +428,7 @@
               <a class="button button--ghost" href="https://github.com/Genefold/arro-cve-search" target="_blank" rel="noopener noreferrer">View source</a>
             </div>
           </div>
-          <div class="demo-card__visual" aria-hidden="true">
+          <a class="demo-card__visual" href="https://cve-search-engine.genefold.ai/" target="_blank" rel="noopener noreferrer" aria-label="Open the CVE Search Engine demo">
             <div class="demo-search">
               <div class="demo-search__bar">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -463,7 +452,40 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ SCIENTIFIC CORE ═══════════════════ -->
+      <section class="section science reveal" id="science">
+        <div class="section-heading">
+          <p class="eyebrow">Scientific core</p>
+          <h2>A compact container for embeddings, algorithms and pipelines.</h2>
+        </div>
+        <div class="science-layout">
+          <article class="glass-panel science-panel">
+            <h3>Core insight</h3>
+            <p>
+              Cluster embeddings, build a feature-space Laplacian, compute Rayleigh or λ-based scores,
+              and obtain an artifact that uniquely identifies your dataset at any given time — then apply
+              transformations from different algorithm families.
+            </p>
+            <div class="mini-flow" aria-label="Scientific workflow">
+              <div>Embeddings</div>
+              <div>Graph wiring</div>
+              <div>Laplacian</div>
+              <div>Spectral scores</div>
+              <div>Reusable artifact</div>
+            </div>
+          </article>
+          <article class="glass-panel science-panel">
+            <h3>Why it matters</h3>
+            <ul role="list" class="science-list">
+              <li>Compact representation of domain structure for production ML systems</li>
+              <li>Diagnostics such as compression, spectral gap and Rayleigh variability</li>
+              <li>Reusable substrate for search, compression, anomaly detection, and data lifecycle analysis</li>
+            </ul>
+          </article>
         </div>
       </section>
 
