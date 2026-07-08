@@ -165,6 +165,76 @@
       text-decoration: underline;
     }
 
+    /* ── Engineering blog cards on homepage ──────────────────── */
+    .eng-blog-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .eng-blog-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1.4rem 1.5rem;
+      border: 1px solid rgba(var(--accent-rgb), 0.14);
+      border-radius: var(--radius-m);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      text-decoration: none;
+      transition: border-color 0.2s ease, background 0.2s ease, translate 0.2s ease;
+    }
+
+    .eng-blog-card:hover,
+    .eng-blog-card:focus-visible {
+      border-color: rgba(var(--accent-rgb), 0.34);
+      background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.06), rgba(255, 255, 255, 0.03));
+      translate: 0 -2px;
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .eng-blog-card__id {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .eng-blog-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #f2eded;
+      margin: 0;
+    }
+
+    .eng-blog-card > p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #9a8e8e;
+      margin: 0;
+      flex: 1;
+    }
+
+    .eng-blog-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.74rem;
+      color: #6e6060;
+    }
+
+    @media (max-width: 760px) {
+      .eng-blog-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
     /* ── Hero compaction ───────────────────────────────────────── */
     .hero__badge {
@@ -456,37 +526,42 @@
         </div>
       </section>
 
-      <!-- ═══════════════════ SCIENTIFIC CORE ═══════════════════ -->
-      <section class="section science reveal" id="science">
+      <!-- ═══════════════════ ENGINEERING BLOG ═══════════════════ -->
+      <section class="section reveal" id="engineering-blog">
         <div class="section-heading">
-          <p class="eyebrow">Scientific core</p>
-          <h2>A compact container for embeddings, algorithms and pipelines.</h2>
+          <p class="eyebrow">Engineering</p>
+          <h2>How we build spectral intelligence.</h2>
         </div>
-        <div class="science-layout">
-          <article class="glass-panel science-panel">
-            <h3>Core insight</h3>
-            <p>
-              Cluster embeddings, build a feature-space Laplacian, compute Rayleigh or λ-based scores,
-              and obtain an artifact that uniquely identifies your dataset at any given time — then apply
-              transformations from different algorithm families.
-            </p>
-            <div class="mini-flow" aria-label="Scientific workflow">
-              <div>Embeddings</div>
-              <div>Graph wiring</div>
-              <div>Laplacian</div>
-              <div>Spectral scores</div>
-              <div>Reusable artifact</div>
+        <p class="platform-intro">
+          Notes on systems, algorithms, and the engineering choices behind ArrowSpace.
+          Written for the teams shipping embedding-heavy software in production.
+        </p>
+        <div class="eng-blog-grid">
+          <a class="eng-blog-card" href="/engineering/002.html">
+            <span class="eng-blog-card__id">002 &mdash; Foundations</span>
+            <h3>Genefold First Principles: Depletion of Uncertainty</h3>
+            <p>Entropy is the irreducible uncertainty of the source. Cross-entropy is the mathematical structure that measures how close the model's distribution is to the truth. Training depletes the gap — the KL divergence.</p>
+            <div class="eng-blog-card__meta">
+              <span>15 Jul 2026</span>
+              <span>by Lorenzo and Tommaso</span>
+              <span>10 min read</span>
             </div>
-          </article>
-          <article class="glass-panel science-panel">
-            <h3>Why it matters</h3>
-            <ul role="list" class="science-list">
-              <li>Compact representation of domain structure for production ML systems</li>
-              <li>Diagnostics such as compression, spectral gap and Rayleigh variability</li>
-              <li>Reusable substrate for search, compression, anomaly detection, and data lifecycle analysis</li>
-            </ul>
-          </article>
+          </a>
+          <a class="eng-blog-card" href="/engineering/001.html">
+            <span class="eng-blog-card__id">001 &mdash; Algorithms</span>
+            <h3>Designing the ArrowSpace graph wiring protocol</h3>
+            <p>How graph wiring in the feature-space Laplacian powers spectral indexing for vector retrieval, and what the experimental evidence shows on CVE and TREC-COVID.</p>
+            <div class="eng-blog-card__meta">
+              <span>8 Jul 2026</span>
+              <span>by Lorenzo Moriondo</span>
+              <span>12 min read</span>
+            </div>
+          </a>
         </div>
+        <a class="oss-org-link" href="/engineering" style="margin-top: 2rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Read all engineering notes
+        </a>
       </section>
 
       <!-- ═══════════════════ OPEN SOURCE ═══════════════════ -->
