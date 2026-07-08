@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Genefold First Principles: Depletion of Uncertainty — Genefold Engineering</title>
-  <meta name="description" content="Entropy is the uncertainty of the source. Cross-entropy is the uncertainty left by the model. Training is the process of reducing the gap between the two." />
+  <meta name="description" content="Entropy is the irreducible uncertainty of the source. Cross-entropy is the mathematical structure that measures how close the model's distribution is to the truth. Training depletes the KL divergence — the gap between the two." />
+  <meta name="author" content="Lorenzo and Tommaso" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -467,13 +468,14 @@
           <span class="eng-article__eyebrow">002 &mdash; Foundations</span>
           <h1 class="eng-article__title">Genefold First Principles: Depletion of Uncertainty</h1>
           <p class="eng-article__lede">
-            Entropy is the uncertainty of the source. Cross-entropy is the uncertainty left by the model.
-            Training is the process of reducing the gap between the two.
+            Entropy is the irreducible uncertainty of the source. Cross-entropy is the mathematical structure
+            that measures how close the model's distribution is to the truth. Training depletes the gap
+            between the two — the KL divergence.
           </p>
           <div class="eng-article__meta">
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              genefold-ai
+              Lorenzo and Tommaso
             </span>
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -597,8 +599,9 @@ plt.show()</code></pre>
           <h2>3. Why cross-entropy appears in LLM training</h2>
 
           <p>
-            Cross-entropy is the operational version of this same story. If the true distribution is $p$
-            and the model distribution is $q$, cross-entropy is:
+            Cross-entropy is the mathematical structure that connects the model's distribution to the data's
+            true distribution. If the true distribution is $p$ and the model distribution is $q$,
+            cross-entropy is:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
@@ -606,10 +609,21 @@ plt.show()</code></pre>
           </p>
 
           <p>
-            Entropy measures the intrinsic uncertainty of the data source. Cross-entropy measures how much
-            uncertainty remains when the model's probabilities are used instead of the truth. When $q$
-            matches $p$, cross-entropy becomes minimal, and the model stops being surprised by the data in
-            the wrong way.
+            Entropy $H(p)$ is the irreducible uncertainty of the data source — the minimum number of bits
+            needed to encode events drawn from $p$. Cross-entropy $H(p, q)$ is the total coding cost when
+            the model uses distribution $q$ to encode events from $p$. It is the structure that tells the
+            optimizer how close $q$ is to $p$. The difference between the two is the KL divergence:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$D_{KL}(p \| q) = H(p, q) - H(p) \geq 0$$
+          </p>
+
+          <p>
+            The KL divergence is the extra cost the model pays for using the wrong distribution. When
+            $q = p$, the KL divergence is zero, cross-entropy equals entropy, and the model is optimal.
+            Since $H(p)$ is fixed for a given dataset, minimizing cross-entropy is equivalent to
+            minimizing the KL divergence.
           </p>
 
           <p>
@@ -624,8 +638,10 @@ plt.show()</code></pre>
           </p>
 
           <p>
-            That is just surprise, turned into a training signal. Better predictions mean lower surprise,
-            and lower surprise means less uncertainty left unresolved by the model.
+            That is the per-sample contribution to cross-entropy. Better predictions mean the model assigns
+            higher probability to the truth, which lowers the coding cost. Since the data's entropy $H(p)$
+            is fixed, minimizing cross-entropy is equivalent to minimizing the KL divergence — the gap
+            between what the model believes and what the data actually is.
           </p>
 
           <pre><code class="language-python">import math
@@ -646,24 +662,26 @@ for p in examples:
           <h2>4. Depletion of uncertainty as a training principle</h2>
 
           <p>
-            The phrase "depletion of uncertainty" is a good lens for understanding modern loss functions.
-            In Shannon's view, receiving a message removes uncertainty. In LLM training, seeing the correct
-            token should remove uncertainty from the model's posterior over the next token. Cross-entropy
-            quantifies how much uncertainty remains after the model has spoken.
+            The phrase "depletion of uncertainty" is a lens for understanding modern loss functions. In
+            Shannon's view, receiving a message removes uncertainty. In LLM training, the model's
+            distribution $q$ should converge toward the true distribution $p$ as it learns. Cross-entropy
+            is the structure that measures the cost of the gap; the KL divergence $D_{KL}(p \| q)$ is the
+            gap itself. Training depletes the KL divergence — the extra cost the model pays for not matching
+            the data — driving it toward zero.
           </p>
 
           <p>That is why loss minimization feels so universal across deep learning:</p>
 
           <ul>
-            <li>entropy describes the uncertainty of the world,</li>
-            <li>cross-entropy describes the uncertainty left by the model,</li>
-            <li>optimization pushes the model toward less surprise.</li>
+            <li>entropy $H(p)$ is the irreducible uncertainty of the source,</li>
+            <li>cross-entropy $H(p, q)$ measures the total cost of encoding the data with the model's distribution,</li>
+            <li>the KL divergence $D_{KL}(p \| q) = H(p, q) - H(p)$ is the gap that training depletes.</li>
           </ul>
 
           <p>
-            Viewed this way, the model is not trying to "be smart" in a vague sense. It is trying to
-            assign probability mass to the truth efficiently enough that the truth no longer feels
-            exceptional.
+            Viewed this way, the model is not trying to "be smart" in a vague sense. It is trying to match
+            the true distribution $p$ closely enough that the KL divergence — the price of being wrong —
+            approaches zero.
           </p>
 
           <pre class="mermaid">flowchart LR
@@ -711,10 +729,12 @@ for p in examples:
           <h2>7. Closing idea</h2>
 
           <p>
-            The cleanest way to think about entropy, cross-entropy, and LLM loss is this: entropy is the
-            uncertainty of the source, cross-entropy is the uncertainty left by the model, and training is
-            the process of reducing the gap between the two. Genefold's engineering perspective starts
-            from that first principle: better models are not just more accurate, they are less surprised
+            The cleanest way to think about entropy, cross-entropy, and LLM loss is this: entropy $H(p)$ is
+            the irreducible uncertainty of the source, cross-entropy $H(p, q)$ is the mathematical
+            structure that measures how close the model's distribution $q$ is to the true distribution $p$,
+            and training depletes the KL divergence $D_{KL}(p \| q) = H(p, q) - H(p)$ — the gap between
+            what the model believes and what the data is. Genefold's engineering perspective starts from
+            that first principle: better models are not just more accurate, they are less surprised
             by reality.
           </p>
         </div>
@@ -722,10 +742,10 @@ for p in examples:
         <aside class="eng-author">
           <span class="eng-author__avatar" aria-hidden="true"></span>
           <div class="eng-author__copy">
-            <p class="eng-author__name">genefold-ai</p>
+            <p class="eng-author__name">Lorenzo and Tommaso</p>
             <p class="eng-author__role">Genefold AI &middot; First Principles series</p>
             <p class="eng-author__bio">
-              Writes about the foundations of information, structure, and intelligence that guide
+              Writing about the foundations of information, structure, and intelligence that guide
               Genefold's engineering choices.
             </p>
           </div>
