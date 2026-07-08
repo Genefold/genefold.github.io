@@ -54,9 +54,20 @@
       color: var(--accent);
     }
 
+    .eng-nav__brand a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .eng-nav__brand a:hover {
+      color: var(--primary);
+    }
+
     .eng-nav__brand span {
       opacity: 0.55;
       font-weight: 500;
+      margin: 0 0.35rem;
     }
 
     .eng-nav__links {
@@ -547,13 +558,17 @@
     </header>
 
     <nav class="eng-nav" aria-label="Engineering">
-      <a class="eng-nav__brand" href="/">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-        </svg>
-        Genefold <span>/ Engineering</span>
-      </a>
+      <div class="eng-nav__brand">
+        <a href="/" aria-label="Genefold home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </a>
+        <a href="/">Genefold</a>
+        <span>/</span>
+        <a href="/engineering">Engineering</a>
+      </div>
       <ul class="eng-nav__links">
         <li><a href="/" aria-current="false">Home</a></li>
         <li><a href="/engineering" aria-current="page">Blog</a></li>
