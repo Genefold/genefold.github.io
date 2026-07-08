@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Designing the ArrowSpace graph wiring protocol — Genefold Engineering</title>
-  <meta name="description" content="How graph wiring in the feature-space Laplacian powers spectral indexing (SPIN) for vector retrieval, and what the experimental evidence shows on CVE and TREC-COVID." />
+  <title>Genefold First Principles: Depletion of Uncertainty — Genefold Engineering</title>
+  <meta name="description" content="Entropy is the uncertainty of the source. Cross-entropy is the uncertainty left by the model. Training is the process of reducing the gap between the two." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=20260604-3" />
   <script>
     MathJax = {
-      tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+      tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
       svg: { fontCache: 'global' }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.mermaid) {
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+      }
+    });
+  </script>
   <style>
     /* ── Engineering blog tokens & overrides ─────────────────── */
     .eng-root {
@@ -26,9 +34,7 @@
       --eng-max-width: 720px;
     }
 
-    .eng-root .site-shell {
-      padding-bottom: 2rem;
-    }
+    .eng-root .site-shell { padding-bottom: 2rem; }
 
     /* ── Engineering nav ─────────────────────────────────────── */
     .eng-nav {
@@ -49,16 +55,28 @@
     .eng-nav__brand {
       display: inline-flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.45rem;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       font-size: 0.95rem;
       color: var(--text);
-      text-decoration: none;
     }
 
+    .eng-nav__brand a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .eng-nav__brand a:hover { color: var(--primary); }
+
     .eng-nav__brand svg { color: var(--accent); }
-    .eng-nav__brand span { opacity: 0.55; font-weight: 500; }
+
+    .eng-nav__brand span {
+      opacity: 0.55;
+      font-weight: 500;
+      margin: 0 0.35rem;
+    }
 
     .eng-nav__links {
       display: flex;
@@ -242,6 +260,12 @@
       color: var(--eng-muted);
     }
 
+    .eng-article__body pre.mermaid {
+      display: flex;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
     .eng-article__body blockquote {
       margin: 0 0 1.5rem;
       padding: 1rem 1.25rem;
@@ -262,65 +286,6 @@
       margin: 2.5rem 0;
     }
 
-    /* ── Tables ──────────────────────────────────────────────── */
-    .eng-article__body .table-wrap {
-      overflow-x: auto;
-      margin: 0 0 1.5rem;
-      border: 1px solid var(--eng-line);
-      border-radius: var(--radius-s);
-    }
-
-    .eng-article__body table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
-
-    .eng-article__body th,
-    .eng-article__body td {
-      padding: 0.7rem 0.9rem;
-      text-align: left;
-      border-bottom: 1px solid var(--eng-line);
-      white-space: nowrap;
-    }
-
-    .eng-article__body th {
-      font-family: var(--eng-mono);
-      font-size: 0.76rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--eng-muted);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .eng-article__body td { color: var(--eng-muted); }
-    .eng-article__body td strong { color: var(--text); }
-    .eng-article__body tr:last-child td { border-bottom: none; }
-    .eng-article__body tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
-
-    .eng-article__body .table-caption {
-      font-family: var(--eng-mono);
-      font-size: 0.75rem;
-      color: var(--eng-muted);
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── Callout ─────────────────────────────────────────────── */
-    .eng-callout {
-      padding: 1.1rem 1.25rem;
-      margin: 0 0 1.5rem;
-      border: 1px solid rgba(104, 240, 211, 0.2);
-      border-radius: var(--radius-s);
-      background: rgba(104, 240, 211, 0.05);
-    }
-
-    .eng-callout p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-
     /* ── Author bio ──────────────────────────────────────────── */
     .eng-author {
       display: flex;
@@ -339,6 +304,7 @@
       border-radius: 50%;
       border: 1px solid var(--eng-line-strong);
       flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
     }
 
     .eng-author__copy { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -423,6 +389,26 @@
       color: var(--eng-muted);
     }
 
+    /* ── References ──────────────────────────────────────────── */
+    .eng-references {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem;
+    }
+
+    .eng-references li {
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--eng-line);
+      font-size: 0.95rem;
+    }
+
+    .eng-references li:last-child { border-bottom: none; }
+
+    .eng-references a {
+      color: var(--primary);
+      word-break: break-all;
+    }
+
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 640px) {
       .eng-nav { flex-wrap: wrap; }
@@ -478,399 +464,269 @@
         </a>
 
         <header>
-          <span class="eng-article__eyebrow">001 &mdash; Algorithms</span>
-          <h1 class="eng-article__title">Designing the ArrowSpace graph wiring protocol</h1>
+          <span class="eng-article__eyebrow">002 &mdash; Foundations</span>
+          <h1 class="eng-article__title">Genefold First Principles: Depletion of Uncertainty</h1>
           <p class="eng-article__lede">
-            How graph wiring in the feature-space Laplacian powers spectral indexing for
-            vector retrieval, why it closes the semantic gap that cosine leaves open,
-            and what the experimental evidence shows on CVE and TREC-COVID.
+            Entropy is the uncertainty of the source. Cross-entropy is the uncertainty left by the model.
+            Training is the process of reducing the gap between the two.
           </p>
           <div class="eng-article__meta">
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Lorenzo Moriondo
+              genefold-ai
             </span>
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              8 Jul 2026
+              15 Jul 2026
             </span>
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              12 min read
+              10 min read
             </span>
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <a href="https://arxiv.org/abs/2606.21535" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:2px">arXiv:2606.21535</a>
+              First Principles
             </span>
           </div>
         </header>
 
         <div class="eng-article__body">
           <p>
-            Vector retrieval systems overwhelmingly rely on cosine similarity. Given a query
-            and a corpus item, cosine measures their angular proximity in the ambient embedding
-            space. What it does <em>not</em> do is account for the statistical and topological
-            structure of the corpus from which those embeddings are drawn.
+            Information theory begins with a harsh idea: information is not "stuff," it is the
+            reduction of uncertainty. When a receiver learns a message, the receiver's uncertainty
+            about what could happen next shrinks. Shannon's entropy measures that uncertainty, and
+            self-information measures the surprise of a particular outcome.
           </p>
 
           <p>
-            This creates a problem we call the <strong>semantic gap</strong>: items may be
-            geometrically close while belonging to different regions of the feature manifold,
-            whereas geometrically distant items may still share structural affinity through
-            the corpus topology. The gap is most visible in the tail of ranked retrieval
-            results, where weakly grounded or noisy evidence can affect downstream applications
-            like Retrieval-Augmented Generation. A result set with high average cosine
-            similarity may still be topologically scattered.
+            In machine learning, that same logic becomes loss minimization. A model is rewarded when
+            it assigns high probability to the truth and punished when it is surprised by it. Modern
+            learning systems are not merely predicting; they are steadily depleting uncertainty.
           </p>
 
-          <p>
-            This post walks through how <strong>Graph Wiring</strong> (GW) and
-            <strong>Spectral Indexing</strong> (SPIN) address this gap, presenting the
-            algorithm as published in <a href="https://arxiv.org/abs/2606.21535"
-            target="_blank" rel="noopener noreferrer">our paper</a> and the experimental
-            evidence that supports it.
-          </p>
-
-          <h2>1. The feature-space graph Laplacian</h2>
+          <h2>1. Shannon's starting point: information as uncertainty reduction</h2>
 
           <p>
-            Classical spectral graph theory operates in the item-space: given a weighted
-            undirected graph $G=(V,E,W)$ with adjacency matrix $A \in \mathbb{R}^{N \times N}$
-            and degree matrix $D$, the combinatorial Laplacian is $L = D - A$. For production
-            systems with millions of vectors, building an $N \times N$ adjacency is impractical.
-          </p>
-
-          <p>
-            Graph Wiring takes a different path. We work in the <strong>feature-space</strong>
-            rather than the item-space:
-          </p>
-
-          <ol>
-            <li>Reduce the data matrix from $N \times F$ to $C \times F$ via incremental centroid clustering, where $C \ll N$ and the optimal $C$ is computed via the Johnson&ndash;Lindenstrauss lemma.</li>
-            <li>Transpose to obtain an $F \times C$ matrix.</li>
-            <li>Compute the graph Laplacian $L_F \in \mathbb{R}^{F \times F}$ on this transposed space.</li>
-          </ol>
-
-          <p>
-            The result is a Laplacian over <em>features</em>, not items. The feature-space is
-            the semantic web of the dataset &mdash; it encodes how dimensions correlate across
-            the corpus. An item vector $x_i \in \mathbb{R}^{N \times F}$, when blended with
-            $L_F$, carries measurably more discriminative information than its geometric
-            measurement alone.
-          </p>
-
-          <div class="eng-callout">
-            <p>
-              <strong>Complexity:</strong> Index construction is $O(F \cdot \mathrm{nnz}(L_F))$
-              following an $O(N \cdot F)$ clustering step. Memory is $O(F \cdot N)$ for dense
-              features, $O(F \cdot \mathrm{nnz}(L_F))$ for the Laplacian, and $O(N)$ for the
-              scalar $\lambda_\tau$ index. The spectral operations run on sparse feature-space,
-              not dense item-space.
-            </p>
-          </div>
-
-          <h2>2. The Rayleigh quotient as spectral energy</h2>
-
-          <p>
-            Once $L_F$ is available, we compute the Rayleigh quotient for each vector $x$:
+            Claude Shannon's formulation makes entropy the central quantity for a probabilistic source.
+            For a discrete variable $X$ with outcomes $x_i$ and probabilities $p_i$, entropy is:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
-            $$R(x) = \frac{x^\top L_F x}{x^\top x}$$
+            $$H(X) = - \sum_i p_i \log_2 p_i$$
           </p>
 
           <p>
-            This is the normalized Dirichlet energy &mdash; physically, <em>potential energy
-            per unit mass</em> on the feature manifold. The interpretation is direct:
+            This is the expected value of surprise, measured in bits. A rare event carries more surprise
+            than a common one, and a perfectly predictable source has zero entropy. If every outcome is
+            equally likely, entropy rises with the number of possible states because there is more
+            uncertainty to resolve.
           </p>
 
+          <p>A useful way to read this is:</p>
+
           <ul>
-            <li><strong>High energy</strong> (peaks, rough): the item is anomalous, topologically isolated, or out-of-distribution.</li>
-            <li><strong>Low energy</strong> (hills, smooth): the item is typical, well-connected, semantically aligned with the corpus.</li>
+            <li>self-information of one event: $I(x_i) = -\log_2 p_i$,</li>
+            <li>entropy of the whole source: $H(X) = \mathbb{E}[I(X)]$.</li>
           </ul>
 
           <p>
-            A semantically typical item produces a smooth signal on $L_F$: adjacent feature
-            nodes receive similar activation values. An anomalous or OOD item produces a rough,
-            high-energy signal. This is structural information that geometric search cannot
-            access.
+            Entropy is not "noise" in the abstract. It is the average amount of uncertainty left before
+            the message arrives.
           </p>
 
-          <blockquote>
-            <p>The graph is not an approximation of the data. For spectral methods, it <em>is</em> the data structure.</p>
-          </blockquote>
+          <pre><code class="language-python">import math
 
-          <h2>3. Bounded spectral scores</h2>
+def shannon_entropy(probs):
+    return -sum(p * math.log2(p) for p in probs if p > 0)
+
+print(shannon_entropy([0.5, 0.5]))   # 1.0
+print(shannon_entropy([0.8, 0.2]))   # 0.72
+print(shannon_entropy([0.99, 0.01])) # 0.08</code></pre>
+
+          <h2>2. Entropy grows with bits because uncertainty multiplies</h2>
 
           <p>
-            The Rayleigh quotient is unbounded, which makes it hard to compare across datasets
-            with different energy scales. We apply a Gini-like dispersion transform to produce
-            a bounded score:
+            If a message contains $N$ independent binary choices and each bit is fair, there are $2^N$
+            possible messages. Each full message has probability $2^{-N}$, so its information content is:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
-            $$\lambda_\tau^x = \frac{R(x)}{R(x) + \epsilon} \in [0, 1)$$
+            $$I = -\log_2(2^{-N}) = N$$
           </p>
 
           <p>
-            This bounded score &mdash; called <strong>taumode</strong> &mdash; is a 1D
-            positional score that synthesizes where each vector sits in the spectral structure.
-            At query time, spectral similarity becomes:
+            The uncertainty of a fair $N$-bit message is exactly $N$ bits. Every additional fair bit
+            doubles the number of possible states, so the receiver must resolve one more bit of
+            uncertainty.
+          </p>
+
+          <pre><code class="language-python">import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+def binary_entropy(p):
+    if p == 0.0 or p == 1.0:
+        return 0.0
+    return -(p * math.log2(p) + (1 - p) * math.log2(1 - p))
+
+bits = np.arange(1, 21)
+p = 0.5
+entropy_per_bit = binary_entropy(p)
+total_entropy = bits * entropy_per_bit
+
+for n, h in zip(bits[:5], total_entropy[:5]):
+    print(f"{n} bit(s): H = {h:.1f} bits")
+
+plt.figure(figsize=(8, 4.5))
+plt.plot(bits, total_entropy, marker="o", linewidth=2)
+plt.title("Entropy growth for a fair binary source")
+plt.xlabel("Number of bits")
+plt.ylabel("Total entropy (bits)")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()</code></pre>
+
+          <p>
+            For a fair source, the plot is a straight line because each added bit contributes one more
+            bit of uncertainty. If the source becomes biased, the line bends downward: the source becomes
+            more predictable, and the entropy per bit falls below 1.
+          </p>
+
+          <p>This is the first clue for neural networks: a good model is one that makes the next token less surprising.</p>
+
+          <h2>3. Why cross-entropy appears in LLM training</h2>
+
+          <p>
+            Cross-entropy is the operational version of this same story. If the true distribution is $p$
+            and the model distribution is $q$, cross-entropy is:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
-            $$\mathrm{sim}_\lambda = \lambda_\tau^q - \lambda_\tau^i$$
+            $$H(p, q) = - \sum_x p(x)\log_2 q(x)$$
           </p>
 
           <p>
-            The $\lambda_\tau$ score is bounded to $[0, 1)$ regardless of corpus energy scale,
-            making it stable across heterogeneous datasets &mdash; something cosine ($[-1, 1]$)
-            and $\ell_2$ ($[0, \infty)$) do not provide.
+            Entropy measures the intrinsic uncertainty of the data source. Cross-entropy measures how much
+            uncertainty remains when the model's probabilities are used instead of the truth. When $q$
+            matches $p$, cross-entropy becomes minimal, and the model stops being surprised by the data in
+            the wrong way.
           </p>
 
-          <h2>4. SPIN: lambda-aware similarity search</h2>
-
           <p>
-            SPIN (SPectral INdexing) combines geometric and spectral similarity through a
-            linear combination controlled by a parameter $\alpha$, which we call <strong>tau</strong>
-            ($\tau$):
+            For language models, the training objective is next-token prediction. The model assigns a
+            probability distribution over the vocabulary, and the loss penalizes low probability on the
+            correct token. If the model gives the true next token probability $q(y)$, the loss is
+            proportional to:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
-            $$\mathrm{dist}_{SPIN} = \alpha \cdot \mathrm{sim}_{\cos}(q, i) + (1 - \alpha) \cdot \mathrm{sim}_\lambda(q, i)$$
+            $$-\log q(y)$$
           </p>
 
           <p>
-            The first term is the geometric component (cosine). The second term is the spectral
-            component, which acts as a <em>differentiator</em> of the geometric signal. If
-            cosine picks a false neighbor from a different topological community, the spectral
-            distance corrects the measurement.
+            That is just surprise, turned into a training signal. Better predictions mean lower surprise,
+            and lower surprise means less uncertainty left unresolved by the model.
           </p>
 
+          <pre><code class="language-python">import math
+
+def cross_entropy_single_token(prob_true_token):
+    return -math.log2(max(prob_true_token, 1e-15))
+
+examples = [0.95, 0.50, 0.10, 0.01]
+for p in examples:
+    print(f"q(true)={p:.2f} -> loss={cross_entropy_single_token(p):.3f} bits")</code></pre>
+
           <p>
-            The tau parameter controls the balance:
+            If the model is confident and correct, the penalty is small; if it is confident and wrong,
+            the penalty is large. Training is therefore not just fitting data. It is a systematic drive
+            to compress uncertainty about the next token.
           </p>
+
+          <h2>4. Depletion of uncertainty as a training principle</h2>
+
+          <p>
+            The phrase "depletion of uncertainty" is a good lens for understanding modern loss functions.
+            In Shannon's view, receiving a message removes uncertainty. In LLM training, seeing the correct
+            token should remove uncertainty from the model's posterior over the next token. Cross-entropy
+            quantifies how much uncertainty remains after the model has spoken.
+          </p>
+
+          <p>That is why loss minimization feels so universal across deep learning:</p>
 
           <ul>
-            <li><strong>$\tau = 1.0$</strong>: pure cosine retrieval (no spectral signal)</li>
-            <li><strong>$\tau = 0.42$</strong>: 58% spectral signal (optimal for the CVE dataset)</li>
-            <li><strong>$\tau \to 0$</strong>: fully spectral retrieval</li>
+            <li>entropy describes the uncertainty of the world,</li>
+            <li>cross-entropy describes the uncertainty left by the model,</li>
+            <li>optimization pushes the model toward less surprise.</li>
           </ul>
 
           <p>
-            Cosine is the high-locality signal; $\mathrm{sim}_\lambda$ is the corpus-structure
-            signal. They are complementary, not competing.
+            Viewed this way, the model is not trying to "be smart" in a vague sense. It is trying to
+            assign probability mass to the truth efficiently enough that the truth no longer feels
+            exceptional.
           </p>
 
-          <h2>5. Tau-modulation for adaptive retrieval</h2>
+          <pre class="mermaid">flowchart LR
+    A[Possible states] --> B[Entropy]
+    B --> C[Uncertainty]
+    C --> D[Observation / message]
+    D --> E[Uncertainty depleted]
+
+    F[Model logits] --> G[Softmax distribution]
+    G --> H[Cross-entropy loss]
+    H --> I[Gradient update]
+    I --> J[Less surprise next time]</pre>
+
+          <h2>5. A note on diffusion and ELBO</h2>
 
           <p>
-            The tau parameter is not a hyperparameter you tune once and freeze. It is a runtime
-            control that enables <strong>adaptive search</strong> &mdash; adjusting retrieval
-            behavior based on the phase of context formation in a RAG pipeline:
-          </p>
-
-          <ul>
-            <li><strong>Early phase</strong> (broad frame): $\tau \approx 1.0$ &mdash; rely more on geometric signal to establish context.</li>
-            <li><strong>Later phase</strong> (specific evidence): $\tau \approx 0.4$ &mdash; embed more spectral signal for finer corpus sieving.</li>
-          </ul>
-
-          <p>
-            We call this process <strong>tau-modulation</strong>. A simple feedback loop on
-            $\tau$ can avoid deadlocks caused by poor retrieval in long-context applications.
-            This is where spectral intelligence becomes operational rather than theoretical.
-          </p>
-
-          <h2>6. Experimental evidence</h2>
-
-          <p>
-            We evaluated SPIN on two retrieval benchmarks. The first is the
-            <strong>CVE&trade;</strong> vulnerability corpus: 347,113 reports with 50
-            LLM-generated queries emulating realistic cybersecurity search scenarios. The
-            second is <strong>TREC-COVID</strong>: approximately 171,000 scientific articles
-            with 50 expert-designed topics and graded human relevance judgments.
+            There is a parallel story in diffusion models. The direct likelihood objective is often
+            intractable, so training uses a lower bound, the ELBO, as the computable route toward the
+            same end. In that setting too, the loss is still about reducing uncertainty step by step:
+            denoising one noisy state at a time until the model's distribution is close to the data
+            distribution.
           </p>
 
           <p>
-            Documents and queries are encoded using a domain-adapted Sentence-BERT model
-            with lightweight fine-tuning on 3&ndash;5% of the target corpus. We compare three
-            configurations: cosine ($\tau=1.0$), hybrid ($\tau=0.72$), and taumode
-            ($\tau=0.42$).
+            Whether the system is a next-token predictor or a denoiser, the geometry of learning is the
+            same. The model is learning to explain away surprise.
           </p>
 
-          <h3>CVE: flatter tails, near-perfect recall</h3>
+          <h2>6. Current literature to follow</h2>
 
           <p>
-            On CVE, taumode produces flatter and more stable score tails while preserving
-            near-perfect Tolerant Recall. The tail metrics are the key finding: cosine
-            retrieval degrades rapidly in the tail, while SPIN maintains semantic coherence
-            deeper into the ranking.
-          </p>
-
-          <p class="table-caption">Table 1: Mean tail-shape metrics at $K_h = 3$ (CVE)</p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Method</th>
-                  <th>Head mean</th>
-                  <th>Tail mean</th>
-                  <th>T/H Ratio</th>
-                  <th>Tail CV</th>
-                  <th>Tail Decay</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Cosine ($\tau=1.0$)</td>
-                  <td>0.843</td>
-                  <td>0.831</td>
-                  <td>0.986</td>
-                  <td>0.00396</td>
-                  <td>0.000512</td>
-                </tr>
-                <tr>
-                  <td>Hybrid ($\tau=0.72$)</td>
-                  <td>0.875</td>
-                  <td>0.863</td>
-                  <td>0.986</td>
-                  <td>0.00382</td>
-                  <td>0.000509</td>
-                </tr>
-                <tr>
-                  <td><strong>Taumode ($\tau=0.42$)</strong></td>
-                  <td><strong>0.924</strong></td>
-                  <td><strong>0.915</strong></td>
-                  <td><strong>0.991</strong></td>
-                  <td><strong>0.00254</strong></td>
-                  <td><strong>0.000359</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            Compared to cosine, taumode achieves <strong>29.9% lower Tail CV</strong> and
-            <strong>29.8% lower Tail Decay</strong>, with <strong>Tolerant Recall of 0.993</strong>
-            and an average <strong>Semantic Uplift of +0.573</strong> (cosine provides zero
-            uplift by construction).
-          </p>
-
-          <h3>TREC-COVID: gains on human-labeled relevance</h3>
-
-          <p>
-            On TREC-COVID, intermediate tau values improve both Relevance Recall and NDCG
-            over cosine. The gains are strongest in hybrid settings ($\tau \approx 0.65$&ndash;$0.80$),
-            not in purely spectral regimes &mdash; confirming that geometric and spectral
-            signals are complementary.
-          </p>
-
-          <p class="table-caption">Table 2: Retrieval quality on TREC-COVID at $k=10$</p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Method</th>
-                  <th>Relevance Recall@10</th>
-                  <th>NDCG@10</th>
-                  <th>Semantic Uplift</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Cosine ($\tau=1.0$)</td>
-                  <td>0.508</td>
-                  <td>0.455</td>
-                  <td>0.000</td>
-                </tr>
-                <tr>
-                  <td>Hybrid ($\tau=0.70$)</td>
-                  <td><strong>0.522</strong></td>
-                  <td><strong>0.467</strong></td>
-                  <td>0.184</td>
-                </tr>
-                <tr>
-                  <td>Taumode ($\tau=0.40$)</td>
-                  <td>0.510</td>
-                  <td>0.459</td>
-                  <td><strong>0.334</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            The hybrid setting achieves approximately <strong>2.8% gain in Relevance Recall</strong>
-            and <strong>2.6% gain in NDCG</strong> over cosine. Taumode pushes Semantic Uplift
-            from 0.000 (cosine) to <strong>0.334</strong>, indicating that feature-space
-            topology helps retrieve more semantically coherent neighborhoods beyond pure
-            geometric similarity.
-          </p>
-
-          <h2>7. What this means in practice</h2>
-
-          <p>
-            The evidence supports a clear reading: cosine similarity is a strong local baseline
-            but a limited global semantic index. SPIN reorders the ranked list according to the
-            graph's spectral-topological layout, integrating both local geometry and
-            corpus-level connectivity.
+            A useful recent reference on information-theoretic dilution in high-dimensional systems is
+            <a href="https://arxiv.org/abs/2504.08807" target="_blank" rel="noopener noreferrer">arXiv:2504.08807</a>,
+            which frames an "Information Dilution Theorem" linking growing dimensionality to declining
+            metric-information efficiency. It is not about LLM loss directly, but it is relevant because
+            it formalizes how information can become less recoverable as systems grow larger and noisier.
           </p>
 
           <p>
-            Four engineering takeaways:
+            For broader context, the <a href="https://papers.neurips.cc" target="_blank"
+            rel="noopener noreferrer">NeurIPS proceedings</a> page is a good entry point for current work
+            across learning theory, representation learning, and generative modeling.
           </p>
 
-          <ol>
-            <li>
-              <strong>Graph wiring is the foundation.</strong> The feature-space Laplacian is
-              where all the structural signal lives. Getting it right &mdash; deterministic
-              clustering, validated symmetry, connected components &mdash; is prerequisite to
-              everything downstream.
-            </li>
-            <li>
-              <strong>Tau is a runtime control, not a frozen hyperparameter.</strong> Different
-              queries, different phases of retrieval, and different corpora all benefit from
-              different tau values. Build your system to modulate it.
-            </li>
-            <li>
-              <strong>The tail matters more than the head.</strong> Cosine already does well on
-              top results. The value of spectral search is in producing coherent, non-degrading
-              tails &mdash; which is exactly where RAG context windows pull from.
-            </li>
-            <li>
-              <strong>Complexity is manageable.</strong> The spectral operations work on sparse
-              feature-space ($O(F \cdot \mathrm{nnz}(L_F))$), not dense item-space. This
-              scales to production corpora.
-            </li>
-          </ol>
-
-          <hr />
+          <h2>7. Closing idea</h2>
 
           <p>
-            The full algorithmic pipeline, theoretical foundation through epiplexity, and
-            experimental details are in <a href="https://arxiv.org/abs/2606.21535"
-            target="_blank" rel="noopener noreferrer">the paper</a>. The reference
-            implementation is open source:
-            <a href="https://github.com/tuned-org-uk/pyarrowspace" target="_blank"
-            rel="noopener noreferrer"><code>pip install arrowspace</code></a>.
-          </p>
-
-          <p style="font-size: 0.85rem; color: var(--eng-muted); margin-top: 2rem;">
-            <em>Cite as:</em> Lorenzo Moriondo, Ilias Azizi. <em>From Embedding Geometry to
-            Spectral Search: Energy Dispersion Networks For Vector Retrieval.</em>
-            arXiv:2606.21535 [cs.IR], 2026.
+            The cleanest way to think about entropy, cross-entropy, and LLM loss is this: entropy is the
+            uncertainty of the source, cross-entropy is the uncertainty left by the model, and training is
+            the process of reducing the gap between the two. Genefold's engineering perspective starts
+            from that first principle: better models are not just more accurate, they are less surprised
+            by reality.
           </p>
         </div>
 
         <aside class="eng-author">
-          <span class="eng-author__avatar" aria-hidden="true" style="background: linear-gradient(135deg, var(--primary), var(--secondary));"></span>
+          <span class="eng-author__avatar" aria-hidden="true"></span>
           <div class="eng-author__copy">
-            <p class="eng-author__name">Lorenzo Moriondo</p>
-            <p class="eng-author__role">Co-founder, Genefold AI &middot; Algorithms</p>
+            <p class="eng-author__name">genefold-ai</p>
+            <p class="eng-author__role">Genefold AI &middot; First Principles series</p>
             <p class="eng-author__bio">
-              Works on the geometry of embedding spaces and the algorithms that make spectral
-              intelligence practical. Author of the ArrowSpace algorithm and the
-              <code>arrowspace</code> library.
+              Writes about the foundations of information, structure, and intelligence that guide
+              Genefold's engineering choices.
             </p>
           </div>
         </aside>
@@ -879,9 +735,9 @@
           <h2 class="eng-related__title">Related notes</h2>
           <ul class="eng-related__list" role="list">
             <li>
-              <a href="/engineering/002.html">
-                <h4>Genefold First Principles: Depletion of Uncertainty</h4>
-                <span>002 &middot; Foundations &middot; 10 min</span>
+              <a href="/engineering/001.html">
+                <h4>Designing the ArrowSpace graph wiring protocol</h4>
+                <span>001 &middot; Algorithms &middot; 12 min</span>
               </a>
             </li>
           </ul>
