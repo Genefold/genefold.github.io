@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Designing the ArrowSpace graph wiring protocol — Genefold Engineering</title>
+  <meta name="description" content="Why the edge-building step is the most consequential decision in spectral indexing, and how we turned an empirical art into a reproducible, tested pipeline." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <style>
+    /* ── Engineering blog tokens & overrides ─────────────────── */
+    .eng-root {
+      --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --eng-line: rgba(156, 181, 255, 0.12);
+      --eng-line-strong: rgba(156, 181, 255, 0.28);
+      --eng-muted: #8a9cc4;
+      --eng-max-width: 720px;
+    }
+
+    .eng-root .site-shell {
+      padding-bottom: 2rem;
+    }
+
+    /* ── Engineering nav ─────────────────────────────────────── */
+    .eng-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      margin: 0 -1rem;
+      border-bottom: 1px solid var(--eng-line);
+      background: rgba(10, 16, 32, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .eng-nav__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .eng-nav__brand svg {
+      color: var(--accent);
+    }
+
+    .eng-nav__brand span {
+      opacity: 0.55;
+      font-weight: 500;
+    }
+
+    .eng-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .eng-nav__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--eng-muted);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .eng-nav__links a:hover,
+    .eng-nav__links a[aria-current="page"] {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ── Article header ──────────────────────────────────────── */
+    .eng-article {
+      max-width: var(--eng-max-width);
+      margin: 0 auto;
+      padding: 3rem 0 4rem;
+    }
+
+    .eng-article__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--eng-muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+
+    .eng-article__back:hover {
+      color: var(--primary);
+    }
+
+    .eng-article__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--primary);
+      border: 1px solid rgba(104, 240, 211, 0.2);
+      background: rgba(104, 240, 211, 0.08);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .eng-article__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__lede {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+      margin: 0 0 1.5rem;
+      max-width: 60ch;
+    }
+
+    .eng-article__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--eng-line);
+      border-bottom: 1px solid var(--eng-line);
+      font-family: var(--eng-mono);
+      font-size: 0.78rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .eng-article__meta .eng-article__topic {
+      border-color: rgba(104, 240, 211, 0.25);
+      color: var(--primary);
+      background: rgba(104, 240, 211, 0.08);
+    }
+
+    /* ── Article body ────────────────────────────────────────── */
+    .eng-article__body {
+      padding-top: 2.5rem;
+    }
+
+    .eng-article__body h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .eng-article__body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+
+    .eng-article__body p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--eng-muted);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__body p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .eng-article__body a {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+
+    .eng-article__body a:hover {
+      color: var(--text);
+    }
+
+    .eng-article__body ul,
+    .eng-article__body ol {
+      margin: 0 0 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body li {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 0.5rem;
+    }
+
+    .eng-article__body li::marker {
+      color: var(--primary);
+    }
+
+    .eng-article__body code {
+      font-family: var(--eng-mono);
+      font-size: 0.9em;
+      padding: 0.15rem 0.35rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
+
+    .eng-article__body pre {
+      padding: 1.25rem;
+      border-radius: var(--radius-s);
+      border: 1px solid var(--eng-line);
+      background: rgba(0, 0, 0, 0.28);
+      overflow-x: auto;
+      margin: 0 0 1.5rem;
+    }
+
+    .eng-article__body pre code {
+      display: block;
+      padding: 0;
+      background: transparent;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body blockquote {
+      margin: 0 0 1.5rem;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: rgba(255, 122, 143, 0.06);
+    }
+
+    .eng-article__body blockquote p {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .eng-article__body hr {
+      border: none;
+      border-top: 1px solid var(--eng-line);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Author bio ──────────────────────────────────────────── */
+    .eng-author {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-top: 3rem;
+      padding: 1.25rem;
+      border: 1px solid var(--eng-line);
+      border-radius: var(--radius-m);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    }
+
+    .eng-author__avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--eng-line-strong);
+      flex-shrink: 0;
+    }
+
+    .eng-author__copy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .eng-author__name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-author__role {
+      font-family: var(--eng-mono);
+      font-size: 0.75rem;
+      color: var(--eng-muted);
+      margin: 0;
+    }
+
+    .eng-author__bio {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--eng-muted);
+      margin: 0.4rem 0 0;
+      max-width: 55ch;
+    }
+
+    /* ── Related posts ───────────────────────────────────────── */
+    .eng-related {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--eng-line);
+    }
+
+    .eng-related__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 1rem;
+    }
+
+    .eng-related__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .eng-related__list a {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--eng-line);
+      border-radius: 12px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .eng-related__list a:hover,
+    .eng-related__list a:focus-visible {
+      border-color: var(--eng-line-strong);
+      background: rgba(255, 255, 255, 0.06);
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .eng-related__list h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-related__list span {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      color: var(--eng-muted);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .eng-nav {
+        flex-wrap: wrap;
+      }
+
+      .eng-nav__links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+      }
+
+      .eng-article {
+        padding: 2rem 0 3rem;
+      }
+
+      .eng-article__meta {
+        gap: 0.75rem;
+      }
+
+      .eng-author {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body class="eng-root">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="site-shell">
+    <header class="site-social" aria-label="Social links">
+      <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+        </svg>
+      </a>
+      <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+        </svg>
+      </a>
+    </header>
+
+    <nav class="eng-nav" aria-label="Engineering">
+      <a class="eng-nav__brand" href="/">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+        Genefold <span>/ Engineering</span>
+      </a>
+      <ul class="eng-nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/engineering" aria-current="page">Blog</a></li>
+        <li><a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open source</a></li>
+        <li><a href="mailto:hello@genefold.ai?subject=Engineering%20inquiry">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+      <article class="eng-article reveal">
+        <a class="eng-article__back" href="/engineering">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+          All engineering notes
+        </a>
+
+        <header>
+          <span class="eng-article__eyebrow">GF-ENG-001 &mdash; Algorithms</span>
+          <h1 class="eng-article__title">Designing the ArrowSpace graph wiring protocol</h1>
+          <p class="eng-article__lede">
+            Why the edge-building step is the most consequential decision in spectral indexing,
+            and how we turned an empirical art into a reproducible, tested pipeline.
+          </p>
+          <div class="eng-article__meta">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Lorenzo Moriondo
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              8 Jul 2026
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              7 min read
+            </span>
+          </div>
+        </header>
+
+        <div class="eng-article__body">
+          <p>
+            Spectral search starts with a graph. Before you can compute a Laplacian, before you can talk about
+            eigenvalues or Rayleigh quotients, you have to decide which points are connected to which. That
+            decision&mdash;graph wiring&mdash;is where most of the signal lives, and where most of the bugs hide.
+          </p>
+
+          <p>
+            In this post I want to explain why we treat wiring as a first-class engineering problem in ArrowSpace,
+            not a hyperparameter you tune once and forget. I will walk through the constraints that matter for
+            production systems, the tests we run, and the protocol we ended up with.
+          </p>
+
+          <h2>1. The wiring step is the model</h2>
+
+          <p>
+            Cosine similarity gives you a ranked list of neighbours. Spectral methods give you a shape. The shape
+            is only as good as the graph you build, and the graph is only as good as the wiring rule.
+          </p>
+
+          <p>
+            A bad wiring rule can collapse distinct clusters, create bridges across manifolds that should stay
+            separate, or leave long-tail points orphaned. A good wiring rule preserves local geometry while
+            exposing global structure. There is no universal rule because the right graph depends on the density,
+            dimensionality, and noise of the dataset.
+          </p>
+
+          <blockquote>
+            <p>The graph is not an approximation of the data. For spectral methods, it <em>is</em> the data structure.</p>
+          </blockquote>
+
+          <h2>2. What we optimized for</h2>
+
+          <p>
+            When we started ArrowSpace, we evaluated wiring rules against four criteria that matter in production:
+          </p>
+
+          <ul>
+            <li><strong>Reproducibility.</strong> The same input must produce the same graph, byte for byte, across runs.</li>
+            <li><strong>Scalability.</strong> Wiring must not dominate the indexing cost for millions of vectors.</li>
+            <li><strong>Diagnostics.</strong> We need to measure graph quality without waiting for downstream retrieval.</li>
+            <li><strong>Composability.</strong> The rule must accept constraints from the rest of the pipeline.</li>
+          </ul>
+
+          <p>
+            Reproducibility sounds obvious, but floating-point neighbour search with approximate indices can
+            introduce non-determinism. We fixed this by separating the <em>candidate generation</em> phase from
+            the <em>edge selection</em> phase, and by making edge selection deterministic given candidates.
+          </p>
+
+          <h2>3. The protocol</h2>
+
+          <p>
+            Our wiring protocol has three stages:
+          </p>
+
+          <ol>
+            <li><strong>Candidate neighbours.</strong> Build a candidate set using an approximate index or brute-force search.</li>
+            <li><strong>Mutual- kNN pruning.</strong> Keep an edge only if both endpoints consider each other neighbours.</li>
+            <li><strong>Constraint validation.</strong> Enforce minimum degree, remove disconnected components, and validate symmetry.</li>
+          </ol>
+
+          <p>
+            Here is what the validation step looks like in the current Python implementation:
+          </p>
+
+          <pre><code>def validate_wiring(graph, min_degree=2, max_components=1):
+    degrees = graph.degree()
+    orphans = [i for i, d in enumerate(degrees) if d &lt; min_degree]
+    if orphans:
+        raise WiringError(f"{len(orphans)} nodes below min_degree {min_degree}")
+
+    n_components = graph.connected_components()
+    if n_components &gt; max_components:
+        raise WiringError(f"graph has {n_components} components, max {max_components}")
+
+    if not graph.is_symmetric():
+        raise WiringError("graph adjacency is not symmetric")
+
+    return graph</code></pre>
+
+          <p>
+            The key insight is that these checks run <em>before</em> any spectral computation. If the graph fails
+            validation, we surface the failure immediately rather than letting a bad Laplacian silently degrade
+            retrieval quality.
+          </p>
+
+          <h2>4. Measuring quality</h2>
+
+          <p>
+            We use three diagnostics to assess a wiring rule without running a full search evaluation:
+          </p>
+
+          <ul>
+            <li><strong>Spectral gap.</strong> A clear gap between consecutive eigenvalues indicates well-separated clusters.</li>
+            <li><strong>Rayleigh variability.</strong> Low variability suggests the graph captures consistent local structure.</li>
+            <li><strong>Compression ratio.</strong> The number of edges relative to a fully connected graph; we want sparse but connected.</li>
+          </ul>
+
+          <p>
+            These metrics let us iterate on wiring rules in unit tests, which means we can refactor the algorithm
+            with confidence.
+          </p>
+
+          <hr />
+
+          <p>
+            Graph wiring will keep evolving as we support larger datasets and more diverse embedding spaces.
+            If you are building something similar, start by making the wiring rule explicit, testable, and
+            observable. Everything else in spectral search depends on it.
+          </p>
+        </div>
+
+        <aside class="eng-author">
+          <img class="eng-author__avatar" src="https://avatars.githubusercontent.com/u/1" alt="Lorenzo Moriondo" width="52" height="52" loading="lazy" decoding="async" />
+          <div class="eng-author__copy">
+            <p class="eng-author__name">Lorenzo Moriondo</p>
+            <p class="eng-author__role">Co-founder &middot; Algorithms</p>
+            <p class="eng-author__bio">
+              Works on the geometry of embedding spaces and the algorithms that make spectral intelligence practical.
+            </p>
+          </div>
+        </aside>
+
+        <nav class="eng-related" aria-label="Related posts">
+          <h2 class="eng-related__title">Related notes</h2>
+          <ul class="eng-related__list" role="list">
+            <li>
+              <a href="/engineering/post.html">
+                <h4>From Rayleigh quotients to bounded spectral scores</h4>
+                <span>GF-ENG-004 &middot; Algorithms &middot; 9 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/post.html">
+                <h4>Benchmarking spectral retrieval at 360k vectors</h4>
+                <span>GF-ENG-002 &middot; Performance &middot; 5 min</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-contact-strip">
+        Building retrieval, monitoring, or evals for embedding-heavy systems?
+        <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">hello@genefold.ai</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+
+      <div class="site-footer__social" aria-label="Social links">
+        <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+        <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+        </a>
+      </div>
+
+      <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+      <p style="font-size:0.75rem; margin-top:0.4rem;">
+        <a href="/privacy.html" style="color: inherit; opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">Privacy Policy &amp; Terms</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#" id="cookie-settings-link" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Cookie settings</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      const yearEl = document.getElementById('footer-year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    })();
+  </script>
+</body>
+</html>
