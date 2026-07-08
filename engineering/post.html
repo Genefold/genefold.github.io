@@ -4,11 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Designing the ArrowSpace graph wiring protocol — Genefold Engineering</title>
-  <meta name="description" content="Why the edge-building step is the most consequential decision in spectral indexing, and how we turned an empirical art into a reproducible, tested pipeline." />
+  <meta name="description" content="How graph wiring in the feature-space Laplacian powers spectral indexing (SPIN) for vector retrieval, and what the experimental evidence shows on CVE and TREC-COVID." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
   <style>
     /* ── Engineering blog tokens & overrides ─────────────────── */
     .eng-root {
@@ -50,14 +57,8 @@
       text-decoration: none;
     }
 
-    .eng-nav__brand svg {
-      color: var(--accent);
-    }
-
-    .eng-nav__brand span {
-      opacity: 0.55;
-      font-weight: 500;
-    }
+    .eng-nav__brand svg { color: var(--accent); }
+    .eng-nav__brand span { opacity: 0.55; font-weight: 500; }
 
     .eng-nav__links {
       display: flex;
@@ -105,9 +106,7 @@
       transition: color 0.15s;
     }
 
-    .eng-article__back:hover {
-      color: var(--primary);
-    }
+    .eng-article__back:hover { color: var(--primary); }
 
     .eng-article__eyebrow {
       display: inline-flex;
@@ -163,16 +162,8 @@
       gap: 0.4rem;
     }
 
-    .eng-article__meta .eng-article__topic {
-      border-color: rgba(104, 240, 211, 0.25);
-      color: var(--primary);
-      background: rgba(104, 240, 211, 0.08);
-    }
-
     /* ── Article body ────────────────────────────────────────── */
-    .eng-article__body {
-      padding-top: 2.5rem;
-    }
+    .eng-article__body { padding-top: 2.5rem; }
 
     .eng-article__body h2 {
       font-family: 'Space Grotesk', sans-serif;
@@ -199,10 +190,8 @@
       margin: 0 0 1.25rem;
     }
 
-    .eng-article__body p strong {
-      color: var(--text);
-      font-weight: 600;
-    }
+    .eng-article__body p strong { color: var(--text); font-weight: 600; }
+    .eng-article__body em { color: var(--secondary); font-style: italic; }
 
     .eng-article__body a {
       color: var(--primary);
@@ -210,10 +199,7 @@
       text-underline-offset: 3px;
       transition: color 0.15s;
     }
-
-    .eng-article__body a:hover {
-      color: var(--text);
-    }
+    .eng-article__body a:hover { color: var(--text); }
 
     .eng-article__body ul,
     .eng-article__body ol {
@@ -227,10 +213,7 @@
       line-height: 1.7;
       margin-bottom: 0.5rem;
     }
-
-    .eng-article__body li::marker {
-      color: var(--primary);
-    }
+    .eng-article__body li::marker { color: var(--primary); }
 
     .eng-article__body code {
       font-family: var(--eng-mono);
@@ -279,6 +262,65 @@
       margin: 2.5rem 0;
     }
 
+    /* ── Tables ──────────────────────────────────────────────── */
+    .eng-article__body .table-wrap {
+      overflow-x: auto;
+      margin: 0 0 1.5rem;
+      border: 1px solid var(--eng-line);
+      border-radius: var(--radius-s);
+    }
+
+    .eng-article__body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .eng-article__body th,
+    .eng-article__body td {
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--eng-line);
+      white-space: nowrap;
+    }
+
+    .eng-article__body th {
+      font-family: var(--eng-mono);
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--eng-muted);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .eng-article__body td { color: var(--eng-muted); }
+    .eng-article__body td strong { color: var(--text); }
+    .eng-article__body tr:last-child td { border-bottom: none; }
+    .eng-article__body tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .eng-article__body .table-caption {
+      font-family: var(--eng-mono);
+      font-size: 0.75rem;
+      color: var(--eng-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Callout ─────────────────────────────────────────────── */
+    .eng-callout {
+      padding: 1.1rem 1.25rem;
+      margin: 0 0 1.5rem;
+      border: 1px solid rgba(104, 240, 211, 0.2);
+      border-radius: var(--radius-s);
+      background: rgba(104, 240, 211, 0.05);
+    }
+
+    .eng-callout p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
     /* ── Author bio ──────────────────────────────────────────── */
     .eng-author {
       display: flex;
@@ -299,11 +341,7 @@
       flex-shrink: 0;
     }
 
-    .eng-author__copy {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
+    .eng-author__copy { display: flex; flex-direction: column; gap: 0.25rem; }
 
     .eng-author__name {
       font-family: 'Space Grotesk', sans-serif;
@@ -387,29 +425,11 @@
 
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 640px) {
-      .eng-nav {
-        flex-wrap: wrap;
-      }
-
-      .eng-nav__links {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 0.25rem;
-      }
-
-      .eng-article {
-        padding: 2rem 0 3rem;
-      }
-
-      .eng-article__meta {
-        gap: 0.75rem;
-      }
-
-      .eng-author {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
+      .eng-nav { flex-wrap: wrap; }
+      .eng-nav__links { width: 100%; overflow-x: auto; padding-bottom: 0.25rem; }
+      .eng-article { padding: 2rem 0 3rem; }
+      .eng-article__meta { gap: 0.75rem; }
+      .eng-author { flex-direction: column; align-items: center; text-align: center; }
     }
   </style>
 </head>
@@ -457,8 +477,9 @@
           <span class="eng-article__eyebrow">GF-ENG-001 &mdash; Algorithms</span>
           <h1 class="eng-article__title">Designing the ArrowSpace graph wiring protocol</h1>
           <p class="eng-article__lede">
-            Why the edge-building step is the most consequential decision in spectral indexing,
-            and how we turned an empirical art into a reproducible, tested pipeline.
+            How graph wiring in the feature-space Laplacian powers spectral indexing for
+            vector retrieval, why it closes the semantic gap that cosine leaves open,
+            and what the experimental evidence shows on CVE and TREC-COVID.
           </p>
           <div class="eng-article__meta">
             <span>
@@ -471,121 +492,369 @@
             </span>
             <span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              7 min read
+              12 min read
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <a href="https://arxiv.org/abs/2606.21535" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:2px">arXiv:2606.21535</a>
             </span>
           </div>
         </header>
 
         <div class="eng-article__body">
           <p>
-            Spectral search starts with a graph. Before you can compute a Laplacian, before you can talk about
-            eigenvalues or Rayleigh quotients, you have to decide which points are connected to which. That
-            decision&mdash;graph wiring&mdash;is where most of the signal lives, and where most of the bugs hide.
+            Vector retrieval systems overwhelmingly rely on cosine similarity. Given a query
+            and a corpus item, cosine measures their angular proximity in the ambient embedding
+            space. What it does <em>not</em> do is account for the statistical and topological
+            structure of the corpus from which those embeddings are drawn.
           </p>
 
           <p>
-            In this post I want to explain why we treat wiring as a first-class engineering problem in ArrowSpace,
-            not a hyperparameter you tune once and forget. I will walk through the constraints that matter for
-            production systems, the tests we run, and the protocol we ended up with.
-          </p>
-
-          <h2>1. The wiring step is the model</h2>
-
-          <p>
-            Cosine similarity gives you a ranked list of neighbours. Spectral methods give you a shape. The shape
-            is only as good as the graph you build, and the graph is only as good as the wiring rule.
+            This creates a problem we call the <strong>semantic gap</strong>: items may be
+            geometrically close while belonging to different regions of the feature manifold,
+            whereas geometrically distant items may still share structural affinity through
+            the corpus topology. The gap is most visible in the tail of ranked retrieval
+            results, where weakly grounded or noisy evidence can affect downstream applications
+            like Retrieval-Augmented Generation. A result set with high average cosine
+            similarity may still be topologically scattered.
           </p>
 
           <p>
-            A bad wiring rule can collapse distinct clusters, create bridges across manifolds that should stay
-            separate, or leave long-tail points orphaned. A good wiring rule preserves local geometry while
-            exposing global structure. There is no universal rule because the right graph depends on the density,
-            dimensionality, and noise of the dataset.
+            This post walks through how <strong>Graph Wiring</strong> (GW) and
+            <strong>Spectral Indexing</strong> (SPIN) address this gap, presenting the
+            algorithm as published in <a href="https://arxiv.org/abs/2606.21535"
+            target="_blank" rel="noopener noreferrer">our paper</a> and the experimental
+            evidence that supports it.
+          </p>
+
+          <h2>1. The feature-space graph Laplacian</h2>
+
+          <p>
+            Classical spectral graph theory operates in the item-space: given a weighted
+            undirected graph $G=(V,E,W)$ with adjacency matrix $A \in \mathbb{R}^{N \times N}$
+            and degree matrix $D$, the combinatorial Laplacian is $L = D - A$. For production
+            systems with millions of vectors, building an $N \times N$ adjacency is impractical.
+          </p>
+
+          <p>
+            Graph Wiring takes a different path. We work in the <strong>feature-space</strong>
+            rather than the item-space:
+          </p>
+
+          <ol>
+            <li>Reduce the data matrix from $N \times F$ to $C \times F$ via incremental centroid clustering, where $C \ll N$ and the optimal $C$ is computed via the Johnson&ndash;Lindenstrauss lemma.</li>
+            <li>Transpose to obtain an $F \times C$ matrix.</li>
+            <li>Compute the graph Laplacian $L_F \in \mathbb{R}^{F \times F}$ on this transposed space.</li>
+          </ol>
+
+          <p>
+            The result is a Laplacian over <em>features</em>, not items. The feature-space is
+            the semantic web of the dataset &mdash; it encodes how dimensions correlate across
+            the corpus. An item vector $x_i \in \mathbb{R}^{N \times F}$, when blended with
+            $L_F$, carries measurably more discriminative information than its geometric
+            measurement alone.
+          </p>
+
+          <div class="eng-callout">
+            <p>
+              <strong>Complexity:</strong> Index construction is $O(F \cdot \mathrm{nnz}(L_F))$
+              following an $O(N \cdot F)$ clustering step. Memory is $O(F \cdot N)$ for dense
+              features, $O(F \cdot \mathrm{nnz}(L_F))$ for the Laplacian, and $O(N)$ for the
+              scalar $\lambda_\tau$ index. The spectral operations run on sparse feature-space,
+              not dense item-space.
+            </p>
+          </div>
+
+          <h2>2. The Rayleigh quotient as spectral energy</h2>
+
+          <p>
+            Once $L_F$ is available, we compute the Rayleigh quotient for each vector $x$:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$R(x) = \frac{x^\top L_F x}{x^\top x}$$
+          </p>
+
+          <p>
+            This is the normalized Dirichlet energy &mdash; physically, <em>potential energy
+            per unit mass</em> on the feature manifold. The interpretation is direct:
+          </p>
+
+          <ul>
+            <li><strong>High energy</strong> (peaks, rough): the item is anomalous, topologically isolated, or out-of-distribution.</li>
+            <li><strong>Low energy</strong> (hills, smooth): the item is typical, well-connected, semantically aligned with the corpus.</li>
+          </ul>
+
+          <p>
+            A semantically typical item produces a smooth signal on $L_F$: adjacent feature
+            nodes receive similar activation values. An anomalous or OOD item produces a rough,
+            high-energy signal. This is structural information that geometric search cannot
+            access.
           </p>
 
           <blockquote>
             <p>The graph is not an approximation of the data. For spectral methods, it <em>is</em> the data structure.</p>
           </blockquote>
 
-          <h2>2. What we optimized for</h2>
+          <h2>3. Bounded spectral scores</h2>
 
           <p>
-            When we started ArrowSpace, we evaluated wiring rules against four criteria that matter in production:
+            The Rayleigh quotient is unbounded, which makes it hard to compare across datasets
+            with different energy scales. We apply a Gini-like dispersion transform to produce
+            a bounded score:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$\lambda_\tau^x = \frac{R(x)}{R(x) + \epsilon} \in [0, 1)$$
+          </p>
+
+          <p>
+            This bounded score &mdash; called <strong>taumode</strong> &mdash; is a 1D
+            positional score that synthesizes where each vector sits in the spectral structure.
+            At query time, spectral similarity becomes:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$\mathrm{sim}_\lambda = \lambda_\tau^q - \lambda_\tau^i$$
+          </p>
+
+          <p>
+            The $\lambda_\tau$ score is bounded to $[0, 1)$ regardless of corpus energy scale,
+            making it stable across heterogeneous datasets &mdash; something cosine ($[-1, 1]$)
+            and $\ell_2$ ($[0, \infty)$) do not provide.
+          </p>
+
+          <h2>4. SPIN: lambda-aware similarity search</h2>
+
+          <p>
+            SPIN (SPectral INdexing) combines geometric and spectral similarity through a
+            linear combination controlled by a parameter $\alpha$, which we call <strong>tau</strong>
+            ($\tau$):
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$\mathrm{dist}_{SPIN} = \alpha \cdot \mathrm{sim}_{\cos}(q, i) + (1 - \alpha) \cdot \mathrm{sim}_\lambda(q, i)$$
+          </p>
+
+          <p>
+            The first term is the geometric component (cosine). The second term is the spectral
+            component, which acts as a <em>differentiator</em> of the geometric signal. If
+            cosine picks a false neighbor from a different topological community, the spectral
+            distance corrects the measurement.
+          </p>
+
+          <p>
+            The tau parameter controls the balance:
           </p>
 
           <ul>
-            <li><strong>Reproducibility.</strong> The same input must produce the same graph, byte for byte, across runs.</li>
-            <li><strong>Scalability.</strong> Wiring must not dominate the indexing cost for millions of vectors.</li>
-            <li><strong>Diagnostics.</strong> We need to measure graph quality without waiting for downstream retrieval.</li>
-            <li><strong>Composability.</strong> The rule must accept constraints from the rest of the pipeline.</li>
+            <li><strong>$\tau = 1.0$</strong>: pure cosine retrieval (no spectral signal)</li>
+            <li><strong>$\tau = 0.42$</strong>: 58% spectral signal (optimal for the CVE dataset)</li>
+            <li><strong>$\tau \to 0$</strong>: fully spectral retrieval</li>
           </ul>
 
           <p>
-            Reproducibility sounds obvious, but floating-point neighbour search with approximate indices can
-            introduce non-determinism. We fixed this by separating the <em>candidate generation</em> phase from
-            the <em>edge selection</em> phase, and by making edge selection deterministic given candidates.
+            Cosine is the high-locality signal; $\mathrm{sim}_\lambda$ is the corpus-structure
+            signal. They are complementary, not competing.
           </p>
 
-          <h2>3. The protocol</h2>
+          <h2>5. Tau-modulation for adaptive retrieval</h2>
 
           <p>
-            Our wiring protocol has three stages:
+            The tau parameter is not a hyperparameter you tune once and freeze. It is a runtime
+            control that enables <strong>adaptive search</strong> &mdash; adjusting retrieval
+            behavior based on the phase of context formation in a RAG pipeline:
+          </p>
+
+          <ul>
+            <li><strong>Early phase</strong> (broad frame): $\tau \approx 1.0$ &mdash; rely more on geometric signal to establish context.</li>
+            <li><strong>Later phase</strong> (specific evidence): $\tau \approx 0.4$ &mdash; embed more spectral signal for finer corpus sieving.</li>
+          </ul>
+
+          <p>
+            We call this process <strong>tau-modulation</strong>. A simple feedback loop on
+            $\tau$ can avoid deadlocks caused by poor retrieval in long-context applications.
+            This is where spectral intelligence becomes operational rather than theoretical.
+          </p>
+
+          <h2>6. Experimental evidence</h2>
+
+          <p>
+            We evaluated SPIN on two retrieval benchmarks. The first is the
+            <strong>CVE&trade;</strong> vulnerability corpus: 347,113 reports with 50
+            LLM-generated queries emulating realistic cybersecurity search scenarios. The
+            second is <strong>TREC-COVID</strong>: approximately 171,000 scientific articles
+            with 50 expert-designed topics and graded human relevance judgments.
+          </p>
+
+          <p>
+            Documents and queries are encoded using a domain-adapted Sentence-BERT model
+            with lightweight fine-tuning on 3&ndash;5% of the target corpus. We compare three
+            configurations: cosine ($\tau=1.0$), hybrid ($\tau=0.72$), and taumode
+            ($\tau=0.42$).
+          </p>
+
+          <h3>CVE: flatter tails, near-perfect recall</h3>
+
+          <p>
+            On CVE, taumode produces flatter and more stable score tails while preserving
+            near-perfect Tolerant Recall. The tail metrics are the key finding: cosine
+            retrieval degrades rapidly in the tail, while SPIN maintains semantic coherence
+            deeper into the ranking.
+          </p>
+
+          <p class="table-caption">Table 1: Mean tail-shape metrics at $K_h = 3$ (CVE)</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Head mean</th>
+                  <th>Tail mean</th>
+                  <th>T/H Ratio</th>
+                  <th>Tail CV</th>
+                  <th>Tail Decay</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cosine ($\tau=1.0$)</td>
+                  <td>0.843</td>
+                  <td>0.831</td>
+                  <td>0.986</td>
+                  <td>0.00396</td>
+                  <td>0.000512</td>
+                </tr>
+                <tr>
+                  <td>Hybrid ($\tau=0.72$)</td>
+                  <td>0.875</td>
+                  <td>0.863</td>
+                  <td>0.986</td>
+                  <td>0.00382</td>
+                  <td>0.000509</td>
+                </tr>
+                <tr>
+                  <td><strong>Taumode ($\tau=0.42$)</strong></td>
+                  <td><strong>0.924</strong></td>
+                  <td><strong>0.915</strong></td>
+                  <td><strong>0.991</strong></td>
+                  <td><strong>0.00254</strong></td>
+                  <td><strong>0.000359</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Compared to cosine, taumode achieves <strong>29.9% lower Tail CV</strong> and
+            <strong>29.8% lower Tail Decay</strong>, with <strong>Tolerant Recall of 0.993</strong>
+            and an average <strong>Semantic Uplift of +0.573</strong> (cosine provides zero
+            uplift by construction).
+          </p>
+
+          <h3>TREC-COVID: gains on human-labeled relevance</h3>
+
+          <p>
+            On TREC-COVID, intermediate tau values improve both Relevance Recall and NDCG
+            over cosine. The gains are strongest in hybrid settings ($\tau \approx 0.65$&ndash;$0.80$),
+            not in purely spectral regimes &mdash; confirming that geometric and spectral
+            signals are complementary.
+          </p>
+
+          <p class="table-caption">Table 2: Retrieval quality on TREC-COVID at $k=10$</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Relevance Recall@10</th>
+                  <th>NDCG@10</th>
+                  <th>Semantic Uplift</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cosine ($\tau=1.0$)</td>
+                  <td>0.508</td>
+                  <td>0.455</td>
+                  <td>0.000</td>
+                </tr>
+                <tr>
+                  <td>Hybrid ($\tau=0.70$)</td>
+                  <td><strong>0.522</strong></td>
+                  <td><strong>0.467</strong></td>
+                  <td>0.184</td>
+                </tr>
+                <tr>
+                  <td>Taumode ($\tau=0.40$)</td>
+                  <td>0.510</td>
+                  <td>0.459</td>
+                  <td><strong>0.334</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            The hybrid setting achieves approximately <strong>2.8% gain in Relevance Recall</strong>
+            and <strong>2.6% gain in NDCG</strong> over cosine. Taumode pushes Semantic Uplift
+            from 0.000 (cosine) to <strong>0.334</strong>, indicating that feature-space
+            topology helps retrieve more semantically coherent neighborhoods beyond pure
+            geometric similarity.
+          </p>
+
+          <h2>7. What this means in practice</h2>
+
+          <p>
+            The evidence supports a clear reading: cosine similarity is a strong local baseline
+            but a limited global semantic index. SPIN reorders the ranked list according to the
+            graph's spectral-topological layout, integrating both local geometry and
+            corpus-level connectivity.
+          </p>
+
+          <p>
+            Four engineering takeaways:
           </p>
 
           <ol>
-            <li><strong>Candidate neighbours.</strong> Build a candidate set using an approximate index or brute-force search.</li>
-            <li><strong>Mutual- kNN pruning.</strong> Keep an edge only if both endpoints consider each other neighbours.</li>
-            <li><strong>Constraint validation.</strong> Enforce minimum degree, remove disconnected components, and validate symmetry.</li>
+            <li>
+              <strong>Graph wiring is the foundation.</strong> The feature-space Laplacian is
+              where all the structural signal lives. Getting it right &mdash; deterministic
+              clustering, validated symmetry, connected components &mdash; is prerequisite to
+              everything downstream.
+            </li>
+            <li>
+              <strong>Tau is a runtime control, not a frozen hyperparameter.</strong> Different
+              queries, different phases of retrieval, and different corpora all benefit from
+              different tau values. Build your system to modulate it.
+            </li>
+            <li>
+              <strong>The tail matters more than the head.</strong> Cosine already does well on
+              top results. The value of spectral search is in producing coherent, non-degrading
+              tails &mdash; which is exactly where RAG context windows pull from.
+            </li>
+            <li>
+              <strong>Complexity is manageable.</strong> The spectral operations work on sparse
+              feature-space ($O(F \cdot \mathrm{nnz}(L_F))$), not dense item-space. This
+              scales to production corpora.
+            </li>
           </ol>
-
-          <p>
-            Here is what the validation step looks like in the current Python implementation:
-          </p>
-
-          <pre><code>def validate_wiring(graph, min_degree=2, max_components=1):
-    degrees = graph.degree()
-    orphans = [i for i, d in enumerate(degrees) if d &lt; min_degree]
-    if orphans:
-        raise WiringError(f"{len(orphans)} nodes below min_degree {min_degree}")
-
-    n_components = graph.connected_components()
-    if n_components &gt; max_components:
-        raise WiringError(f"graph has {n_components} components, max {max_components}")
-
-    if not graph.is_symmetric():
-        raise WiringError("graph adjacency is not symmetric")
-
-    return graph</code></pre>
-
-          <p>
-            The key insight is that these checks run <em>before</em> any spectral computation. If the graph fails
-            validation, we surface the failure immediately rather than letting a bad Laplacian silently degrade
-            retrieval quality.
-          </p>
-
-          <h2>4. Measuring quality</h2>
-
-          <p>
-            We use three diagnostics to assess a wiring rule without running a full search evaluation:
-          </p>
-
-          <ul>
-            <li><strong>Spectral gap.</strong> A clear gap between consecutive eigenvalues indicates well-separated clusters.</li>
-            <li><strong>Rayleigh variability.</strong> Low variability suggests the graph captures consistent local structure.</li>
-            <li><strong>Compression ratio.</strong> The number of edges relative to a fully connected graph; we want sparse but connected.</li>
-          </ul>
-
-          <p>
-            These metrics let us iterate on wiring rules in unit tests, which means we can refactor the algorithm
-            with confidence.
-          </p>
 
           <hr />
 
           <p>
-            Graph wiring will keep evolving as we support larger datasets and more diverse embedding spaces.
-            If you are building something similar, start by making the wiring rule explicit, testable, and
-            observable. Everything else in spectral search depends on it.
+            The full algorithmic pipeline, theoretical foundation through epiplexity, and
+            experimental details are in <a href="https://arxiv.org/abs/2606.21535"
+            target="_blank" rel="noopener noreferrer">the paper</a>. The reference
+            implementation is open source:
+            <a href="https://github.com/tuned-org-uk/pyarrowspace" target="_blank"
+            rel="noopener noreferrer"><code>pip install arrowspace</code></a>.
+          </p>
+
+          <p style="font-size: 0.85rem; color: var(--eng-muted); margin-top: 2rem;">
+            <em>Cite as:</em> Lorenzo Moriondo, Ilias Azizi. <em>From Embedding Geometry to
+            Spectral Search: Energy Dispersion Networks For Vector Retrieval.</em>
+            arXiv:2606.21535 [cs.IR], 2026.
           </p>
         </div>
 
@@ -593,9 +862,11 @@
           <img class="eng-author__avatar" src="https://avatars.githubusercontent.com/u/1" alt="Lorenzo Moriondo" width="52" height="52" loading="lazy" decoding="async" />
           <div class="eng-author__copy">
             <p class="eng-author__name">Lorenzo Moriondo</p>
-            <p class="eng-author__role">Co-founder &middot; Algorithms</p>
+            <p class="eng-author__role">Co-founder, Genefold AI &middot; Algorithms</p>
             <p class="eng-author__bio">
-              Works on the geometry of embedding spaces and the algorithms that make spectral intelligence practical.
+              Works on the geometry of embedding spaces and the algorithms that make spectral
+              intelligence practical. Author of the ArrowSpace algorithm and the
+              <code>arrowspace</code> library.
             </p>
           </div>
         </aside>
