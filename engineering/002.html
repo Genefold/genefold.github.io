@@ -493,18 +493,6 @@
         </header>
 
         <div class="eng-article__body">
-          <p>
-            Information theory begins with a harsh idea: information is not "stuff," it is the
-            reduction of uncertainty. When a receiver learns a message, the receiver's uncertainty
-            about what could happen next shrinks. Shannon's entropy measures that uncertainty, and
-            self-information measures the surprise of a particular outcome.
-          </p>
-
-          <p>
-            In machine learning, that same logic becomes loss minimization. A model is rewarded when
-            it assigns high probability to the truth and punished when it is surprised by it. Modern
-            learning systems are not merely predicting; they are steadily depleting uncertainty.
-          </p>
 
           <h2>1. Shannon's starting point: information as uncertainty reduction</h2>
 
@@ -618,14 +606,7 @@ plt.show()</code></pre>
           <p style="text-align:center; margin: 1.5rem 0;">
             $$D_{KL}(p \| q) = H(p, q) - H(p) \geq 0$$
           </p>
-
-          <p>
-            The KL divergence is the extra cost the model pays for using the wrong distribution. When
-            $q = p$, the KL divergence is zero, cross-entropy equals entropy, and the model is optimal.
-            Since $H(p)$ is fixed for a given dataset, minimizing cross-entropy is equivalent to
-            minimizing the KL divergence.
-          </p>
-
+  
           <p>
             For language models, the training objective is next-token prediction. The model assigns a
             probability distribution over the vocabulary, and the loss penalizes low probability on the
@@ -652,12 +633,6 @@ def cross_entropy_single_token(prob_true_token):
 examples = [0.95, 0.50, 0.10, 0.01]
 for p in examples:
     print(f"q(true)={p:.2f} -> loss={cross_entropy_single_token(p):.3f} bits")</code></pre>
-
-          <p>
-            If the model is confident and correct, the penalty is small; if it is confident and wrong,
-            the penalty is large. Training is therefore not just fitting data. It is a systematic drive
-            to compress uncertainty about the next token.
-          </p>
 
           <h2>4. Depletion of uncertainty as a training principle</h2>
 
