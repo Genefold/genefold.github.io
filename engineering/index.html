@@ -604,49 +604,66 @@
         <aside class="eng-sidebar" aria-label="Topics">
           <h2 class="eng-sidebar__title">Filter by topic</h2>
           <ul class="eng-topics" role="list">
-            <li><a href="#all" aria-current="true">All <span class="eng-topics__count">2</span></a></li>
-            <li><a href="#foundations">Foundations <span class="eng-topics__count">1</span></a></li>
+            <li><a href="#all" aria-current="true">All <span class="eng-topics__count">3</span></a></li>
+            <li><a href="#first-principles">First Principles <span class="eng-topics__count">2</span></a></li>
             <li><a href="#algorithms">Algorithms <span class="eng-topics__count">1</span></a></li>
           </ul>
         </aside>
 
         <section class="eng-feed" aria-label="Posts">
-          <a class="eng-featured reveal" href="/engineering/002.html">
+          <a class="eng-featured reveal" href="/engineering/003.html">
             <div class="eng-featured__copy">
               <span class="eng-featured__eyebrow">Featured &middot; First Principles</span>
-              <h2 class="eng-featured__title">Genefold First Principles: Depletion of Uncertainty</h2>
+              <h2 class="eng-featured__title">Genefold First Principles: From Entropy to Epiplexity</h2>
               <p class="eng-featured__excerpt">
-                Entropy is the irreducible uncertainty of the source. Cross-entropy is the mathematical structure
-                that measures how close the model's distribution is to the truth. Training depletes the
-                gap — the KL divergence.
+                Entropy measures uncertainty. But not all uncertainty is learnable. When compute is finite,
+                the question shifts from how much uncertainty exists to how much structure we can extract
+                per FLOP.
               </p>
               <div class="eng-featured__meta">
-                <span>002</span>
-                <span>10 min read</span>
-                <span>15 Jul 2026</span>
+                <span>003</span>
+                <span>12 min read</span>
+                <span>24 Aug 2026</span>
                 <span>by Lorenzo and Tommaso</span>
               </div>
             </div>
             <div class="eng-featured__visual" aria-hidden="true">
               <svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="fp-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="rgba(183,131,255,0.35)"/>
-                    <stop offset="100%" stop-color="rgba(104,240,211,0.15)"/>
+                  <linearGradient id="ep-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="rgba(104,240,211,0.35)"/>
+                    <stop offset="100%" stop-color="rgba(137,168,255,0.15)"/>
                   </linearGradient>
                 </defs>
-                <rect width="400" height="240" fill="url(#fp-grad)" opacity="0.12"/>
-                <g fill="none" stroke="rgba(183,131,255,0.45)" stroke-width="1">
-                  <circle cx="200" cy="120" r="60"/>
-                  <circle cx="200" cy="120" r="40"/>
-                  <circle cx="200" cy="120" r="20"/>
-                  <line x1="140" y1="120" x2="80" y2="120"/>
-                  <line x1="320" y1="120" x2="260" y2="120"/>
-                  <text x="200" y="125" text-anchor="middle" fill="rgba(183,131,255,0.8)" font-family="IBM Plex Mono, monospace" font-size="14">H(X)</text>
-                  <text x="60" y="125" text-anchor="middle" fill="rgba(183,131,255,0.6)" font-family="IBM Plex Mono, monospace" font-size="12">high</text>
-                  <text x="340" y="125" text-anchor="middle" fill="rgba(183,131,255,0.6)" font-family="IBM Plex Mono, monospace" font-size="12">low</text>
+                <rect width="400" height="240" fill="url(#ep-grad)" opacity="0.12"/>
+                <g fill="none" stroke="rgba(104,240,211,0.45)" stroke-width="1">
+                  <circle cx="200" cy="120" r="70"/>
+                  <circle cx="200" cy="120" r="45"/>
+                  <circle cx="200" cy="120" r="22"/>
+                  <line x1="200" y1="50" x2="200" y2="98"/>
+                  <text x="200" y="42" text-anchor="middle" fill="rgba(137,168,255,0.8)" font-family="IBM Plex Mono, monospace" font-size="14">H</text>
+                  <text x="200" y="125" text-anchor="middle" fill="rgba(104,240,211,0.9)" font-family="IBM Plex Mono, monospace" font-size="13">S_T</text>
                 </g>
               </svg>
+            </div>
+          </a>
+
+          <a class="eng-card reveal" href="/engineering/002.html">
+            <div class="eng-card__rail">
+              <span class="eng-card__id">002</span>
+              <span class="eng-card__topic">First Principles</span>
+            </div>
+            <div class="eng-card__body">
+              <h3 class="eng-card__title">Genefold First Principles: Depletion of Uncertainty</h3>
+              <p class="eng-card__excerpt">
+                Entropy is the irreducible uncertainty of the source. Cross-entropy measures how close the
+                model's distribution is to the truth — training depletes the gap: the KL divergence.
+              </p>
+              <div class="eng-card__footer">
+                <span>10 min read</span>
+                <span>15 Jul 2026</span>
+                <span>by Lorenzo and Tommaso</span>
+              </div>
             </div>
           </a>
 
