@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genefold First Principles: The Curriculum Engine — Genefold Engineering</title>
+  <meta name="description" content="Once the pipes are fast enough, the bottleneck stops moving bytes and starts moving meaning. Build the engine that chases epiplexity online: measure what each data domain teaches, forecast its marginal return, steer the sampler, and do it all without starving the GPUs." />
+  <meta name="author" content="Tommaso" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'], ['\\(','\\ ')'], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <style>
+    /* ── Engineering blog tokens & overrides ─────────────────── */
+    .eng-root {
+      --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --eng-line: rgba(156, 181, 255, 0.12);
+      --eng-line-strong: rgba(156, 181, 255, 0.28);
+      --eng-muted: #8a9cc4;
+      --eng-max-width: 720px;
+    }
+
+    .eng-root .site-shell { padding-bottom: 2rem; }
+
+    /* ── Engineering nav ─────────────────────────────────────── */
+    .eng-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      margin: 0 -1rem;
+      border-bottom: 1px solid var(--eng-line);
+      background: rgba(10, 16, 32, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .eng-nav__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .eng-nav__brand a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .eng-nav__brand a:hover { color: var(--primary); }
+
+    .eng-nav__brand svg { color: var(--accent); }
+
+    .eng-nav__brand span {
+      opacity: 0.55;
+      font-weight: 500;
+      margin: 0 0.35rem;
+    }
+
+    .eng-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .eng-nav__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--eng-muted);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .eng-nav__links a:hover,
+    .eng-nav__links a[aria-current="page"] {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ── Article header ──────────────────────────────────────── */
+    .eng-article {
+      max-width: var(--eng-max-width);
+      margin: 0 auto;
+      padding: 3rem 0 4rem;
+    }
+
+    .eng-article__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--eng-muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+
+    .eng-article__back:hover { color: var(--primary); }
+
+    .eng-article__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--primary);
+      border: 1px solid rgba(104, 240, 211, 0.2);
+      background: rgba(104, 240, 211, 0.08);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .eng-article__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__lede {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+      margin: 0 0 1.5rem;
+      max-width: 60ch;
+    }
+
+    .eng-article__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--eng-line);
+      border-bottom: 1px solid var(--eng-line);
+      font-family: var(--eng-mono);
+      font-size: 0.78rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── Article body ────────────────────────────────────────── */
+    .eng-article__body { padding-top: 2.5rem; }
+
+    .eng-article__body h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .eng-article__body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+
+    .eng-article__body p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--eng-muted);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__body p strong { color: var(--text); font-weight: 600; }
+    .eng-article__body em { color: var(--secondary); font-style: italic; }
+
+    .eng-article__body a {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+    .eng-article__body a:hover { color: var(--text); }
+
+    .eng-article__body ul,
+    .eng-article__body ol {
+      margin: 0 0 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body li {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 0.5rem;
+    }
+    .eng-article__body li::marker { color: var(--primary); }
+
+    .eng-article__body code {
+      font-family: var(--eng-mono);
+      font-size: 0.9em;
+      padding: 0.15rem 0.35rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
+
+    .eng-article__body pre {
+      padding: 1.25rem;
+      border-radius: var(--radius-s);
+      border: 1px solid var(--eng-line);
+      background: rgba(0, 0, 0, 0.28);
+      overflow-x: auto;
+      margin: 0 0 1.5rem;
+    }
+
+    .eng-article__body pre code {
+      display: block;
+      padding: 0;
+      background: transparent;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body pre.mermaid {
+      display: flex;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .eng-article__body blockquote {
+      margin: 0 0 1.5rem;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: rgba(255, 122, 143, 0.06);
+    }
+
+    .eng-article__body blockquote p {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .eng-article__body hr {
+      border: none;
+      border-top: 1px solid var(--eng-line);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Tables (literature) ─────────────────────────────────── */
+    .eng-article__body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 1.5rem;
+      font-size: 0.92rem;
+    }
+
+    .eng-article__body th,
+    .eng-article__body td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--eng-line);
+      line-height: 1.55;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body th {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .eng-article__body table code { white-space: nowrap; }
+
+    /* ── Author bio ──────────────────────────────────────────── */
+    .eng-author {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-top: 3rem;
+      padding: 1.25rem;
+      border: 1px solid var(--eng-line);
+      border-radius: var(--radius-m);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    }
+
+    .eng-author__avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--eng-line-strong);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .eng-author__copy { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .eng-author__name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-author__role {
+      font-family: var(--eng-mono);
+      font-size: 0.75rem;
+      color: var(--eng-muted);
+      margin: 0;
+    }
+
+    .eng-author__bio {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--eng-muted);
+      margin: 0.4rem 0 0;
+      max-width: 55ch;
+    }
+
+    /* ── Related posts ───────────────────────────────────────── */
+    .eng-related {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--eng-line);
+    }
+
+    .eng-related__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 1rem;
+    }
+
+    .eng-related__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .eng-related__list a {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--eng-line);
+      border-radius: 12px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .eng-related__list a:hover,
+    .eng-related__list a:focus-visible {
+      border-color: var(--eng-line-strong);
+      background: rgba(255, 255, 255, 0.06);
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .eng-related__list h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-related__list span {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      color: var(--eng-muted);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .eng-nav { flex-wrap: wrap; }
+      .eng-nav__links { width: 100%; overflow-x: auto; padding-bottom: 0.25rem; }
+      .eng-article { padding: 2rem 0 3rem; }
+      .eng-article__meta { gap: 0.75rem; }
+      .eng-author { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body class="eng-root">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="site-shell">
+    <header class="site-social" aria-label="Social links">
+      <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+        </svg>
+      </a>
+      <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+        </svg>
+      </a>
+    </header>
+
+    <nav class="eng-nav" aria-label="Engineering">
+      <div class="eng-nav__brand">
+        <a href="/" aria-label="Genefold home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </a>
+        <a href="/">Genefold</a>
+        <span>/</span>
+        <a href="/engineering">Engineering</a>
+      </div>
+      <ul class="eng-nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/engineering" aria-current="page">Blog</a></li>
+        <li><a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open source</a></li>
+        <li><a href="mailto:hello@genefold.ai?subject=Engineering%20inquiry">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+      <article class="eng-article">
+        <a class="eng-article__back" href="/engineering">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+          All engineering notes
+        </a>
+
+        <header>
+          <span class="eng-article__eyebrow">004 &mdash; First Principles</span>
+          <h1 class="eng-article__title">Genefold First Principles: The Curriculum Engine</h1>
+          <p class="eng-article__lede">
+            Once the pipes are fast enough, the bottleneck stops moving bytes and starts moving meaning. Last time we separated entropy from epiplexity; this time we build the engine that chases epiplexity online: measure what each data domain teaches, forecast its marginal return, steer the sampler, and do it all without starving the GPUs.
+          </p>
+          <div class="eng-article__meta">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Tommaso
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              24 Aug 2026
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              12 min read
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              First Principles
+            </span>
+          </div>
+        </header>
+
+        <div class="eng-article__body">
+          <h2>1. The bottleneck shift: from I/O throughput to gradient information density</h2>
+
+          <p>
+            There was an era when pre-training performance meant systems performance. Dataloaders starved accelerators; sharding, prefetching, zero-copy token streams, and fused kernels were the difference between a run that finished and one that didn't. Those problems are now largely solved &mdash; engineering commodity training stacks stream tokens at line rate and keep devices saturated.
+          </p>
+
+          <p>
+            That victory relocates the bottleneck rather than removing it. When hardware idles at zero, the binding constraint on capability-per-dollar becomes <strong>gradient information density</strong>: how much usable structural signal each parameter update absorbs. A batch of near-duplicate web pages and a batch of formally verified proofs both cost the same FLOPs. They do not buy the same learning.
+          </p>
+
+          <p>
+            Two facts sharpen this into an emergency rather than a preference:
+          </p>
+
+          <ul>
+            <li><strong>Modern pre-training still treats all tokens equally.</strong> The default recipe &mdash; scrape everything, shuffle uniformly, train once &mdash; assigns identical marginal value to noise, redundancy, and structure. It is static uniform shuffling over a commodity pile.</li>
+            <li><strong>The commodity itself has a ceiling.</strong> Villalobos et al. project that public human-generated text will be exhausted as a scaling resource somewhere between 2026 and 2032, with the median estimate landing in 2028 (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener noreferrer">Villalobos et al., 2024</a>). And simply re-reading the pile doesn't dodge the wall: Muennighoff et al. show repeated data retains full value for roughly four epochs, then decays toward zero return (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>).</li>
+          </ul>
+
+          <p>
+            When you cannot scale the dataset, you must scale what the dataset <em>teaches</em>. Compute efficiency has to come from <strong>data selection and curriculum design</strong> &mdash; deciding which tokens enter the next batch &mdash; rather than unconstrained dataset growth. That decision procedure needs a quantity to optimize. Which brings us back to information theory, and to why the classical version isn't good enough.
+          </p>
+
+          <h2>2. Beyond Shannon: information for compute-bounded learners</h2>
+
+          <p>
+            Shannon entropy measures the surprise of a source for an observer with unlimited computational power. Kolmogorov complexity measures the shortest program that reproduces a string &mdash; again, with no runtime budget. Both are the right tools for communication channels and randomness extraction. Both are quietly wrong for <em>learning</em>, because learners are compute-bounded observers.
+          </p>
+
+          <p>
+            The failure mode is precise: pseudo-random noise generated by a short program has tiny Kolmogorov complexity but is unlearnable within any realistic budget, while rich, compressible regularities &mdash; grammar, arithmetic, multi-step dependencies &mdash; may carry modest Shannon entropy yet dominate what a bounded learner can extract. Classical measures cannot distinguish &ldquo;unpredictable because random&rdquo; from &ldquo;unpredictable until you find the circuit.&rdquo;
+          </p>
+
+          <p>
+            As we argued in <a href="/engineering/003.html">003</a>, <strong>Epiplexity</strong> ($S_T$, <a href="https://arxiv.org/abs/2601.03220" target="_blank" rel="noopener noreferrer">Finzi et al., 2026</a>) names the missing decomposition: the structural information a time-bounded model can actually extract and store, separate from residual time-bounded entropy $H_T$. Models don't memorize tokens; they allocate parameter capacity to internalize <strong>reusable subprograms</strong> &mdash; copying mechanisms, counting routines, algorithmic circuits. $S_T$ counts that allocation. Noise contributes nothing to it, no matter how surprising.
+          </p>
+
+          <p>
+            What makes this operational rather than philosophical is a much older idea: the <strong>MDL prequential view</strong> (<a href="https://doi.org/10.1109/18.481776" target="_blank" rel="noopener noreferrer">Rissanen, 1996</a>; <a href="https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/" target="_blank" rel="noopener noreferrer">Gr&uuml;nwald, 2007</a>). Treat the learner as a sequential coder. Its cumulative codelength on unseen data, $\sum_i -\log_2 q(x_i \mid x_{&lt;i})$, <em>is</em> its running validation loss in different units. Learning progress is coding-progress: the <strong>prequential coding gap</strong> between a trained model and a trivial baseline measures exactly how much description work the model took over.
+          </p>
+
+          <p>
+            This reframes learning as a process, not a property:
+          </p>
+
+          <ul>
+            <li>Information content is <strong>observer-dependent</strong> &mdash; it depends on the compute available to the observer.</li>
+            <li>It is <strong>measurable online</strong>, from loss trajectories, with no labels and no ground truth about &ldquo;true structure.&rdquo;</li>
+            <li>It decomposes: the part of the gap attributable to <em>reusable</em> structure (as opposed to domain-specific fitting) is precisely the transferable component.</li>
+          </ul>
+
+          <p>
+            A training loop already computes the raw material &mdash; losses over time, per domain. The engineering question is what to build on top of that signal.
+          </p>
+
+          <h2>3. Dynamic curricula and cross-domain scaling laws</h2>
+
+          <p>
+            The operational layer we want is a controller: observe per-domain learning dynamics, forecast each domain's marginal return on more exposure, adjust the sampling mix accordingly.
+          </p>
+
+          <p>
+            The forecast is possible because per-domain loss trajectories follow predictable parametric laws. For domain $k$, fit
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$L_k(n) = \epsilon_k + \beta_k \, n^{-\alpha_k}$$
+          </p>
+
+          <p>
+            where $n$ is cumulative tokens seen and $\alpha_k, \beta_k, \epsilon_k$ capture decay steepness, scale, and irreducible floor. The derivative is the marginal value of the next token:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$\frac{\partial L_k}{\partial n} = -\alpha_k \beta_k \, n^{-\alpha_k - 1}, \qquad \frac{\partial \hat{S}}{\partial n_k} \propto -\frac{\partial L_k}{\partial n_k}$$
+          </p>
+
+          <p>
+            A scheduler that tracks these fits online can rank domains by $\partial \hat{S}/\partial n_k$ and spend the next window of batches where structure is being absorbed fastest. This is exactly the design of ADO, which fits per-domain laws during training and steers the mixture without proxy models (<a href="https://arxiv.org/abs/2410.11820" target="_blank" rel="noopener noreferrer">Jiang et al., 2024</a>); its ancestor DoReMi showed a 280M-parameter proxy could produce mixture weights that train an 8B model to baseline accuracy 2.6&times; faster (<a href="https://arxiv.org/abs/2305.10429" target="_blank" rel="noopener noreferrer">Xie et al., 2023</a>). EpiSelect extends the family by making the law <strong>cross-domain</strong>: a mixing vector $\gamma_{m,k}$ attributes each domain's improvement to exposures across all domains, which is what turns a ranking heuristic into a transfer map (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>).
+          </p>
+
+          <p>
+            Two properties of that cross-domain matrix matter enormously:
+          </p>
+
+          <ul>
+            <li><strong>Directional:</strong> code helps natural-language reasoning far more than the reverse. Exposure is not symmetric.</li>
+            <li><strong>Sparse:</strong> most pairs interact weakly; a handful of edges (code &rarr; reasoning, formal math &rarr; code) carry most of the transfer.</li>
+          </ul>
+
+          <p>
+            Targeted exposure to highly structured domains therefore acts as an accelerator for unrelated downstream tasks. Muennighoff et al. observed a clean instance of this: adding code data to a data-constrained run left natural-language perplexity intact while tasks like WebNLG and bAbI <em>jumped</em> &mdash; attributed to long-range state-tracking abilities learned from code (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>). Uniform shuffling buys none of this, because it spends its budget proportionally to dataset size, not to interaction strength.
+          </p>
+
+          <h2>4. Mechanistic foundations: induction heads and circuit formation</h2>
+
+          <p>
+            Why does structure transfer? Because transformers don't store training text &mdash; they compile it into <strong>circuits</strong>, and circuits are portable.
+          </p>
+
+          <p>
+            The canonical example is the induction head: a two-layer attention motif that finds previous occurrences of the current token and boosts the tokens that followed it. Its formation marks a sharp phase transition in in-context learning ability across scales (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">Olsson et al., 2022</a>). Edelman et al. give the cleanest controlled account: transformers trained to in-context-learn Markov chains pass through discrete phases &mdash; uniform predictions, then a suboptimal unigram circuit, then a rapid transition to a bigram-computing <strong>statistical induction head</strong> approaching Bayes-optimal prediction (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">Edelman et al., 2024</a>). Each phase is a distinct subnetwork, built by the data, recycled by later learning.
+          </p>
+
+          <p>
+            The data side of the story matters just as much. Zhang et al. trained GPT-2 models on elementary cellular automata spanning Wolfram's complexity classes and evaluated them downstream: models trained on trivially ordered rules learned trivial solutions and transferred poorly; models trained on maximally chaotic rules were effectively fitting noise and also transferred poorly; models trained on <strong>Class IV rules &mdash; complex but structured &mdash; performed best on reasoning and chess-move prediction</strong> (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">Zhang et al., 2024</a>). There is a sweet spot, and it is not &ldquo;more data,&rdquo; it is &ldquo;data at the edge of chaos.&rdquo;
+          </p>
+
+          <p>
+            Put together, this is the mechanistic justification for epiplexity-guided curricula:
+          </p>
+
+          <ul>
+            <li>Structured, multi-step dependencies <strong>force</strong> the formation of dedicated subnetworks &mdash; induction heads, counting routines, state-tracking loops.</li>
+            <li>These circuits are <strong>reusable</strong>: they get recruited by downstream zero-shot reasoning and fine-tuning, including on distributions the pre-training loss never measured.</li>
+            <li>In-distribution loss is blind to this inventory. Two checkpoints with identical validation loss can differ wildly in which circuits exist inside them &mdash; which is why a curriculum optimized purely on aggregate loss can plateau while one optimized on <em>where loss drops come from</em> does not.</li>
+          </ul>
+
+          <p>
+            High-$S_T$ domains are, almost by definition, the ones that make circuit formation unavoidable: they contain dependencies shallow statistics cannot absorb, so the only path to lower loss is building another mechanism.
+          </p>
+
+          <h2>5. Systems architecture: engineering the feedback seam</h2>
+
+          <p>
+            None of the above survives contact with production unless the control loop can be bolted onto a training engine without slowing it down. Our Rust pre-training stack (<code>nanogpt-rs</code>) implements this seam in three layers, and the constraints it enforces are the interesting part.
+          </p>
+
+          <h3>5.1 One trait, one seam</h3>
+
+          <p>
+            The autodiff engine knows nothing about curricula. Everything flows through a single observer interface:
+          </p>
+
+          <pre><code class="language-rust">// src/train.rs &mdash; the ONLY seam between the training loop and later phases.
+pub trait TrainObserver: Send {
+    fn on_step(
+        &amp;mut self,
+        step: u64,
+        domain_id: usize,
+        loss: f32,
+        tokens_delta: u64,
+        // Cumulative tokens seen per domain as of this step, length K.
+        domain_tokens: &amp;[u64],
+    );
+}</code></pre>
+
+          <p>
+            The dependency rule is absolute: <code>train.rs</code> imports no curriculum modules &mdash; grep the file, there are zero cross-imports. The observer is injected as <code>Box&lt;dyn TrainObserver&gt;</code>, so the engine ships with a <code>NoopObserver</code> and pays nothing when telemetry is off. Modularity here isn't aesthetic; it's what lets the numerical core stay frozen while the data-policy layer iterates weekly.
+          </p>
+
+          <h3>5.2 Non-blocking orchestration: the scaling-law sidecar</h3>
+
+          <p>
+            Fitting nonlinear least squares with L-BFGS-B belongs nowhere near the accelerator. The tracker accumulates per-domain <code>(tokens, loss)</code> observations in a fixed-size ring buffer and, every $\nu = 500$ steps, hands windows to a <strong>Python sidecar</strong> over one-JSON-object-per-line IPC:
+          </p>
+
+          <pre><code class="language-text">Rust trainer &mdash;stdin&rarr;  sidecar.py  &mdash;stdout&rarr; Rust trainer
+   &vert;                     L(n)=&epsilon;+&beta;&middot;n^(-&alpha;)              &vert;
+   &vert;  {&quot;domain_id&quot;:2,      L-BFGS-B, numpy/scipy       &vert;  {&quot;domain_id&quot;:2,
+   &vert;   &quot;history&quot;:[...],     SingleDomain |             &vert;   &quot;alpha&quot;:..,&quot;beta&quot;:..,
+   &vert;   &quot;phase&quot;:&quot;Cross&quot;&lt;--- CrossDomain &gamma;-mixing ---&gt; &vert;   &quot;gamma&quot;:[...],&quot;ok&quot;:true}
+</code></pre>
+
+          <p>
+            The contract is failure-tolerant by construction:
+          </p>
+
+          <ul>
+            <li>Malformed input or internal errors produce <code>{&quot;ok&quot;: false}</code> responses &mdash; the sidecar <strong>never exits</strong>, so the connection stays warm.</li>
+            <li>The Rust wrapper enforces a timeout by killing and respawning the child; every fallible path returns a typed <code>SidecarError</code> and <code>fit()</code> never panics.</li>
+            <li>Fits are gated before use: at least 20 observations, second half of the history strictly below the first, non-trivial variance and range. A domain failing five consecutive cycles is marked ineligible for the rest of the run with a forced-zero gradient &mdash; bad fits degrade to <em>no steering</em>, never to wrong steering.</li>
+          </ul>
+
+          <p>
+            Because the solver lives out-of-process, the GPU pipeline stays saturated: the fit cycle costs milliseconds of CPU time amortized over hundreds of steps.
+          </p>
+
+          <h3>5.3 From fits to weights &mdash; and back to the sampler</h3>
+
+          <p>
+            The fitted parameters become analytic marginal gradients, computed from the post-cycle snapshot so a fresh fit immediately influences its own weight:
+          </p>
+
+          <pre><code class="language-rust">// Analytic &part;&Shat;/&part;n_j under the fitted multi-domain law:
+//   &Sigma;_m &alpha;_m &beta;_m &gamma;_{m,j} (&Sigma;_k &gamma;_{m,k} n_k)^(-&alpha;_m - 1) &middot; t_total
+fn compute_marginal_grad(params, domain_tokens, j) -&gt; f64 { /* closed form */ }
+
+// score -&gt; stable softmax -&gt; momentum blend -&gt; exact floor projection.
+let new_w = project_floor(
+    &amp;blend(softmax(scores / tau), prev_weights, mu),
+    pi_min,
+);
+debug_assert!((new_w.iter().sum&lt;f32&gt;() - 1.0).abs() &lt; 1e-4);</code></pre>
+
+          <p>
+            Three details earn their place in production code:
+          </p>
+
+          <ul>
+            <li><strong>Momentum</strong> ($\mu$) on the weights prevents oscillation from noisy per-window fits.</li>
+            <li><strong>An exact simplex floor</strong> ($\pi_{min}$) via water-filling guarantees no domain is ever fully starved &mdash; clip-then-renormalize would silently break the floor, so the projection is exact and asserted.</li>
+            <li><strong>Phase discipline:</strong> the current release is observational &mdash; weights are written to <code>weights.jsonl</code> but sampling remains uniform, and the loop-closing path is a separate <code>WeightProvider</code> trait behind a mutex. You ship the measurement layer, validate its outputs offline, and only then let it drive the loader.</li>
+          </ul>
+
+          <p>
+            That last point generalizes into the validation principle: <strong>verify information-theoretic schedulers against controlled synthetic baselines before deploying at scale.</strong> Multi-domain mixtures with known ground-truth dynamics &mdash; one fast-decaying domain, one pure-noise domain, one redundant domain &mdash; turn the theory's predictions (noise domains get down-weighted, structured domains win share) into unit assertions. Only after the controller passes there does it earn a slot in a real run.
+          </p>
+
+          <pre style="text-align:center; margin: 1.5rem 0;"><code>┌──────────────┐   batches   ┌────────────────┐    Box&lt;dyn TrainObserver&gt;
+│ ShardedData  │────────────▶│  Training Loop │───────────────┐
+│ Loader       │             │  (autodiff +   │               ▼
+│ (weights ◀──┐│             │   kernels)     │      ┌─────────────────┐
+└─────────────┼┘             └────────────────┘      │ Epiplexity      │
+              │ WeightProvider                        │ Tracker         │
+              │  (Phase 3 seam)                       │ ring buffer +   │
+              └───────────────────────────────────────┤ epi_accum       │
+                                                      └───────┬─────────┘
+                                              ν-step fit cycle│JSONL IPC
+                                                              ▼
+                                                   ┌───────────────────┐
+                                                   │ sidecar.py        │
+                                                   │ scaling-law fits  │
+                                                   └───────────────────┘</code></pre>
+
+          <h2>6. Current literature to follow</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Paper</th>
+                <th scope="col">Contribution</th>
+                <th scope="col">Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Villalobos et al., 2024</td>
+                <td>The Data Wall &mdash; human-generated public text exhausted as a scaling resource between 2026&ndash;2032</td>
+                <td><a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener noreferrer">arXiv:2211.04325</a></td>
+              </tr>
+              <tr>
+                <td>Muennighoff et al., 2023</td>
+                <td>Data-constrained scaling laws; repetition value decays past ~4 epochs; code adds ~2&times; effective data</td>
+                <td><a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">arXiv:2305.16264</a></td>
+              </tr>
+              <tr>
+                <td>Finzi et al., 2026</td>
+                <td>Epiplexity ($S_T$) &mdash; information for computationally bounded observers</td>
+                <td><a href="https://arxiv.org/abs/2601.03220" target="_blank" rel="noopener noreferrer">arXiv:2601.03220</a></td>
+              </tr>
+              <tr>
+                <td>Su et al., 2026</td>
+                <td>EpiSelect/EpiGen &mdash; cross-domain scaling laws and epiplexity-guided selection for OOD generalization</td>
+                <td><a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">arXiv:2608.11746</a></td>
+              </tr>
+              <tr>
+                <td>Jiang et al., 2024</td>
+                <td>ADO &mdash; online per-domain scaling laws steer the data mixture with no proxy model</td>
+                <td><a href="https://arxiv.org/abs/2410.11820" target="_blank" rel="noopener noreferrer">arXiv:2410.11820</a></td>
+              </tr>
+              <tr>
+                <td>Xie et al., 2023</td>
+                <td>DoReMi &mdash; proxy-model mixture optimization reaches baseline 2.6&times; faster</td>
+                <td><a href="https://arxiv.org/abs/2305.10429" target="_blank" rel="noopener noreferrer">arXiv:2305.10429</a></td>
+              </tr>
+              <tr>
+                <td>Olsson et al., 2022</td>
+                <td>Induction heads &mdash; circuit-level account of the in-context learning phase transition</td>
+                <td><a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">Transformer Circuits</a></td>
+              </tr>
+              <tr>
+                <td>Edelman et al., 2024</td>
+                <td>Statistical induction heads &mdash; staged circuit formation on Markov chains</td>
+                <td><a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">arXiv:2402.11004</a></td>
+              </tr>
+              <tr>
+                <td>Zhang et al., 2024</td>
+                <td>Intelligence at the Edge of Chaos &mdash; downstream gains peak for structured-complex training data</td>
+                <td><a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">arXiv:2410.02536</a></td>
+              </tr>
+              <tr>
+                <td>Rissanen, 1996</td>
+                <td>Stochastic complexity &mdash; Fisher-information codelengths; the prequential foundation of MDL</td>
+                <td><a href="https://doi.org/10.1109/18.481776" target="_blank" rel="noopener noreferrer">IEEE DOI</a></td>
+              </tr>
+              <tr>
+                <td>Gr&uuml;nwald, 2007</td>
+                <td>The MDL Principle &mdash; prequential analysis as the bridge from compression to learning</td>
+                <td><a href="https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/" target="_blank" rel="noopener noreferrer">MIT Press</a></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>7. Closing idea</h2>
+
+          <p>
+            The arc of the series so far: retrieval infrastructure (001), uncertainty depletion (002), the epiplexity decomposition (003) &mdash; and now the engine that acts on it.
+          </p>
+
+          <p>
+            The cleanest way to state this post's thesis: <strong>once I/O is solved, pre-training becomes a control problem.</strong> The plant is the model; the sensors are per-domain loss trajectories; the reference signal is maximal structural information absorbed per FLOP; the actuators are sampling weights. Every piece of that loop exists today &mdash; parametric scaling laws for sensing, cross-domain gradients for planning, observer interfaces and sidecars for actuation.
+          </p>
+
+          <p>
+            Uniform shuffling is not a neutral default. It is a controller stuck at its initialization, spending compute where the data is plentiful instead of where the structure is dense. The engineering task is to close the loop.
+          </p>
+        </div>
+
+        <aside class="eng-author">
+          <span class="eng-author__avatar" aria-hidden="true"></span>
+          <div class="eng-author__copy">
+            <p class="eng-author__name">Tommaso</p>
+            <p class="eng-author__role">Genefold AI &middot; First Principles series</p>
+            <p class="eng-author__bio">
+              Writing about the foundations of information, structure, and intelligence that guide
+              Genefold's engineering choices.
+            </p>
+          </div>
+        </aside>
+
+        <nav class="eng-related" aria-label="Related posts">
+          <h2 class="eng-related__title">Related notes</h2>
+          <ul class="eng-related__list" role="list">
+            <li>
+              <a href="/engineering/003.html">
+                <h4>Genefold First Principles: From Entropy to Epiplexity</h4>
+                <span>003 &middot; First Principles &middot; 12 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/002.html">
+                <h4>Genefold First Principles: Depletion of Uncertainty</h4>
+                <span>002 &middot; First Principles &middot; 10 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/001.html">
+                <h4>Designing ArrowSpace and graph wiring</h4>
+                <span>001 &middot; Algorithms &middot; 12 min</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-contact-strip">
+        Building retrieval, monitoring, or evals for embedding-heavy systems?
+        <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">hello@genefold.ai</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+
+      <div class="site-footer__social" aria-label="Social links">
+        <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+        <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+        </a>
+      </div>
+
+      <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+      <p style="font-size:0.75rem; margin-top:0.4rem;">
+        <a href="/privacy.html" style="color: inherit; opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">Privacy Policy &amp; Terms</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#" id="cookie-settings-link" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Cookie settings</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      const yearEl = document.getElementById('footer-year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    })();
+  </script>
+</body>
+</html>
