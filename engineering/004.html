@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../style.css?v=20260604-3" />
   <script>
     MathJax = {
-      tex: { inlineMath: [['$','$'], ['\\(','\\ ')'], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
       svg: { fontCache: 'global' }
     };
   </script>
@@ -495,11 +495,11 @@
           <h2>1. The bottleneck shift: from I/O throughput to gradient information density</h2>
 
           <p>
-            There was an era when pre-training performance meant systems performance. Dataloaders starved accelerators; sharding, prefetching, zero-copy token streams, and fused kernels were the difference between a run that finished and one that didn't. Those problems are now largely solved &mdash; engineering commodity training stacks stream tokens at line rate and keep devices saturated.
+            There was an era when pre-training performance meant systems performance. Dataloaders starved accelerators; sharding, prefetching, zero-copy token streams, and fused kernels were the difference between a run that finished and one that didn't. Those problems are now largely solved &mdash; modern training stacks stream tokens at line rate and keep devices saturated.
           </p>
 
           <p>
-            That victory relocates the bottleneck rather than removing it. When hardware idles at zero, the binding constraint on capability-per-dollar becomes <strong>gradient information density</strong>: how much usable structural signal each parameter update absorbs. A batch of near-duplicate web pages and a batch of formally verified proofs both cost the same FLOPs. They do not buy the same learning.
+            That victory relocates the bottleneck rather than removing it. When hardware idles at zero, the binding constraint on capability-per-dollar becomes <strong>gradient information density</strong>: how much usable structural signal each parameter update absorbs. A batch of near-duplicate web pages and a batch of formally verified proofs both cost the same FLOPs, but they do not buy the same learning.
           </p>
 
           <p>
@@ -507,18 +507,18 @@
           </p>
 
           <ul>
-            <li><strong>Modern pre-training still treats all tokens equally.</strong> The default recipe &mdash; scrape everything, shuffle uniformly, train once &mdash; assigns identical marginal value to noise, redundancy, and structure. It is static uniform shuffling over a commodity pile.</li>
-            <li><strong>The commodity itself has a ceiling.</strong> Villalobos et al. project that public human-generated text will be exhausted as a scaling resource somewhere between 2026 and 2032, with the median estimate landing in 2028 (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener noreferrer">Villalobos et al., 2024</a>). And simply re-reading the pile doesn't dodge the wall: Muennighoff et al. show repeated data retains full value for roughly four epochs, then decays toward zero return (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>).</li>
+            <li><strong>Modern pre-training still treats all tokens equally.</strong> The default recipe &mdash; scrape everything, shuffle uniformly, train once &mdash; assigns identical marginal value to noise, redundancy, and structure.</li>
+            <li><strong>The commodity itself has a ceiling.</strong> Villalobos et al. project that public human-generated text will be exhausted as a scaling resource somewhere between 2026 and 2032, with the median estimate landing in 2028 (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener noreferrer">Villalobos et al., 2024</a>). Simply re-reading the pile doesn't dodge the wall: Muennighoff et al. show repeated data retains full value for roughly four epochs, then decays toward zero return (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>).</li>
           </ul>
 
           <p>
-            When you cannot scale the dataset, you must scale what the dataset <em>teaches</em>. Compute efficiency has to come from <strong>data selection and curriculum design</strong> &mdash; deciding which tokens enter the next batch &mdash; rather than unconstrained dataset growth. That decision procedure needs a quantity to optimize. Which brings us back to information theory, and to why the classical version isn't good enough.
+            When you cannot scale the dataset, you must scale what the dataset <em>teaches</em>. Compute efficiency has to come from <strong>data selection and curriculum design</strong> &mdash; deciding which tokens enter the next batch &mdash; rather than unconstrained dataset growth. That decision procedure needs a quantity to optimize, which brings us back to information theory and to why the classical version isn't good enough.
           </p>
 
           <h2>2. Beyond Shannon: information for compute-bounded learners</h2>
 
           <p>
-            Shannon entropy measures the surprise of a source for an observer with unlimited computational power. Kolmogorov complexity measures the shortest program that reproduces a string &mdash; again, with no runtime budget. Both are the right tools for communication channels and randomness extraction. Both are quietly wrong for <em>learning</em>, because learners are compute-bounded observers.
+            Shannon entropy measures the surprise of a source for an observer with unlimited computational power. Kolmogorov complexity measures the shortest program that reproduces a string, again with no runtime budget. Both are the right tools for communication channels and randomness extraction, but both are quietly wrong for <em>learning</em>, because learners are compute-bounded observers.
           </p>
 
           <p>
@@ -526,11 +526,11 @@
           </p>
 
           <p>
-            As we argued in <a href="/engineering/003.html">003</a>, <strong>Epiplexity</strong> ($S_T$, <a href="https://arxiv.org/abs/2601.03220" target="_blank" rel="noopener noreferrer">Finzi et al., 2026</a>) names the missing decomposition: the structural information a time-bounded model can actually extract and store, separate from residual time-bounded entropy $H_T$. Models don't memorize tokens; they allocate parameter capacity to internalize <strong>reusable subprograms</strong> &mdash; copying mechanisms, counting routines, algorithmic circuits. $S_T$ counts that allocation. Noise contributes nothing to it, no matter how surprising.
+            As we argued in <a href="/engineering/003.html">003</a>, <strong>Epiplexity</strong> (\(S_T\), <a href="https://arxiv.org/abs/2601.03220" target="_blank" rel="noopener noreferrer">Finzi et al., 2026</a>) names the missing decomposition: the structural information a time-bounded model can actually extract and store, separate from residual time-bounded entropy \(H_T\). Models don't memorize tokens; they allocate parameter capacity to internalize <strong>reusable subprograms</strong> &mdash; copying mechanisms, counting routines, algorithmic circuits. \(S_T\) counts that allocation, and noise contributes nothing to it no matter how surprising.
           </p>
 
           <p>
-            What makes this operational rather than philosophical is a much older idea: the <strong>MDL prequential view</strong> (<a href="https://doi.org/10.1109/18.481776" target="_blank" rel="noopener noreferrer">Rissanen, 1996</a>; <a href="https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/" target="_blank" rel="noopener noreferrer">Gr&uuml;nwald, 2007</a>). Treat the learner as a sequential coder. Its cumulative codelength on unseen data, $\sum_i -\log_2 q(x_i \mid x_{&lt;i})$, <em>is</em> its running validation loss in different units. Learning progress is coding-progress: the <strong>prequential coding gap</strong> between a trained model and a trivial baseline measures exactly how much description work the model took over.
+            What makes this operational rather than philosophical is a much older idea: the <strong>MDL prequential view</strong> (<a href="https://doi.org/10.1109/18.481776" target="_blank" rel="noopener noreferrer">Rissanen, 1996</a>; <a href="https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/" target="_blank" rel="noopener noreferrer">Gr&uuml;nwald, 2007</a>). Treat the learner as a sequential coder. Its cumulative codelength on unseen data, \(\sum_i -\log_2 q(x_i \mid x_{<i})\), <em>is</em> its running validation loss in different units. Learning progress is coding progress: the <strong>prequential coding gap</strong> between a trained model and a trivial baseline measures exactly how much description work the model has taken over.
           </p>
 
           <p>
@@ -540,7 +540,7 @@
           <ul>
             <li>Information content is <strong>observer-dependent</strong> &mdash; it depends on the compute available to the observer.</li>
             <li>It is <strong>measurable online</strong>, from loss trajectories, with no labels and no ground truth about &ldquo;true structure.&rdquo;</li>
-            <li>It decomposes: the part of the gap attributable to <em>reusable</em> structure (as opposed to domain-specific fitting) is precisely the transferable component.</li>
+            <li>It decomposes: the part of the gap attributable to <em>reusable</em> structure, as opposed to domain-specific fitting, is precisely the transferable component.</li>
           </ul>
 
           <p>
@@ -550,11 +550,11 @@
           <h2>3. Dynamic curricula and cross-domain scaling laws</h2>
 
           <p>
-            The operational layer we want is a controller: observe per-domain learning dynamics, forecast each domain's marginal return on more exposure, adjust the sampling mix accordingly.
+            The operational layer we want is a controller: observe per-domain learning dynamics, forecast each domain's marginal return on more exposure, and adjust the sampling mix accordingly.
           </p>
 
           <p>
-            The forecast is possible because per-domain loss trajectories follow predictable parametric laws. For domain $k$, fit
+            The forecast is possible because per-domain loss trajectories follow predictable parametric laws. For domain \(k\), fit
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
@@ -562,7 +562,7 @@
           </p>
 
           <p>
-            where $n$ is cumulative tokens seen and $\alpha_k, \beta_k, \epsilon_k$ capture decay steepness, scale, and irreducible floor. The derivative is the marginal value of the next token:
+            where \(n\) is cumulative tokens seen and \(\alpha_k, \beta_k, \epsilon_k\) capture decay steepness, scale, and irreducible floor. The derivative gives the marginal value of the next token:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
@@ -570,7 +570,7 @@
           </p>
 
           <p>
-            A scheduler that tracks these fits online can rank domains by $\partial \hat{S}/\partial n_k$ and spend the next window of batches where structure is being absorbed fastest. This is exactly the design of ADO, which fits per-domain laws during training and steers the mixture without proxy models (<a href="https://arxiv.org/abs/2410.11820" target="_blank" rel="noopener noreferrer">Jiang et al., 2024</a>); its ancestor DoReMi showed a 280M-parameter proxy could produce mixture weights that train an 8B model to baseline accuracy 2.6&times; faster (<a href="https://arxiv.org/abs/2305.10429" target="_blank" rel="noopener noreferrer">Xie et al., 2023</a>). EpiSelect extends the family by making the law <strong>cross-domain</strong>: a mixing vector $\gamma_{m,k}$ attributes each domain's improvement to exposures across all domains, which is what turns a ranking heuristic into a transfer map (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>).
+            A scheduler that tracks these fits online can rank domains by \(\partial \hat{S}/\partial n_k\) and spend the next window of batches where structure is being absorbed fastest. This is the design of ADO, which fits per-domain laws during training and steers the mixture without proxy models (<a href="https://arxiv.org/abs/2410.11820" target="_blank" rel="noopener noreferrer">Jiang et al., 2024</a>); its predecessor DoReMi showed a 280M-parameter proxy could produce mixture weights that train an 8B model to baseline accuracy 2.6&times; faster (<a href="https://arxiv.org/abs/2305.10429" target="_blank" rel="noopener noreferrer">Xie et al., 2023</a>). EpiSelect extends the family by making the law <strong>cross-domain</strong>: a mixing vector \(\gamma_{m,k}\) attributes each domain's improvement to exposures across all domains, turning a ranking heuristic into a transfer map (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>).
           </p>
 
           <p>
@@ -583,7 +583,7 @@
           </ul>
 
           <p>
-            Targeted exposure to highly structured domains therefore acts as an accelerator for unrelated downstream tasks. Muennighoff et al. observed a clean instance of this: adding code data to a data-constrained run left natural-language perplexity intact while tasks like WebNLG and bAbI <em>jumped</em> &mdash; attributed to long-range state-tracking abilities learned from code (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>). Uniform shuffling buys none of this, because it spends its budget proportionally to dataset size, not to interaction strength.
+            Targeted exposure to highly structured domains therefore acts as an accelerator for unrelated downstream tasks. Muennighoff et al. observed a clean instance: adding code data to a data-constrained run left natural-language perplexity intact while tasks like WebNLG and bAbI <em>jumped</em> &mdash; attributed to long-range state-tracking abilities learned from code (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>). Uniform shuffling buys none of this, because it spends its budget proportionally to dataset size rather than to interaction strength.
           </p>
 
           <h2>4. Mechanistic foundations: induction heads and circuit formation</h2>
@@ -593,25 +593,25 @@
           </p>
 
           <p>
-            The canonical example is the induction head: a two-layer attention motif that finds previous occurrences of the current token and boosts the tokens that followed it. Its formation marks a sharp phase transition in in-context learning ability across scales (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">Olsson et al., 2022</a>). Edelman et al. give the cleanest controlled account: transformers trained to in-context-learn Markov chains pass through discrete phases &mdash; uniform predictions, then a suboptimal unigram circuit, then a rapid transition to a bigram-computing <strong>statistical induction head</strong> approaching Bayes-optimal prediction (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">Edelman et al., 2024</a>). Each phase is a distinct subnetwork, built by the data, recycled by later learning.
+            The canonical example is the induction head: a two-layer attention motif that finds previous occurrences of the current token and boosts the tokens that followed it. Its formation marks a sharp phase transition in in-context learning ability across scales (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">Olsson et al., 2022</a>). Edelman et al. give the cleanest controlled account: transformers trained to in-context-learn Markov chains pass through discrete phases &mdash; uniform predictions, then a suboptimal unigram circuit, then a rapid transition to a bigram-computing <strong>statistical induction head</strong> approaching Bayes-optimal prediction (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">Edelman et al., 2024</a>). Each phase is a distinct subnetwork, built by the data and recycled by later learning.
           </p>
 
           <p>
-            The data side of the story matters just as much. Zhang et al. trained GPT-2 models on elementary cellular automata spanning Wolfram's complexity classes and evaluated them downstream: models trained on trivially ordered rules learned trivial solutions and transferred poorly; models trained on maximally chaotic rules were effectively fitting noise and also transferred poorly; models trained on <strong>Class IV rules &mdash; complex but structured &mdash; performed best on reasoning and chess-move prediction</strong> (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">Zhang et al., 2024</a>). There is a sweet spot, and it is not &ldquo;more data,&rdquo; it is &ldquo;data at the edge of chaos.&rdquo;
+            The data side of the story matters just as much. Zhang et al. trained GPT-2 models on elementary cellular automata spanning Wolfram's complexity classes and evaluated them downstream: models trained on trivially ordered rules learned trivial solutions and transferred poorly; models trained on maximally chaotic rules were effectively fitting noise and also transferred poorly; models trained on <strong>Class IV rules &mdash; complex but structured &mdash; performed best on reasoning and chess-move prediction</strong> (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">Zhang et al., 2024</a>). There is a sweet spot, and it is not &ldquo;more data&rdquo; but &ldquo;data at the edge of chaos.&rdquo;
           </p>
 
           <p>
-            Put together, this is the mechanistic justification for epiplexity-guided curricula:
+            This is the mechanistic justification for epiplexity-guided curricula:
           </p>
 
           <ul>
             <li>Structured, multi-step dependencies <strong>force</strong> the formation of dedicated subnetworks &mdash; induction heads, counting routines, state-tracking loops.</li>
             <li>These circuits are <strong>reusable</strong>: they get recruited by downstream zero-shot reasoning and fine-tuning, including on distributions the pre-training loss never measured.</li>
-            <li>In-distribution loss is blind to this inventory. Two checkpoints with identical validation loss can differ wildly in which circuits exist inside them &mdash; which is why a curriculum optimized purely on aggregate loss can plateau while one optimized on <em>where loss drops come from</em> does not.</li>
+            <li>In-distribution loss is blind to this inventory. Two checkpoints with identical validation loss can differ widely in which circuits exist inside them &mdash; which is why a curriculum optimized purely on aggregate loss can plateau while one optimized on <em>where loss drops come from</em> does not.</li>
           </ul>
 
           <p>
-            High-$S_T$ domains are, almost by definition, the ones that make circuit formation unavoidable: they contain dependencies shallow statistics cannot absorb, so the only path to lower loss is building another mechanism.
+            High-\(S_T\) domains are, almost by definition, the ones that make circuit formation unavoidable: they contain dependencies shallow statistics cannot absorb, so the only path to lower loss is building another mechanism.
           </p>
 
           <h2>5. Systems architecture: engineering the feedback seam</h2>
@@ -640,13 +640,13 @@ pub trait TrainObserver: Send {
 }</code></pre>
 
           <p>
-            The dependency rule is absolute: <code>train.rs</code> imports no curriculum modules &mdash; grep the file, there are zero cross-imports. The observer is injected as <code>Box&lt;dyn TrainObserver&gt;</code>, so the engine ships with a <code>NoopObserver</code> and pays nothing when telemetry is off. Modularity here isn't aesthetic; it's what lets the numerical core stay frozen while the data-policy layer iterates weekly.
+            The dependency rule is absolute: <code>train.rs</code> imports no curriculum modules. The observer is injected as <code>Box&lt;dyn TrainObserver&gt;</code>, so the engine ships with a <code>NoopObserver</code> and pays nothing when telemetry is off. This modularity is what lets the numerical core stay frozen while the data-policy layer iterates weekly.
           </p>
 
           <h3>5.2 Non-blocking orchestration: the scaling-law sidecar</h3>
 
           <p>
-            Fitting nonlinear least squares with L-BFGS-B belongs nowhere near the accelerator. The tracker accumulates per-domain <code>(tokens, loss)</code> observations in a fixed-size ring buffer and, every $\nu = 500$ steps, hands windows to a <strong>Python sidecar</strong> over one-JSON-object-per-line IPC:
+            Fitting nonlinear least squares with L-BFGS-B belongs nowhere near the accelerator. The tracker accumulates per-domain <code>(tokens, loss)</code> observations in a fixed-size ring buffer and, every \(\nu = 500\) steps, hands windows to a <strong>Python sidecar</strong> over one-JSON-object-per-line IPC:
           </p>
 
           <pre><code class="language-text">Rust trainer &mdash;stdin&rarr;  sidecar.py  &mdash;stdout&rarr; Rust trainer
@@ -692,9 +692,9 @@ debug_assert!((new_w.iter().sum&lt;f32&gt;() - 1.0).abs() &lt; 1e-4);</code></pr
           </p>
 
           <ul>
-            <li><strong>Momentum</strong> ($\mu$) on the weights prevents oscillation from noisy per-window fits.</li>
-            <li><strong>An exact simplex floor</strong> ($\pi_{min}$) via water-filling guarantees no domain is ever fully starved &mdash; clip-then-renormalize would silently break the floor, so the projection is exact and asserted.</li>
-            <li><strong>Phase discipline:</strong> the current release is observational &mdash; weights are written to <code>weights.jsonl</code> but sampling remains uniform, and the loop-closing path is a separate <code>WeightProvider</code> trait behind a mutex. You ship the measurement layer, validate its outputs offline, and only then let it drive the loader.</li>
+            <li><strong>Momentum</strong> (\(\mu\)) on the weights prevents oscillation from noisy per-window fits.</li>
+            <li><strong>An exact simplex floor</strong> (\(\pi_{min}\)) via water-filling guarantees no domain is ever fully starved &mdash; clip-then-renormalize would silently break the floor, so the projection is exact and asserted.</li>
+            <li><strong>Phase discipline:</strong> the current release is observational &mdash; weights are written to <code>weights.jsonl</code> but sampling remains uniform, and the loop-closing path is a separate <code>WeightProvider</code> trait behind a mutex. Ship the measurement layer, validate its outputs offline, and only then let it drive the loader.</li>
           </ul>
 
           <p>
@@ -740,7 +740,7 @@ debug_assert!((new_w.iter().sum&lt;f32&gt;() - 1.0).abs() &lt; 1e-4);</code></pr
               </tr>
               <tr>
                 <td>Finzi et al., 2026</td>
-                <td>Epiplexity ($S_T$) &mdash; information for computationally bounded observers</td>
+                <td>Epiplexity (\(S_T\)) &mdash; information for computationally bounded observers</td>
                 <td><a href="https://arxiv.org/abs/2601.03220" target="_blank" rel="noopener noreferrer">arXiv:2601.03220</a></td>
               </tr>
               <tr>
