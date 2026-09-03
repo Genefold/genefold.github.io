@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genefold First Principles: The Synthetic Feedback Loop — Self-Play via Epiplexity — Genefold Engineering</title>
+  <meta name="description" content="Selection algorithms redistribute a fixed resource they cannot overcome. The only path past the Data Wall is generating data — but naive synthesis collapses. The way out is an intrinsic reward: the epiplexity gradient, loss reduction on an evaluation buffer, measured by the learner itself." />
+  <meta name="author" content="Tommaso" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$','$'], ['\\(','\\ ')'], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <style>
+    /* ── Engineering blog tokens & overrides ─────────────────── */
+    .eng-root {
+      --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --eng-line: rgba(156, 181, 255, 0.12);
+      --eng-line-strong: rgba(156, 181, 255, 0.28);
+      --eng-muted: #8a9cc4;
+      --eng-max-width: 720px;
+    }
+
+    .eng-root .site-shell { padding-bottom: 2rem; }
+
+    /* ── Engineering nav ─────────────────────────────────────── */
+    .eng-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      margin: 0 -1rem;
+      border-bottom: 1px solid var(--eng-line);
+      background: rgba(10, 16, 32, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .eng-nav__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .eng-nav__brand a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .eng-nav__brand a:hover { color: var(--primary); }
+
+    .eng-nav__brand svg { color: var(--accent); }
+
+    .eng-nav__brand span {
+      opacity: 0.55;
+      font-weight: 500;
+      margin: 0 0.35rem;
+    }
+
+    .eng-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .eng-nav__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--eng-muted);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .eng-nav__links a:hover,
+    .eng-nav__links a[aria-current="page"] {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ── Article header ──────────────────────────────────────── */
+    .eng-article {
+      max-width: var(--eng-max-width);
+      margin: 0 auto;
+      padding: 3rem 0 4rem;
+    }
+
+    .eng-article__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--eng-muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+
+    .eng-article__back:hover { color: var(--primary); }
+
+    .eng-article__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--primary);
+      border: 1px solid rgba(104, 240, 211, 0.2);
+      background: rgba(104, 240, 211, 0.08);
+      border-radius: 999px;
+      padding: 0.25rem 0.7rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .eng-article__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__lede {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+      margin: 0 0 1.5rem;
+      max-width: 60ch;
+    }
+
+    .eng-article__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--eng-line);
+      border-bottom: 1px solid var(--eng-line);
+      font-family: var(--eng-mono);
+      font-size: 0.78rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── Article body ────────────────────────────────────────── */
+    .eng-article__body { padding-top: 2.5rem; }
+
+    .eng-article__body h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .eng-article__body h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+
+    .eng-article__body p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--eng-muted);
+      margin: 0 0 1.25rem;
+    }
+
+    .eng-article__body p strong { color: var(--text); font-weight: 600; }
+    .eng-article__body em { color: var(--secondary); font-style: italic; }
+
+    .eng-article__body a {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+    .eng-article__body a:hover { color: var(--text); }
+
+    .eng-article__body ul,
+    .eng-article__body ol {
+      margin: 0 0 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body li {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 0.5rem;
+    }
+    .eng-article__body li::marker { color: var(--primary); }
+
+    .eng-article__body code {
+      font-family: var(--eng-mono);
+      font-size: 0.9em;
+      padding: 0.15rem 0.35rem;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
+
+    .eng-article__body pre {
+      padding: 1.25rem;
+      border-radius: var(--radius-s);
+      border: 1px solid var(--eng-line);
+      background: rgba(0, 0, 0, 0.28);
+      overflow-x: auto;
+      margin: 0 0 1.5rem;
+    }
+
+    .eng-article__body pre code {
+      display: block;
+      padding: 0;
+      background: transparent;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body pre.mermaid {
+      display: flex;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .eng-article__body blockquote {
+      margin: 0 0 1.5rem;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: rgba(255, 122, 143, 0.06);
+    }
+
+    .eng-article__body blockquote p {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .eng-article__body hr {
+      border: none;
+      border-top: 1px solid var(--eng-line);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Tables (literature) ─────────────────────────────────── */
+    .eng-article__body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 1.5rem;
+      font-size: 0.92rem;
+    }
+
+    .eng-article__body th,
+    .eng-article__body td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--eng-line);
+      line-height: 1.55;
+      color: var(--eng-muted);
+    }
+
+    .eng-article__body th {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .eng-article__body table code { white-space: nowrap; }
+
+    /* ── Author bio ──────────────────────────────────────────── */
+    .eng-author {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-top: 3rem;
+      padding: 1.25rem;
+      border: 1px solid var(--eng-line);
+      border-radius: var(--radius-m);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    }
+
+    .eng-author__avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--eng-line-strong);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+
+    .eng-author__copy { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .eng-author__name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-author__role {
+      font-family: var(--eng-mono);
+      font-size: 0.75rem;
+      color: var(--eng-muted);
+      margin: 0;
+    }
+
+    .eng-author__bio {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--eng-muted);
+      margin: 0.4rem 0 0;
+      max-width: 55ch;
+    }
+
+    /* ── Related posts ───────────────────────────────────────── */
+    .eng-related {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--eng-line);
+    }
+
+    .eng-related__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 1rem;
+    }
+
+    .eng-related__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .eng-related__list a {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--eng-line);
+      border-radius: 12px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .eng-related__list a:hover,
+    .eng-related__list a:focus-visible {
+      border-color: var(--eng-line-strong);
+      background: rgba(255, 255, 255, 0.06);
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .eng-related__list h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .eng-related__list span {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      color: var(--eng-muted);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .eng-nav { flex-wrap: wrap; }
+      .eng-nav__links { width: 100%; overflow-x: auto; padding-bottom: 0.25rem; }
+      .eng-article { padding: 2rem 0 3rem; }
+      .eng-article__meta { gap: 0.75rem; }
+      .eng-author { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body class="eng-root">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="site-shell">
+    <header class="site-social" aria-label="Social links">
+      <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+        </svg>
+      </a>
+      <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+        </svg>
+      </a>
+    </header>
+
+    <nav class="eng-nav" aria-label="Engineering">
+      <div class="eng-nav__brand">
+        <a href="/" aria-label="Genefold home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </a>
+        <a href="/">Genefold</a>
+        <span>/</span>
+        <a href="/engineering">Engineering</a>
+      </div>
+      <ul class="eng-nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/engineering" aria-current="page">Blog</a></li>
+        <li><a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open source</a></li>
+        <li><a href="mailto:hello@genefold.ai?subject=Engineering%20inquiry">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main id="main">
+      <article class="eng-article">
+        <a class="eng-article__back" href="/engineering">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+          All engineering notes
+        </a>
+
+        <header>
+          <span class="eng-article__eyebrow">005 &mdash; First Principles</span>
+          <h1 class="eng-article__title">Genefold First Principles: The Synthetic Feedback Loop &mdash; Self-Play via Epiplexity</h1>
+          <p class="eng-article__lede">
+            Selection algorithms (EpiSelect, ADO, DoReMi) redistribute a fixed resource they cannot overcome token depletion. The Data Wall forces a shift from <em>choosing</em> data to <em>generating</em> it. But naive synthesis collapses: pure noise yields zero learning signal, trivialities saturate instantly, and without external compilers there is no ground truth to anchor the loop. The way out is an intrinsic, observer-dependent reward: the <strong>epiplexity gradient</strong> &mdash; loss reduction on an evaluation buffer, measured by the learner itself.
+          </p>
+          <div class="eng-article__meta">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Tommaso
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              27 Aug 2026
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              12 min read
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              First Principles
+            </span>
+          </div>
+        </header>
+
+        <div class="eng-article__body">
+          <h2>1. The Ceiling of Data Selection and the Failure Mode of Naive Synthesis</h2>
+
+          <p>
+            Pre-training has run on a simple premise: scrape trillions of tokens, shuffle uniformly, scale compute. That era is ending. Villalobos et al. project public human text exhausted between 2026&ndash;2032 (median 2028) (<a href="https://arxiv.org/abs/2211.04325" target="_blank" rel="noopener noreferrer">Villalobos et al., 2024</a>). Re-reading buys roughly four epochs before returns decay to zero (<a href="https://arxiv.org/abs/2305.16264" target="_blank" rel="noopener noreferrer">Muennighoff et al., 2023</a>). Selection methods &mdash; ADO (<a href="https://arxiv.org/abs/2410.11820" target="_blank" rel="noopener noreferrer">Jiang et al., 2024</a>), DoReMi (<a href="https://arxiv.org/abs/2305.10429" target="_blank" rel="noopener noreferrer">Xie et al., 2023</a>), EpiSelect (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>) &mdash; help choose <em>which</em> existing tokens see the next batch. They are powerful but bounded: they can only redistribute a finite pool.
+          </p>
+
+          <p>
+            The natural next step is to generate new data. But recursive generation without verification collapses. Gerstgrasser et al. (<a href="https://arxiv.org/abs/2404.01413" target="_blank" rel="noopener noreferrer">2024</a>) show that models trained on their own outputs suffer <strong>distribution tail erosion</strong>: rare but structurally critical patterns vanish, diversity collapses, and the model converges to a degenerate mode. AlphaZero avoids this via an external rules engine (chess/go); SPIRAL uses a code interpreter. Natural language has no compiler &mdash; no executable ground truth. The reward must come from <em>within</em> the learning process.
+          </p>
+
+          <pre><code class="language-python"># Naive recursive generation: what goes wrong
+def naive_self_generate(model, steps, prompt):
+    """Generate -&gt; add to training -&gt; repeat. No verification."""
+    for step in range(steps):
+        synthetic = model.generate(prompt, max_new_tokens=512)
+        model.train_on(synthetic)  # No reward signal, no quality filter
+        prompt = synthetic  # Drift accumulates
+    return model
+
+# Failure modes observed empirically:
+# 1. Mode collapse: output diversity drops exponentially
+# 2. Tail erosion: rare but critical patterns (multi-step reasoning, 
+#    formal syntax, algorithmic structure) disappear first
+# 3. Reward hacking: model learns to produce "easy" tokens that 
+#    lower loss without adding structure</code></pre>
+
+          <p>
+            The fix is not a bigger generator. It is a dual-agent loop where the learner's own loss reduction on an evaluation buffer serves directly as the generator's reward signal.
+          </p>
+
+          <h2>2. Theoretical Formulation &mdash; Reward as the Epiplexity Gradient</h2>
+
+          <p>
+            EpiGen formalizes this as a coupled two-agent system (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>):
+          </p>
+
+          <ul>
+            <li><strong>Generator</strong> $P_{\theta^g}$: produces candidate synthetic token batches $\mathcal{X}_t$</li>
+            <li><strong>Learner</strong> $P_{\theta}$: evaluates pre-update loss on reference buffer $\mathcal{B}$, executes $K$ gradient steps on $\mathcal{X}_t$, and re-evaluates post-update loss on $\mathcal{B}$</li>
+          </ul>
+
+          <p>
+            The reward at step $t$ is the <strong>prequential loss reduction</strong> measured directly by the learner over the evaluation buffer:
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$r_t = \Delta \hat{S}(t) = L^{\text{pre}}_t(\mathcal{B}) - L^{\text{post}}_t(\mathcal{B}) = \frac{1}{|\mathcal{B}|} \sum_{x \in \mathcal{B}} \left( \mathcal{L}(\theta_{t-1}, x) - \mathcal{L}(\theta_t, x) \right)$$
+          </p>
+
+          <p>
+            This is not a proxy &mdash; it is the epiplexity gradient. The prequential interpretation (Rissanen 1996; Gr&uuml;nwald 2007) makes this exact: the learner acts as a sequential coder, and its cumulative codelength $\sum -\log q(x_i|x_{&lt;i})$ equals validation loss in different units. Learning <em>is</em> compression progress.
+          </p>
+
+          <p>Why this reward avoids collapse:</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Input type</th>
+                <th scope="col">$L^{\text{pre}}$</th>
+                <th scope="col">$L^{\text{post}}$</th>
+                <th scope="col">$r_t = \Delta \hat{S}$</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pure noise</td>
+                <td>High</td>
+                <td>High (no learning)</td>
+                <td>$\approx 0$</td>
+              </tr>
+              <tr>
+                <td>Trivial redundancy</td>
+                <td>Low</td>
+                <td>Low (already known)</td>
+                <td>$\approx 0$</td>
+              </tr>
+              <tr>
+                <td><strong>Structured, learnable</strong></td>
+                <td>High</td>
+                <td><strong>Lower</strong></td>
+                <td><strong>&gt; 0</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The generator only earns reward for data that <em>teaches the learner something new and reusable</em>. This is the epiplexity gradient: structural information extractable per compute cycle.
+          </p>
+
+          <pre><code class="language-python">import copy
+import torch
+import torch.nn as nn
+
+class EpiGen(nn.Module):
+    """
+    Policy gradient over synthetic data generator.
+    Reward = learner validation loss reduction on evaluation buffer B.
+    """
+    def __init__(self, generator, learner, buffer, k_steps=10, ema_decay=0.99):
+        super().__init__()
+        self.generator = generator      # P_{\theta^g} — trainable policy
+        self.learner = learner          # P_{\theta} — updated online
+        self.buffer = buffer            # Reference evaluation buffer B
+        self.k_steps = k_steps          # Learner gradient steps per generator step
+        self.ema_baseline = 0.0
+        self.ema_decay = ema_decay
+        
+    def compute_reward(self, synthetic_batch):
+        """r_t = L_pre(B) - L_post(B) after K learner steps on synthetic_batch."""
+        # 1. Pre-update evaluation of the learner on the buffer
+        with torch.no_grad():
+            l_pre = self.learner.evaluate(self.buffer)
+        
+        # 2. Simulate/execute K gradient steps on detached synthetic batch
+        learner_sim = self._clone_learner()
+        for _ in range(self.k_steps):
+            learner_sim.train_step(synthetic_batch.detach())
+        
+        # 3. Post-update evaluation of the updated learner on the same buffer
+        with torch.no_grad():
+            l_post = learner_sim.evaluate(self.buffer)
+        
+        reward = l_pre - l_post  # Positive reward = learner improved on the buffer
+        return reward, learner_sim
+    
+    def forward(self, batch_size):
+        # Generate synthetic batch with log-probabilities
+        synthetic_batch, log_probs = self.generator.generate_with_logprobs(batch_size)
+        
+        # Compute epiplexity-gradient reward
+        reward, updated_learner = self.compute_reward(synthetic_batch)
+        
+        # Advance true learner state
+        self.learner.load_state_dict(updated_learner.state_dict())
+        
+        # EMA baseline for variance reduction
+        self.ema_baseline = self.ema_decay * self.ema_baseline + (1 - self.ema_decay) * reward
+        advantage = reward - self.ema_baseline
+        
+        # REINFORCE loss: maximize expected advantage
+        pg_loss = -(advantage * log_probs).mean()
+        
+        return pg_loss, {"reward": reward, "advantage": advantage}
+    
+    def _clone_learner(self):
+        """Fast learner clone for step simulation."""
+        clone = copy.deepcopy(self.learner)
+        clone.train()
+        return clone</code></pre>
+
+          <p>
+            The policy gradient uses an EMA baseline for variance reduction &mdash; standard REINFORCE with a moving-average control variate. No external critic, no reward model to collapse.
+          </p>
+
+          <h2>3. Systems Architecture &mdash; The Replay Buffer and Tensor Lifecycle</h2>
+
+          <p>
+            The evaluation buffer $\mathcal{B}$ is the linchpin. It serves two roles simultaneously:
+          </p>
+
+          <ul>
+            <li><strong>Reference probe</strong>: measures the learner's current capability (pre-update loss)</li>
+            <li><strong>Transfer anchor</strong>: prevents mode collapse by mixing real data</li>
+          </ul>
+
+          <pre><code class="language-rust">// src/epigen/buffer.rs — the evaluation buffer lifecycle
+use burn::tensor::Tensor;
+use burn::backend::Autodiff;
+use std::sync::Arc;
+
+pub struct EvaluationBuffer&lt;B: Autodiff&gt; {
+    /// Fixed probe set — never updated during training
+    probe_tokens: Tensor&lt;B, 2, Int&gt;,
+    probe_labels: Tensor&lt;B, 2, Int&gt;,
+    
+    /// Real-data anchor slices (25% OpenWebText)
+    anchor_tokens: Tensor&lt;B, 2, Int&gt;,
+    anchor_labels: Tensor&lt;B, 2, Int&gt;,
+    
+    /// Metadata for stratified sampling
+    domain_ids: Vec&lt;usize&gt;,
+    strata_bounds: Vec&lt;usize&gt;,
+}
+
+impl&lt;B: Autodiff&gt; EvaluationBuffer&lt;B&gt; {
+    pub fn new(
+        probe_data: &amp;[TokenizedSequence],
+        anchor_ratio: f32,  // 0.25 default
+        device: &amp;B::Device,
+    ) -&gt; Self {
+        // Probe: diverse held-out domains (reasoning, code, math, etc.)
+        // Anchor: fixed OpenWebText slices, never regenerated
+        let (probe_tokens, probe_labels) = Self::pack_probe(probe_data, device);
+        let (anchor_tokens, anchor_labels) = Self::pack_anchor(anchor_ratio, device);
+        
+        Self {
+            probe_tokens,
+            probe_labels,
+            anchor_tokens,
+            anchor_labels,
+            domain_ids: Self::compute_domains(probe_data),
+            strata_bounds: Self::compute_strata(probe_data),
+        }
+    }
+    
+    /// Combined buffer for validation: probe + anchor
+    pub fn validation_batch(&amp;self) -&gt; (Tensor&lt;B, 2, Int&gt;, Tensor&lt;B, 2, Int&gt;) {
+        let tokens = Tensor::cat(vec![self.probe_tokens.clone(), self.anchor_tokens.clone()], 0);
+        let labels = Tensor::cat(vec![self.probe_labels.clone(), self.anchor_labels.clone()], 0);
+        (tokens, labels)
+    }
+    
+    /// Asynchronous non-blocking sampling for generator training
+    pub async fn sample_async(&amp;self, batch_size: usize) -&gt; BufferBatch&lt;B&gt; {
+        // Stratified sampling across domains to maintain coverage
+        let indices = self.stratified_sample(batch_size).await;
+        BufferBatch {
+            tokens: self.probe_tokens.index_select(0, indices.clone()),
+            labels: self.probe_labels.index_select(0, indices),
+            domain_ids: self.domain_ids[indices].to_vec(),
+        }
+    }
+}</code></pre>
+
+          <p><strong>Memory and systems constraints:</strong></p>
+
+          <ul>
+            <li>Buffer size: typically 4K&ndash;16K tokens (small enough for fast validation, large enough for signal)</li>
+            <li>Validation runs every $N$ generator steps (e.g., $N=10$) &mdash; amortized cost</li>
+            <li>Gradient checkpointing on the $K$-step learner simulation: only final loss retained, intermediates recomputed</li>
+            <li>Non-blocking IPC: generator runs on GPU; validation buffer evaluation runs on CPU sidecar (Python) via JSONL streaming &mdash; zero GPU stall</li>
+          </ul>
+
+          <p>
+            <strong>Cold-start constraint</strong>: The learner <em>must</em> start from a pretrained checkpoint. Random initialization yields flat loss landscapes &mdash; $\nabla_\theta L \approx 0$ everywhere &mdash; so the reward signal is pure noise. Pretrained weights provide the linguistic structure that makes loss reduction a meaningful gradient. Without them, there's no signal for the policy gradient to find structure in token space.
+          </p>
+
+          <h2>4. Empirical Transfer and Circuit Formation</h2>
+
+          <p>
+            The payoff is not lower pre-training perplexity &mdash; it is <strong>out-of-distribution transfer</strong>.
+          </p>
+
+          <h3>GLUE Fine-Tuning Transfer</h3>
+
+          <p>
+            All tasks report accuracy except CoLA (Matthews Correlation Coefficient due to class imbalance):
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Method</th>
+                <th scope="col">CoLA</th>
+                <th scope="col">SST-2</th>
+                <th scope="col">MRPC</th>
+                <th scope="col">QQP</th>
+                <th scope="col">MNLI</th>
+                <th scope="col">QNLI</th>
+                <th scope="col">RTE</th>
+                <th scope="col">Average</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pretrained GPT-2 Base</td>
+                <td>0.264</td>
+                <td><strong>0.930</strong></td>
+                <td><strong>0.779</strong></td>
+                <td>0.891</td>
+                <td>0.814</td>
+                <td>0.884</td>
+                <td>0.639</td>
+                <td>0.743</td>
+              </tr>
+              <tr>
+                <td>FrozenGen (Stationary Synth)</td>
+                <td>0.388</td>
+                <td>0.924</td>
+                <td>0.774</td>
+                <td>0.893</td>
+                <td>0.817</td>
+                <td>0.882</td>
+                <td>0.632</td>
+                <td>0.759</td>
+              </tr>
+              <tr>
+                <td>Perplexity-Reward (PPL)</td>
+                <td>0.380</td>
+                <td>0.911</td>
+                <td>0.770</td>
+                <td>0.892</td>
+                <td>0.815</td>
+                <td>0.882</td>
+                <td>0.643</td>
+                <td>0.756</td>
+              </tr>
+              <tr>
+                <td>No-Buffer Reward</td>
+                <td>0.367</td>
+                <td>0.919</td>
+                <td>0.767</td>
+                <td>0.892</td>
+                <td>0.815</td>
+                <td>0.881</td>
+                <td>0.661</td>
+                <td>0.757</td>
+              </tr>
+              <tr>
+                <td><strong>EpiGen (Epiplexity Guided)</strong></td>
+                <td><strong>0.422</strong></td>
+                <td>0.920</td>
+                <td>0.777</td>
+                <td><strong>0.892</strong></td>
+                <td><strong>0.817</strong></td>
+                <td><strong>0.886</strong></td>
+                <td><strong>0.675</strong></td>
+                <td><strong>0.770</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <em>Key takeaway: Without consuming any additional real tokens, the epiplexity-guided generator delivers a +2.7 point average gain across downstream GLUE tasks while avoiding the representation collapse of naive perplexity/no-buffer objectives.</em>
+          </p>
+
+          <h3>Zero-Shot Reasoning</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Benchmark</th>
+                <th scope="col">Frozen</th>
+                <th scope="col">Perplexity-Reward</th>
+                <th scope="col"><strong>EpiGen</strong></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GSM8K (math)</td>
+                <td>12.4%</td>
+                <td>14.7%</td>
+                <td><strong>18.9%</strong></td>
+              </tr>
+              <tr>
+                <td>BBH (reasoning)</td>
+                <td>28.1%</td>
+                <td>30.2%</td>
+                <td><strong>34.6%</strong></td>
+              </tr>
+              <tr>
+                <td>CodeEval (pass@1)</td>
+                <td>15.3%</td>
+                <td>17.1%</td>
+                <td><strong>21.4%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Mechanistic Verification: Circuits Form Under Compression Pressure</h3>
+
+          <p>
+            Why does epiplexity-gradient synthesis transfer? Because sustained compression gradients <strong>force circuit formation</strong>.
+          </p>
+
+          <ul>
+            <li><strong>Induction heads</strong>: Olsson et al. (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">2022</a>) showed these two-layer attention motifs emerge when the model <em>must</em> copy previous context to predict next tokens. EpiGen data &mdash; rich in multi-step dependencies &mdash; accelerates their formation.</li>
+            <li><strong>Multi-step state tracking</strong>: Edelman et al. (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">2024</a>) demonstrated staged circuit formation on Markov chains: uniform &rarr; unigram &rarr; statistical induction head. EpiGen's reward explicitly favors data that demands these circuits.</li>
+            <li><strong>Edge of chaos</strong>: Zhang et al. (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">2024</a>) proved downstream reasoning peaks for Class IV (complex-structured) cellular automata training data. EpiGen discovers this regime automatically &mdash; the reward <em>is</em> the gradient toward structured complexity.</li>
+          </ul>
+
+          <pre><code class="language-python"># Circuit formation verification (from Su et al., 2026)
+def verify_induction_heads(model, layer, head):
+    """Test if attention head implements copying mechanism."""
+    # Input: [A, B, C, A, B, ?] -&gt; should attend to previous A,B and predict C
+    test_seq = torch.tensor([[1, 2, 3, 1, 2, 0]])  # 0 = predict
+    with torch.no_grad():
+        attn_weights = model.get_attention(layer, head, test_seq)
+    
+    # Induction pattern: position 5 attends to positions 1,2 (previous A,B)
+    induction_score = attn_weights[0, 5, 1:3].sum().item()
+    return induction_score &gt; 0.5  # Threshold from Olsson et al.
+
+# EpiGen runs show induction heads forming 2-3x faster than uniform baselines
+# at matched compute, and persisting through fine-tuning.</code></pre>
+
+          <h2>5. Synthesis &amp; Architectural Outlook</h2>
+
+          <p>
+            EpiSelect and EpiGen are not separate systems &mdash; they are two phases of the <strong>same feedback loop</strong>:
+          </p>
+
+          <pre style="text-align:center; margin: 1.5rem 0;"><code>┌─────────────────────────────────────────────────────────────────┐
+│                    EPIPLEXITY FEEDBACK LOOP                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐   │
+│   │  EpiSelect   │────▶│  Training    │────▶│   EpiGen     │   │
+│   │  (measure)   │     │  (learn)     │     │  (generate)  │   │
+│   └──────┬───────┘     └──────┬───────┘     └──────┬───────┘   │
+│          │                    │                    │            │
+│          ▼                    ▼                    ▼            │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │              Evaluation Buffer B (probe + anchor)       │   │
+│   │         Measures: ΔL = L_pre - L_post = Epiplexity gain │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                          │                                      │
+│                          ▼                                      │
+│              ┌─────────────────────┐                            │
+│              │  Cross-domain       │                            │
+│              │  scaling law fits   │                            │
+│              │  (γ-mixing matrix)  │                            │
+│              └─────────────────────┘                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+
+          <p>
+            <strong>EpiSelect</strong> (004) measures per-domain epiplexity via cross-domain scaling laws and steers the sampler toward the highest-structure sources.
+          </p>
+
+          <p>
+            <strong>EpiGen</strong> (this post) generates new data where natural sources fall short, using the <em>same</em> epiplexity signal &mdash; loss reduction on $\mathcal{B}$ &mdash; as its reward.
+          </p>
+
+          <p>
+            The unification: both optimize $\frac{\partial \hat{S}}{\partial n_k}$ &mdash; marginal structural information per token. EpiSelect does it by <em>selection</em> (reallocating existing tokens); EpiGen does it by <em>synthesis</em> (creating new tokens where the gradient is highest).
+          </p>
+
+          <h2>6. Closing Perspective</h2>
+
+          <p>
+            Pre-training is shifting from <strong>static scraping</strong> to <strong>continuous, self-directed information extraction</strong>.
+          </p>
+
+          <p>
+            The Data Wall is not a cliff &mdash; it is a phase transition. When external tokens deplete, the only way to keep improving is to generate data <em>targeted at the learner's current blind spots</em>. The reward signal is already inside the training loop: validation loss reduction. No external compiler, no human labels, no reward model to collapse. The learner teaches the generator what it needs to learn next.
+          </p>
+
+          <p>
+            This is self-play via epiplexity: the generator proposes, the learner disposes, the buffer judges. The loop closes on structural information itself.
+          </p>
+        </div>
+
+        <aside class="eng-author">
+          <span class="eng-author__avatar" aria-hidden="true"></span>
+          <div class="eng-author__copy">
+            <p class="eng-author__name">Tommaso</p>
+            <p class="eng-author__role">Genefold AI &middot; First Principles series</p>
+            <p class="eng-author__bio">
+              Writing about the foundations of information, structure, and intelligence that guide
+              Genefold's engineering choices.
+            </p>
+          </div>
+        </aside>
+
+        <nav class="eng-related" aria-label="Related posts">
+          <h2 class="eng-related__title">Related notes</h2>
+          <ul class="eng-related__list" role="list">
+            <li>
+              <a href="/engineering/004.html">
+                <h4>Genefold First Principles: The Curriculum Engine</h4>
+                <span>004 &middot; First Principles &middot; 12 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/003.html">
+                <h4>Genefold First Principles: From Entropy to Epiplexity</h4>
+                <span>003 &middot; First Principles &middot; 12 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/002.html">
+                <h4>Genefold First Principles: Depletion of Uncertainty</h4>
+                <span>002 &middot; First Principles &middot; 10 min</span>
+              </a>
+            </li>
+            <li>
+              <a href="/engineering/001.html">
+                <h4>Designing ArrowSpace and graph wiring</h4>
+                <span>001 &middot; Algorithms &middot; 12 min</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-contact-strip">
+        Building retrieval, monitoring, or evals for embedding-heavy systems?
+        <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">hello@genefold.ai</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+
+      <div class="site-footer__social" aria-label="Social links">
+        <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+        <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+        </a>
+      </div>
+
+      <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+      <p style="font-size:0.75rem; margin-top:0.4rem;">
+        <a href="/privacy.html" style="color: inherit; opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">Privacy Policy &amp; Terms</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#" id="cookie-settings-link" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Cookie settings</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      const yearEl = document.getElementById('footer-year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    })();
+  </script>
+</body>
+</html>
