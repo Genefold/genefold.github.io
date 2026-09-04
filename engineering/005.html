@@ -143,7 +143,18 @@
       line-height: 1.1;
       letter-spacing: -0.03em;
       color: var(--text);
-      margin: 0 0 1.25rem;
+      margin: 0 0 0.75rem;
+    }
+
+    .eng-article__subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.275rem;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      color: var(--eng-muted);
+      max-width: 58ch;
+      margin: 0 0 1.5rem;
     }
 
     .eng-article__lede {
@@ -467,7 +478,8 @@
 
         <header>
           <span class="eng-article__eyebrow">005 &mdash; First Principles</span>
-          <h1 class="eng-article__title">Synthetic Data That Teaches: A Feedback Loop for Training Beyond Static Corpora</h1>
+          <h1 class="eng-article__title">Synthetic Data That Teaches</h1>
+          <p class="eng-article__subtitle">A Feedback Loop for Training Beyond Static Corpora</p>
           <p class="eng-article__lede">
             Data-selection methods such as ADO, DoReMi, and EpiSelect can improve how a finite corpus is allocated during training. They cannot, by themselves, create new high-quality information once the available data pool is exhausted. One alternative is to reward a generator not for fluency or novelty, but for whether its generated batch improves a learner on a fixed, held-out reference buffer. In this note we call that reward the <strong>epiplexity gradient</strong> &mdash; a self-play loop in which the generator proposes, the learner disposes, and the buffer judges.
           </p>
