@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Genefold First Principles: The Synthetic Feedback Loop — Self-Play via Epiplexity — Genefold Engineering</title>
-  <meta name="description" content="Selection algorithms redistribute a fixed resource they cannot overcome. The only path past the Data Wall is generating data — but naive synthesis collapses. The way out is an intrinsic reward: the epiplexity gradient, loss reduction on an evaluation buffer, measured by the learner itself." />
+  <title>Synthetic Data That Teaches: A Feedback Loop for Training Beyond Static Corpora — Genefold Engineering</title>
+  <meta name="description" content="Data selection cannot create new training signal once the corpus is exhausted. This note proposes rewarding a synthetic-data generator for one thing only: whether its batches improve a learner on a fixed, held-out reference buffer — a signal we call the epiplexity gradient." />
   <meta name="author" content="Tommaso" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../style.css?v=20260604-3" />
   <script>
     MathJax = {
-      tex: { inlineMath: [['$','$'], ['\\(','\\ ')'], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
       svg: { fontCache: 'global' }
     };
   </script>
@@ -467,9 +467,9 @@
 
         <header>
           <span class="eng-article__eyebrow">005 &mdash; First Principles</span>
-          <h1 class="eng-article__title">Genefold First Principles: The Synthetic Feedback Loop &mdash; Self-Play via Epiplexity</h1>
+          <h1 class="eng-article__title">Synthetic Data That Teaches: A Feedback Loop for Training Beyond Static Corpora</h1>
           <p class="eng-article__lede">
-            Selection algorithms (EpiSelect, ADO, DoReMi) redistribute a fixed resource they cannot overcome token depletion. The Data Wall forces a shift from <em>choosing</em> data to <em>generating</em> it. But naive synthesis collapses: pure noise yields zero learning signal, trivialities saturate instantly, and without external compilers there is no ground truth to anchor the loop. The way out is an intrinsic, observer-dependent reward: the <strong>epiplexity gradient</strong> &mdash; loss reduction on an evaluation buffer, measured by the learner itself.
+            Data-selection methods such as ADO, DoReMi, and EpiSelect can improve how a finite corpus is allocated during training. They cannot, by themselves, create new high-quality information once the available data pool is exhausted. One alternative is to reward a generator not for fluency or novelty, but for whether its generated batch improves a learner on a fixed, held-out reference buffer. In this note we call that reward the <strong>epiplexity gradient</strong> &mdash; a self-play loop in which the generator proposes, the learner disposes, and the buffer judges.
           </p>
           <div class="eng-article__meta">
             <span>
@@ -492,6 +492,10 @@
         </header>
 
         <div class="eng-article__body">
+          <blockquote>
+            <p><strong>Status: Research note.</strong> This post presents a proposed training objective and system architecture. Code blocks are illustrative pseudocode unless stated otherwise, and benchmark numbers are reported results from the cited EpiGen paper (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>) &mdash; treat them as directional pending independent replication.</p>
+          </blockquote>
+
           <h2>1. The Ceiling of Data Selection and the Failure Mode of Naive Synthesis</h2>
 
           <p>
@@ -502,7 +506,7 @@
             The natural next step is to generate new data. But recursive generation without verification collapses. Gerstgrasser et al. (<a href="https://arxiv.org/abs/2404.01413" target="_blank" rel="noopener noreferrer">2024</a>) show that models trained on their own outputs suffer <strong>distribution tail erosion</strong>: rare but structurally critical patterns vanish, diversity collapses, and the model converges to a degenerate mode. AlphaZero avoids this via an external rules engine (chess/go); SPIRAL uses a code interpreter. Natural language has no compiler &mdash; no executable ground truth. The reward must come from <em>within</em> the learning process.
           </p>
 
-          <pre><code class="language-python"># Naive recursive generation: what goes wrong
+          <pre><code class="language-python"># Illustrative pseudocode — what goes wrong
 def naive_self_generate(model, steps, prompt):
     """Generate -&gt; add to training -&gt; repeat. No verification."""
     for step in range(steps):
@@ -534,7 +538,7 @@ def naive_self_generate(model, steps, prompt):
           </ul>
 
           <p>
-            The reward at step $t$ is the <strong>prequential loss reduction</strong> measured directly by the learner over the evaluation buffer:
+            The key question is simple: after the learner trains on a generated batch, does it become better at data it did <em>not</em> generate? The reward at step $t$ is the loss reduction measured by the learner over the evaluation buffer:
           </p>
 
           <p style="text-align:center; margin: 1.5rem 0;">
@@ -542,7 +546,19 @@ def naive_self_generate(model, steps, prompt):
           </p>
 
           <p>
-            This is not a proxy &mdash; it is the epiplexity gradient. The prequential interpretation (Rissanen 1996; Gr&uuml;nwald 2007) makes this exact: the learner acts as a sequential coder, and its cumulative codelength $\sum -\log q(x_i|x_{&lt;i})$ equals validation loss in different units. Learning <em>is</em> compression progress.
+            In this article, we use <strong>epiplexity gradient</strong> as an operational name for the improvement a learner obtains on a fixed evaluation buffer after an update. It is a measurable proxy for whether a synthetic batch teaches transferable structure rather than merely reducing loss on itself.
+          </p>
+
+          <p>
+            The prequential view (<a href="https://doi.org/10.1109/18.481776" target="_blank" rel="noopener noreferrer">Rissanen, 1996</a>; <a href="https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/" target="_blank" rel="noopener noreferrer">Gr&uuml;nwald, 2007</a>) motivates this signal: the learner acts as a sequential coder, and its cumulative codelength
+          </p>
+
+          <p style="text-align:center; margin: 1.5rem 0;">
+            $$\sum_i -\log q(x_i \mid x_{&lt;i})$$
+          </p>
+
+          <p>
+            equals validation loss in different units. A held-out-buffer loss delta after a finite update is <em>related to</em>, but not identical with, a full prequential description-length measure &mdash; we use it here as a practical, measurable stand-in. Learning progress, in this view, is compression progress.
           </p>
 
           <p>Why this reward avoids collapse:</p>
@@ -581,6 +597,40 @@ def naive_self_generate(model, steps, prompt):
           <p>
             The generator only earns reward for data that <em>teaches the learner something new and reusable</em>. This is the epiplexity gradient: structural information extractable per compute cycle.
           </p>
+
+          <p>
+            A concrete illustration: a generator proposes two synthetic batches for a small language learner. One consists of repeated familiar sentence templates; the other contains short symbolic transformations that share structure with held-out examples. Both may be fluent. Only the latter should earn a high reward &mdash; illustrative numbers:
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Batch</th>
+                <th scope="col">$L^{\text{pre}}$</th>
+                <th scope="col">$L^{\text{post}}$</th>
+                <th scope="col">$r_t$</th>
+                <th scope="col">Verdict</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A: familiar sentence templates</td>
+                <td>2.10</td>
+                <td>2.09</td>
+                <td>0.01</td>
+                <td>Already mastered &mdash; no reward</td>
+              </tr>
+              <tr>
+                <td>B: symbolic transformations sharing structure with held-out probes</td>
+                <td>2.10</td>
+                <td>1.85</td>
+                <td>0.25</td>
+                <td>Transferable structure &mdash; high reward</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p><strong>Illustrative pseudocode &mdash; proposed training objective, not a verified implementation:</strong></p>
 
           <pre><code class="language-python">import copy
 import torch
@@ -644,7 +694,7 @@ class EpiGen(nn.Module):
         return clone</code></pre>
 
           <p>
-            The policy gradient uses an EMA baseline for variance reduction &mdash; standard REINFORCE with a moving-average control variate. No external critic, no reward model to collapse.
+            The policy gradient uses an EMA baseline for variance reduction &mdash; standard REINFORCE with a moving-average control variate. This setup avoids an external critic or learned reward model, the usual collapse points &mdash; but it does not eliminate failure modes: the generator can overfit the buffer, exploit shallow transfer signals, or destabilize the learner through non-stationary updates. We return to these risks in <a href="#failure-modes">Section 6</a>.
           </p>
 
           <h2>3. Systems Architecture &mdash; The Replay Buffer and Tensor Lifecycle</h2>
@@ -658,7 +708,9 @@ class EpiGen(nn.Module):
             <li><strong>Transfer anchor</strong>: prevents mode collapse by mixing real data</li>
           </ul>
 
-          <pre><code class="language-rust">// src/epigen/buffer.rs — the evaluation buffer lifecycle
+          <p><strong>Proposed buffer interface &mdash; illustrative architecture, not compiling repository code:</strong></p>
+
+          <pre><code class="language-rust">// Proposed buffer lifecycle (illustrative)
 use burn::tensor::Tensor;
 use burn::backend::Autodiff;
 use std::sync::Arc;
@@ -739,7 +791,7 @@ impl&lt;B: Autodiff&gt; EvaluationBuffer&lt;B&gt; {
           <h3>GLUE Fine-Tuning Transfer</h3>
 
           <p>
-            All tasks report accuracy except CoLA (Matthews Correlation Coefficient due to class imbalance):
+            The following table adapts results reported in the EpiGen paper (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>); it is reproduced here as directional evidence, not as an independent reproduction. All tasks report accuracy except CoLA (Matthews Correlation Coefficient due to class imbalance):
           </p>
 
           <table>
@@ -816,10 +868,14 @@ impl&lt;B: Autodiff&gt; EvaluationBuffer&lt;B&gt; {
           </table>
 
           <p>
-            <em>Key takeaway: Without consuming any additional real tokens, the epiplexity-guided generator delivers a +2.7 point average gain across downstream GLUE tasks while avoiding the representation collapse of naive perplexity/no-buffer objectives.</em>
+            <em>Key takeaway (as reported in Su et al., 2026): without consuming additional real tokens, the epiplexity-guided condition improved the reported mean GLUE score from 0.743 to 0.770 while avoiding the representation collapse of the perplexity/no-buffer objectives. Treat these numbers as directional pending multi-seed replication.</em>
           </p>
 
           <h3>Zero-Shot Reasoning</h3>
+
+          <p>
+            Same source and same caveat (<a href="https://arxiv.org/abs/2608.11746" target="_blank" rel="noopener noreferrer">Su et al., 2026</a>):
+          </p>
 
           <table>
             <thead>
@@ -852,19 +908,21 @@ impl&lt;B: Autodiff&gt; EvaluationBuffer&lt;B&gt; {
             </tbody>
           </table>
 
-          <h3>Mechanistic Verification: Circuits Form Under Compression Pressure</h3>
+          <h3>Mechanistic Hypotheses: Circuits Under Compression Pressure</h3>
 
           <p>
-            Why does epiplexity-gradient synthesis transfer? Because sustained compression gradients <strong>force circuit formation</strong>.
+            Why might epiplexity-gradient synthesis transfer? A testable hypothesis is that synthetic batches rewarded for transferable loss reduction preferentially train mechanisms associated with longer-range dependency tracking, including induction-like attention patterns. The evidence below is consistent with this, but verifying it requires causal interventions and controlled comparisons &mdash; not attention maps alone.
           </p>
 
           <ul>
-            <li><strong>Induction heads</strong>: Olsson et al. (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">2022</a>) showed these two-layer attention motifs emerge when the model <em>must</em> copy previous context to predict next tokens. EpiGen data &mdash; rich in multi-step dependencies &mdash; accelerates their formation.</li>
-            <li><strong>Multi-step state tracking</strong>: Edelman et al. (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">2024</a>) demonstrated staged circuit formation on Markov chains: uniform &rarr; unigram &rarr; statistical induction head. EpiGen's reward explicitly favors data that demands these circuits.</li>
-            <li><strong>Edge of chaos</strong>: Zhang et al. (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">2024</a>) proved downstream reasoning peaks for Class IV (complex-structured) cellular automata training data. EpiGen discovers this regime automatically &mdash; the reward <em>is</em> the gradient toward structured complexity.</li>
+            <li><strong>Induction heads</strong>: Olsson et al. (<a href="https://www.transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html" target="_blank" rel="noopener noreferrer">2022</a>) showed these two-layer attention motifs emerge when the model <em>must</em> copy previous context to predict next tokens. EpiGen data &mdash; rich in multi-step dependencies &mdash; is the kind of data under which such motifs are known to form; whether it speeds their formation in this system is an open empirical question.</li>
+            <li><strong>Multi-step state tracking</strong>: Edelman et al. (<a href="https://arxiv.org/abs/2402.11004" target="_blank" rel="noopener noreferrer">2024</a>) demonstrated staged circuit formation on Markov chains: uniform &rarr; unigram &rarr; statistical induction head. EpiGen's reward favors data that demands these circuits, if the hypothesis holds.</li>
+            <li><strong>Edge of chaos</strong>: Zhang et al. (<a href="https://arxiv.org/abs/2410.02536" target="_blank" rel="noopener noreferrer">2024</a>) found downstream reasoning peaks for Class IV (complex-structured) cellular automata training data. A well-calibrated epiplexity reward would discover this regime automatically &mdash; the reward points toward structured complexity by construction.</li>
           </ul>
 
-          <pre><code class="language-python"># Circuit formation verification (from Su et al., 2026)
+          <p><strong>Example diagnostic, not a complete circuit test:</strong></p>
+
+          <pre><code class="language-python"># Attention-pattern probe (from Su et al., 2026)
 def verify_induction_heads(model, layer, head):
     """Test if attention head implements copying mechanism."""
     # Input: [A, B, C, A, B, ?] -&gt; should attend to previous A,B and predict C
@@ -876,8 +934,9 @@ def verify_induction_heads(model, layer, head):
     induction_score = attn_weights[0, 5, 1:3].sum().item()
     return induction_score &gt; 0.5  # Threshold from Olsson et al.
 
-# EpiGen runs show induction heads forming 2-3x faster than uniform baselines
-# at matched compute, and persisting through fine-tuning.</code></pre>
+# EpiGen runs reportedly show induction-like patterns forming faster than
+# uniform baselines at matched compute (Su et al., 2026). Verifying this
+# requires causal interventions, not attention maps alone.</code></pre>
 
           <h2>5. Synthesis &amp; Architectural Outlook</h2>
 
@@ -921,18 +980,36 @@ def verify_induction_heads(model, layer, head):
             The unification: both optimize $\frac{\partial \hat{S}}{\partial n_k}$ &mdash; marginal structural information per token. EpiSelect does it by <em>selection</em> (reallocating existing tokens); EpiGen does it by <em>synthesis</em> (creating new tokens where the gradient is highest).
           </p>
 
-          <h2>6. Closing Perspective</h2>
+          <h2 id="failure-modes">6. What Can Go Wrong: Failure Modes and Open Risks</h2>
+
+          <p>
+            The proposal has failure modes of its own. Naming them is part of the design, not a disclaimer:
+          </p>
+
+          <ul>
+            <li><strong>Reward hacking and buffer overfitting</strong>: the generator optimizes $\Delta L$ on $\mathcal{B}$, not on the world. Goodhart's law applies &mdash; batches can be crafted to move buffer loss without teaching transferable structure. Rotating and held-out buffer splits are the first-line defense.</li>
+            <li><strong>Non-stationarity</strong>: the reward is defined against a learner that changes after every step. The same batch yields different rewards at different times, which complicates credit assignment and variance control for the policy gradient.</li>
+            <li><strong>Evaluation leakage and contamination</strong>: synthetic data that memorizes or closely paraphrases buffer content inflates the reward. The real-data anchor (25% of $\mathcal{B}$) mitigates but does not eliminate this; contamination checks remain necessary.</li>
+            <li><strong>Computational cost</strong>: each generator step costs $K$ learner updates plus two buffer evaluations. Gradient checkpointing and amortized validation (every $N$ generator steps) bound the overhead but do not remove it.</li>
+            <li><strong>Residual drift</strong>: a better reward reduces distribution tail erosion; it does not abolish it. Diversity monitoring on generated batches remains necessary.</li>
+          </ul>
+
+          <h2>7. Closing Perspective</h2>
 
           <p>
             Pre-training is shifting from <strong>static scraping</strong> to <strong>continuous, self-directed information extraction</strong>.
           </p>
 
           <p>
-            The Data Wall is not a cliff &mdash; it is a phase transition. When external tokens deplete, the only way to keep improving is to generate data <em>targeted at the learner's current blind spots</em>. The reward signal is already inside the training loop: validation loss reduction. No external compiler, no human labels, no reward model to collapse. The learner teaches the generator what it needs to learn next.
+            As high-quality public text becomes more constrained, synthetic and interactive data are likely to become increasingly important complements to curation, reuse, licensing, and improved training efficiency. Among these, generation has a property the others lack: it can target the learner's current blind spots directly. The reward signal this proposal relies on is already computed in every training run &mdash; validation loss. It needs no external compiler, no human labels, and no learned reward model, though it introduces the failure modes outlined above.
           </p>
 
           <p>
-            This is self-play via epiplexity: the generator proposes, the learner disposes, the buffer judges. The loop closes on structural information itself.
+            This is self-play via epiplexity: the generator proposes, the learner disposes, the buffer judges.
+          </p>
+
+          <p>
+            <strong>Next validation milestone:</strong> multi-seed replication of the transfer results above and publication of the evaluation configuration. Until then, treat this note as a research proposal with directional evidence.
           </p>
         </div>
 
