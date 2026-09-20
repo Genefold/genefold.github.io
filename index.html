@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260604-3" />
+  <link rel="stylesheet" href="style.css?v=20260921-1" />
   <style>
     /* ── OSS Section ───────────────────────────────────────────── */
     .oss-grid {
@@ -64,6 +64,11 @@
       width: 10px; height: 10px;
       border-radius: 50%;
       display: inline-block;
+    }
+    .oss-count {
+      font-size: .78rem;
+      color: #6e6060;
+      margin: 1.5rem 0 0;
     }
     .oss-team-row {
       display: flex;
@@ -583,8 +588,8 @@
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
-              <span>v0.26.2</span>
-              <span>⬇️ 1.1k / month</span>
+              <span>v0.28.1</span>
+              <span>⬇️ 2.5k / month</span>
             </div>
           </a>
 
@@ -599,8 +604,8 @@
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#DEA584;"></span>Rust</span>
-              <span>v0.26.2</span>
-              <span>⬇️ 6.7k total</span>
+              <span>v0.28.1</span>
+              <span>⬇️ 8.9k total</span>
               <span>Apache-2.0</span>
             </div>
           </a>
@@ -626,26 +631,42 @@
               arro-server
             </span>
             <p class="repo-card__desc">
-              Arrow Flight RPC server for high-throughput spectral artifact exchange. Serves structured embedding operations over a binary columnar protocol — zero serialisation overhead.
+              FastAPI server exposing large Zarr v3 datasets and their
+              ArrowSpace-derived metadata over HTTP — dataset browsing, numpy-style
+              slicing, stats, and a search seam for spectral retrieval.
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
-              <span>MIT licence</span>
             </div>
           </a>
 
-          <!-- arro-memory -->
-          <a class="repo-card" href="https://github.com/Genefold/arro-memory" target="_blank" rel="noopener noreferrer" aria-label="arro-memory repository">
+          <!-- arro-nlp-frontend -->
+          <a class="repo-card" href="https://github.com/Genefold/arro-nlp-frontend" target="_blank" rel="noopener noreferrer" aria-label="arro-nlp-frontend repository">
             <span class="repo-card__name">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
-              arro-memory
+              arro-nlp-frontend
             </span>
             <p class="repo-card__desc">
-              Persistent spectral artifact store with versioning and lineage tracking. The structural memory layer for embedding pipelines — durable, queryable, replayable.
+              API server for OpenAI-like NLP interactions — the conversational
+              frontend layer of our CVE Search pipeline.
             </p>
             <div class="repo-card__meta">
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
-              <span>MIT licence</span>
+            </div>
+          </a>
+
+          <!-- pygenestore -->
+          <a class="repo-card" href="https://github.com/Genefold/pygenestore" target="_blank" rel="noopener noreferrer" aria-label="pygenestore repository">
+            <span class="repo-card__name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+              pygenestore
+            </span>
+            <p class="repo-card__desc">
+              Store your <code>numpy</code> arrays at scale with the Lance format —
+              millions of rows, with synchronous and async APIs.
+            </p>
+            <div class="repo-card__meta">
+              <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
             </div>
           </a>
 
@@ -678,6 +699,9 @@
           </a>
         </div>
 
+        <!-- featured repository count -->
+        <p class="oss-count">8 featured public repositories</p>
+
         <!-- community callout -->
         <div class="oss-community-row">
           <div class="oss-community-row__copy">
@@ -685,7 +709,6 @@
             <p>Try ArrowSpace, open an issue, star the repo, or tell us how spectral search fits your stack. We read every message.</p>
           </div>
           <div class="oss-community-row__actions">
-            <a class="button button--ghost" href="https://github.com/Genefold/arrowspace/discussions" target="_blank" rel="noopener noreferrer">GitHub Discussions</a>
             <a class="button button--ghost" href="mailto:hello@genefold.ai?subject=ArrowSpace%20inquiry">hello@genefold.ai</a>
           </div>
         </div>
@@ -716,6 +739,192 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
           View all repositories at github.com/Genefold
         </a>
+      </section>
+
+      <!-- ═══════════════════ GENEFOLD-VD ═══════════════════ -->
+      <section class="section reveal" id="genefold-vd">
+        <div class="section-heading">
+          <p class="eyebrow">Genefold-vd</p>
+          <h2>Native ArrowSpace search. Built into your vector database.</h2>
+        </div>
+        <p class="platform-intro">
+          Genefold-vd is the only vector database with native ArrowSpace support —
+          bringing spectral retrieval into semantic search. It builds a signal
+          graph from your embeddings, persists the structural artifacts, and
+          answers λτ-indexed queries, so ranking uses the geometry of your data
+          rather than cosine proximity alone. See the retrieval approach live in
+          the <a href="#demo">CVE Search demo</a>.
+        </p>
+
+        <div class="vd-panel glass-panel">
+          <div class="vd-panel__copy">
+            <ul class="demo-card__features" role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Native spectral retrieval.</strong> ArrowSpace λτ-indexed queries with configurable tau — tune ranking from purely spectral to cosine-like.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Persistent vector and graph storage.</strong> Embeddings, adjacency, Laplacian, and λ values in a Lance-backed collection.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Incremental ingestion.</strong> Bootstrap a collection or append new vectors through a single ingest path.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Dataset maintenance.</strong> Append, remove, and compact data; verify stored artifacts and sweep orphaned ones.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Inspectable search foundations.</strong> Metadata and graph artifacts are queryable for audit and diagnostics.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Application integration.</strong> Scriptable CLI with JSON output and a TCP query service. Linux and macOS.</span>
+              </li>
+            </ul>
+            <div class="demo-card__actions">
+              <a class="button button--primary" href="mailto:hello@genefold.ai?subject=Genefold-vd%20inquiry">Discuss Genefold-vd</a>
+              <a class="button button--ghost" href="https://cve-search-engine.genefold.ai/" target="_blank" rel="noopener noreferrer">Explore the CVE demo</a>
+            </div>
+          </div>
+          <aside class="vd-facts" aria-label="Genefold-vd key facts">
+            <div class="demo-stats vd-facts__stats" aria-label="Genefold-vd properties">
+              <div class="demo-stat">
+                <span class="demo-stat__value">λτ</span>
+                <span class="demo-stat__label">indexed queries</span>
+              </div>
+              <div class="demo-stat">
+                <span class="demo-stat__value">Lance</span>
+                <span class="demo-stat__label">backed persistence</span>
+              </div>
+              <div class="demo-stat">
+                <span class="demo-stat__value">CLI + TCP</span>
+                <span class="demo-stat__label">integration</span>
+              </div>
+            </div>
+            <p class="vd-facts__availability">
+              Genefold-vd is a private, commercially licensed product. Talk to us
+              about access and deployment — the Full-cover plan includes service
+              infrastructure to run its latest version at scale
+              (<a href="#pricing">see plans</a>).
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ PRICING ═══════════════════ -->
+      <section class="section reveal" id="pricing">
+        <div class="section-heading">
+          <p class="eyebrow">Plans &amp; support</p>
+          <h2>From first deployment to operation at scale.</h2>
+        </div>
+        <p class="platform-intro">
+          Choose the engineering support, commercial access, and deployment
+          coverage your team needs — from getting started with our community
+          tools to running custom solutions at scale.
+        </p>
+
+        <div class="pricing-grid">
+          <!-- Community -->
+          <article class="pricing-card">
+            <h3>Community</h3>
+            <p class="pricing-card__price">
+              <span class="pricing-card__amount">£100</span>
+              <span class="pricing-card__period">/ month</span>
+            </p>
+            <p class="pricing-card__tagline">Get our community tools working for your use case.</p>
+            <ul role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Access to all our community repositories</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Hands-on setup and configuration for your needs</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Basic support and base updates</span>
+              </li>
+            </ul>
+            <a class="button button--ghost" href="mailto:hello@genefold.ai?subject=Community%20plan%20inquiry">Discuss Community</a>
+          </article>
+
+          <!-- Professional -->
+          <article class="pricing-card">
+            <h3>Professional</h3>
+            <p class="pricing-card__price">
+              <span class="pricing-card__amount">£1,000</span>
+              <span class="pricing-card__period">/ month</span>
+            </p>
+            <p class="pricing-card__tagline">Adapt the technology to your business, with support through deployment.</p>
+            <p class="pricing-card__included">Everything in Community, plus:</p>
+            <ul role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Customisation of up to two features per month</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Extended support for deployment</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Access to stable versions of our commercially licensed repositories</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Non-exclusive commercial licence for your business</span>
+              </li>
+            </ul>
+            <a class="button button--ghost" href="mailto:hello@genefold.ai?subject=Professional%20plan%20inquiry">Discuss Professional</a>
+          </article>
+
+          <!-- Full-cover -->
+          <article class="pricing-card pricing-card--flagship">
+            <div class="pricing-card__head">
+              <h3>Full-cover</h3>
+              <span class="badge">Flagship</span>
+            </div>
+            <p class="pricing-card__price">
+              <span class="pricing-card__amount">£5,000</span>
+              <span class="pricing-card__period">/ month</span>
+            </p>
+            <p class="pricing-card__tagline">Work with our latest technology and deploy custom solutions at scale.</p>
+            <p class="pricing-card__included">Everything in Professional, plus:</p>
+            <ul role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Access to all our commercially licensed repositories at their latest stage of development</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Non-exclusive commercial licence for the latest versions</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Support and deployment of custom-based solutions at scale in remote enclaves</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>On-call service</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Service infrastructure for the Genefold-vd vector database to run at scale on its latest version</span>
+              </li>
+            </ul>
+            <a class="button button--primary" href="mailto:hello@genefold.ai?subject=Full-cover%20plan%20inquiry">Discuss Full-cover</a>
+          </article>
+        </div>
+
+        <p class="pricing-note">
+          Public repositories remain openly accessible — subscriptions add
+          support, customisation, and commercial licensing. Need something
+          bespoke? <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">Talk to us</a>.
+        </p>
       </section>
 
       <!-- ═══════════════════ WAITLIST ═══════════════════ -->

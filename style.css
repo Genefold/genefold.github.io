@@ -709,6 +709,174 @@ h1 {
 }
 
 
+/* 7c. Genefold-vd ========================================= */
+
+.vd-panel {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2rem;
+  align-items: start;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(104, 240, 211, 0.05), rgba(137, 168, 255, 0.04));
+}
+
+.vd-panel__copy .demo-card__features {
+  margin-bottom: 1.5rem;
+}
+
+.vd-panel__copy .demo-card__features li {
+  align-items: flex-start;
+}
+
+.vd-panel__copy .demo-card__features strong {
+  color: var(--text);
+}
+
+.vd-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.vd-facts__stats {
+  margin: 0;
+}
+
+.vd-facts__availability {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.platform-intro a,
+.pricing-note a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 1080px) {
+  .vd-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* 7d. Pricing ============================================= */
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-top: 2rem;
+}
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+
+.pricing-card h3 {
+  font-size: 1.35rem;
+}
+
+.pricing-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.pricing-card--flagship {
+  border-color: rgba(var(--accent-rgb), 0.34);
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.pricing-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.pricing-card__amount {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.pricing-card__period {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pricing-card__tagline {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.pricing-card__included {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pricing-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.pricing-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.pricing-card li svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--primary);
+}
+
+.pricing-card .button {
+  margin-top: auto;
+}
+
+.pricing-note {
+  margin: 1.5rem 0 0;
+  max-width: 70ch;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (max-width: 1080px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 /* 8. Waitlist & contact =================================== */
 .waitlist-panel {
   display: grid;
