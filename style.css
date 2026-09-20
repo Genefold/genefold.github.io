@@ -712,16 +712,14 @@ h1 {
 /* 7c. Genefold-vd ========================================= */
 
 .vd-panel {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 2rem;
-  align-items: start;
   padding: 1.5rem;
   background: linear-gradient(135deg, rgba(104, 240, 211, 0.05), rgba(137, 168, 255, 0.04));
 }
 
 .vd-panel__copy .demo-card__features {
   margin-bottom: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.75rem;
 }
 
 .vd-panel__copy .demo-card__features li {
@@ -732,27 +730,6 @@ h1 {
   color: var(--text);
 }
 
-.vd-facts {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  padding: 1.25rem;
-  border-radius: var(--radius-m);
-  border: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.22);
-}
-
-.vd-facts__stats {
-  margin: 0;
-}
-
-.vd-facts__availability {
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.65;
-  color: var(--muted);
-}
-
 .platform-intro a,
 .pricing-note a {
   color: var(--primary);
@@ -760,8 +737,8 @@ h1 {
   text-underline-offset: 2px;
 }
 
-@media (max-width: 1080px) {
-  .vd-panel {
+@media (max-width: 760px) {
+  .vd-panel__copy .demo-card__features {
     grid-template-columns: 1fr;
   }
 }
