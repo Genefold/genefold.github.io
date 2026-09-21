@@ -7,7 +7,7 @@
      4. Typography & shared text rules
      5. Buttons
      6. Cards & panels (hero-card, feature, paper, glass)
-     7. Sections (manifesto, science, papers, company AI)
+     7. Sections (science, papers, company AI)
      8. Waitlist & contact
      9. Site social header (top-right pill)
     10. Site footer
@@ -192,9 +192,8 @@ h1 {
 
 .hero__lede,
 .section-heading p:last-child,
-.feature-card p,
-.science-panel p,
-.paper-card p {
+.paper-card p,
+.science-panel p {
   color: var(--muted);
   line-height: 1.7;
   font-size: 1.05rem;
@@ -258,7 +257,6 @@ h1 {
 /* 6. Cards & panels ======================================= */
 
 .glass-panel,
-.feature-card,
 .paper-card {
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
@@ -316,42 +314,22 @@ h1 {
   animation: pulse 1.8s infinite;
 }
 
-.feature-card {
-  padding: 1.5rem;
-  border-radius: var(--radius-m);
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 180ms ease, border-color 180ms ease, translate 180ms ease;
-}
-
-.feature-card:hover,
 .paper-card:hover,
 .repo-card:hover {
   border-color: rgba(109, 243, 216, 0.45);
   translate: 0 -2px;
 }
-.feature-card:focus-visible,
 .paper-card:focus-visible,
 .repo-card:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-.feature-card--accent {
-  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.14), rgba(255, 255, 255, 0.04));
-}
-
-.feature-index,
 .paper-year {
   color: var(--muted);
   font-size: 0.84rem;
 }
 
-.feature-index {
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
-.feature-card h3,
 .paper-card h3,
 .science-panel h3 {
   font-size: 1.5rem;
@@ -394,21 +372,11 @@ h1 {
   letter-spacing: -0.04em;
 }
 
-.manifesto-grid,
 .papers-grid,
 .science-layout {
   display: grid;
   gap: 1rem;
 }
-
-.manifesto-grid {
-  grid-template-columns: repeat(12, 1fr);
-}
-
-.feature-card:nth-child(1),
-.feature-card:nth-child(2),
-.feature-card:nth-child(3) { grid-column: span 4; }
-.feature-card.wide { grid-column: span 12; }
 
 .science-layout {
   grid-template-columns: 1.15fr 0.85fr;
@@ -1066,53 +1034,6 @@ h1 {
 }
 
 
-/* .manifesto-grid--v2 (was inline, moved here for specificity) */
-.manifesto-grid--v2 > .feature-card:nth-child(1),
-.manifesto-grid--v2 > .feature-card:nth-child(2),
-.manifesto-grid--v2 > .feature-card:nth-child(3),
-.manifesto-grid--v2 > .feature-card.wide {
-  grid-column: unset;
-}
-
-.manifesto-grid--v2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.manifesto-grid--v2 > .feature-card--anchor {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  overflow: hidden;
-}
-
-.manifesto-grid--v2 > .feature-card:nth-child(2) {
-  grid-column: 2;
-  grid-row: 1;
-}
-.manifesto-grid--v2 > .feature-card:nth-child(3) {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-.feature-card--full-width {
-  grid-column: 1 / -1 !important;
-}
-
-@media (max-width: 680px) {
-  .manifesto-grid--v2 {
-    grid-template-columns: 1fr;
-  }
-  .manifesto-grid--v2 > .feature-card--anchor,
-  .manifesto-grid--v2 > .feature-card:nth-child(2),
-  .manifesto-grid--v2 > .feature-card:nth-child(3),
-  .feature-card--full-width {
-    grid-column: 1 !important;
-    grid-row: auto !important;
-  }
-}
-
-
 /* 12. Responsive breakpoints ============================== */
 
 @media (max-width: 1080px) {
@@ -1127,13 +1048,6 @@ h1 {
   .hero {
     min-height: auto;
     padding-top: 3rem;
-  }
-
-  .feature-card:nth-child(1),
-  .feature-card:nth-child(2),
-  .feature-card:nth-child(3),
-  .feature-card.wide {
-    grid-column: span 12;
   }
 }
 
