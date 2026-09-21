@@ -512,6 +512,61 @@
         </div>
       </section>
 
+      <!-- ═══════════════════ GENEFOLD-VD ═══════════════════ -->
+      <section class="section reveal" id="genefold-vd">
+        <div class="section-heading">
+          <p class="eyebrow">Genefold-vd</p>
+          <h2>Bespoke Vector Database. Native ArrowSpace search.</h2>
+        </div>
+        <p class="platform-intro">
+          Genefold-vd is the only vector database with native ArrowSpace support —
+          bringing spectral retrieval into semantic search. It builds a signal
+          graph from your embeddings, persists the structural artifacts, and
+          answers λτ-indexed queries, so ranking uses the geometry of your data
+          rather than cosine proximity alone. See the retrieval approach live in
+          the <a href="#demo">CVE Search demo</a>.
+        </p>
+
+        <div class="vd-panel glass-panel">
+          <div class="vd-panel__copy">
+            <ul class="demo-card__features" role="list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Native spectral retrieval.</strong> ArrowSpace λτ-indexed queries with configurable tau — tune ranking from purely spectral to cosine-like.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Persistent vector and graph storage.</strong> Embeddings, adjacency, Laplacian, and λ values in a Lance-backed collection.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Highly distributed, shutdown-resilient storage.</strong> Materialised views scale with the Lance format; the collection persists across process shutdowns and restarts, and crashed builds are recoverable.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Incremental ingestion.</strong> Bootstrap a collection or append new vectors through a single ingest path.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Dataset maintenance.</strong> Append, remove, and compact data; verify stored artifacts and sweep orphaned ones.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Inspectable search foundations.</strong> Metadata and graph artifacts are queryable for audit and diagnostics.</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>Application integration.</strong> Scriptable CLI with JSON output and a TCP query service. Linux and macOS.</span>
+              </li>
+            </ul>
+            <div class="demo-card__actions">
+              <a class="button button--primary" href="mailto:business@genefold.ai?subject=Genefold-vd%20inquiry">Discuss Genefold-vd</a>
+              <a class="button button--ghost" href="https://cve-search-engine.genefold.ai/" target="_blank" rel="noopener noreferrer">Explore the CVE demo</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ═══════════════════ OPEN SOURCE ═══════════════════ -->
       <section class="section reveal" id="opensource">
         <div class="section-heading">
@@ -682,61 +737,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
           View all repositories at github.com/Genefold
         </a>
-      </section>
-
-      <!-- ═══════════════════ GENEFOLD-VD ═══════════════════ -->
-      <section class="section reveal" id="genefold-vd">
-        <div class="section-heading">
-          <p class="eyebrow">Genefold-vd</p>
-          <h2>Bespoke Vector Database. Native ArrowSpace search.</h2>
-        </div>
-        <p class="platform-intro">
-          Genefold-vd is the only vector database with native ArrowSpace support —
-          bringing spectral retrieval into semantic search. It builds a signal
-          graph from your embeddings, persists the structural artifacts, and
-          answers λτ-indexed queries, so ranking uses the geometry of your data
-          rather than cosine proximity alone. See the retrieval approach live in
-          the <a href="#demo">CVE Search demo</a>.
-        </p>
-
-        <div class="vd-panel glass-panel">
-          <div class="vd-panel__copy">
-            <ul class="demo-card__features" role="list">
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Native spectral retrieval.</strong> ArrowSpace λτ-indexed queries with configurable tau — tune ranking from purely spectral to cosine-like.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Persistent vector and graph storage.</strong> Embeddings, adjacency, Laplacian, and λ values in a Lance-backed collection.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Highly distributed, shutdown-resilient storage.</strong> Materialised views scale with the Lance format; the collection persists across process shutdowns and restarts, and crashed builds are recoverable.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Incremental ingestion.</strong> Bootstrap a collection or append new vectors through a single ingest path.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Dataset maintenance.</strong> Append, remove, and compact data; verify stored artifacts and sweep orphaned ones.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Inspectable search foundations.</strong> Metadata and graph artifacts are queryable for audit and diagnostics.</span>
-              </li>
-              <li>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                <span><strong>Application integration.</strong> Scriptable CLI with JSON output and a TCP query service. Linux and macOS.</span>
-              </li>
-            </ul>
-            <div class="demo-card__actions">
-              <a class="button button--primary" href="mailto:business@genefold.ai?subject=Genefold-vd%20inquiry">Discuss Genefold-vd</a>
-              <a class="button button--ghost" href="https://cve-search-engine.genefold.ai/" target="_blank" rel="noopener noreferrer">Explore the CVE demo</a>
-            </div>
-          </div>
-        </div>
       </section>
 
       <!-- ═══════════════════ PRICING ═══════════════════ -->
