@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260921-3" />
+  <link rel="stylesheet" href="style.css?v=20260921-4" />
   <style>
     /* ── OSS Section ───────────────────────────────────────────── */
     .oss-grid {
@@ -331,6 +331,61 @@
     }
     .footer-contact-strip a:hover { color: #f2eded; }
   </style>
+  <script>
+    (() => {
+      const rotations = { red: 0, blue: 216, green: 156, orange: 36 };
+      const names = Object.keys(rotations);
+      const requested = new URLSearchParams(location.search).get('theme');
+      const seed = requested && requested in rotations
+        ? requested
+        : names[Math.floor(Math.random() * names.length)];
+      const dh = rotations[seed];
+
+      const rotate = (rgb) => {
+        const [r, g, b] = rgb.map(v => v / 255);
+        const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+        let h = 0;
+        if (d) {
+          h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+          h = (h * 60 + 360) % 360;
+        }
+        const l = (max + min) / 2;
+        const s = d ? d / (1 - Math.abs(2 * l - 1)) : 0;
+        h = (h + dh) % 360;
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+        const m = l - c / 2;
+        const seg = Math.floor(h / 60) % 6;
+        return [[c, x, 0], [x, c, 0], [0, c, x], [0, x, c], [x, 0, c], [c, 0, x]][seg]
+          .map(v => Math.round((v + m) * 255));
+      };
+
+      const accent = rotate([255, 122, 143]);
+      const sources = {
+        '--accent-rgb': accent,
+        '--bg-deep-rgb': rotate([255, 87, 112]),
+        '--bg-warm-rgb': rotate([255, 203, 178]),
+        '--orb-a-rgb': rotate([255, 98, 128]),
+        '--orb-b-rgb': rotate([255, 171, 153]),
+        '--hero-card-a-rgb': rotate([37, 10, 22]),
+        '--hero-card-b-rgb': rotate([16, 4, 11])
+      };
+      const root = document.documentElement;
+      for (const [name, rgb] of Object.entries(sources)) {
+        root.style.setProperty(name, rgb.join(','));
+      }
+      root.style.setProperty('--accent', '#' + accent.map(v => v.toString(16).padStart(2, '0')).join(''));
+      root.dataset.theme = seed;
+      window.__gfPalette = {
+        accent: accent.join(','),
+        mid: rotate([255, 168, 153]).join(','),
+        light: rotate([255, 210, 200]).join(','),
+        edgeA: rotate([255, 100, 130]).join(','),
+        edgeB: rotate([255, 200, 185]).join(','),
+        halo: rotate([255, 184, 168]).join(',')
+      };
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -1015,7 +1070,7 @@
     position:fixed; bottom:1.25rem; left:50%; transform:translateX(-50%);
     width:min(96vw, 640px); z-index:9999;
     background:rgba(18,13,15,0.92); backdrop-filter:blur(16px) saturate(1.4);
-    border:1px solid rgba(255,122,143,0.18); border-radius:14px;
+    border:1px solid rgba(var(--accent-rgb),0.18); border-radius:14px;
     padding:1.25rem 1.5rem; display:flex; flex-wrap:wrap; gap:1rem;
     align-items:center; justify-content:space-between;
     box-shadow:0 8px 32px rgba(0,0,0,0.55); font-family:Inter,sans-serif;
@@ -1024,7 +1079,7 @@
       <p style="margin:0 0 .3rem; font-size:.8rem; font-weight:600; color:#f2eded; letter-spacing:.04em; text-transform:uppercase;">Cookie notice</p>
       <p style="margin:0; font-size:.82rem; line-height:1.55; color:#b5abab;">
         We use essential cookies to operate this site, and optional analytics cookies to understand how visitors use it.
-        <a href="/privacy.html" style="color:#ff7a8f; text-decoration:none;">Privacy Policy</a>
+        <a href="/privacy.html" style="color:var(--accent); text-decoration:none;">Privacy Policy</a>
       </p>
     </div>
     <div style="display:flex; gap:.6rem; flex-shrink:0; flex-wrap:wrap;">
@@ -1036,7 +1091,7 @@
       </button>
       <button id="cookie-accept" style="
         padding:.45rem 1.25rem; border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer;
-        border:none; background:#ff7a8f; color:#0d0a0b;
+        border:none; background:var(--accent); color:#0d0a0b;
         transition:background .15s, transform .12s;">
         Accept all
       </button>
@@ -1075,6 +1130,7 @@
       const canvas = document.getElementById('signal-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
+      const P = window.__gfPalette;
       let mouse = { x: 0.5, y: 0.5 };
       let smooth = { x: 0.5, y: 0.5 };
       let nodes = [], edges = [];
@@ -1146,9 +1202,9 @@
           n.y = n.by + Math.cos(t * n.speed * 0.7 + n.phase * 1.3) * 5 + (smooth.y - n.by / H) * n.mass * 28;
         });
         [
-          { a:0, b:6, c:1, col:'rgba(255,122,143,', al:0.55, lw:1.2 },
-          { a:6, b:2, c:4, col:'rgba(255,168,153,', al:0.38, lw:0.9 },
-          { a:8, b:7, c:3, col:'rgba(255,210,200,', al:0.28, lw:0.8 },
+          { a:0, b:6, c:1, col:`rgba(${P.accent},`, al:0.55, lw:1.2 },
+          { a:6, b:2, c:4, col:`rgba(${P.mid},`, al:0.38, lw:0.9 },
+          { a:8, b:7, c:3, col:`rgba(${P.light},`, al:0.28, lw:0.8 },
         ].forEach(({ a, b, c, col, al, lw }) => {
           if (!nodes[a] || !nodes[b] || !nodes[c]) return;
           const na = nodes[a], nb = nodes[b], nc = nodes[c], p = 0.12;
@@ -1164,7 +1220,7 @@
           const al = (1 - d/320) * 0.45;
           const boost = Math.max(0, 1 - Math.hypot(mx-(a.x+b.x)/2, my-(a.y+b.y)/2) / 200) * 0.3;
           const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-          g.addColorStop(0, `rgba(255,100,130,${al+boost})`); g.addColorStop(1, `rgba(255,200,185,${al*0.5+boost*0.5})`);
+          g.addColorStop(0, `rgba(${P.edgeA},${al+boost})`); g.addColorStop(1, `rgba(${P.edgeB},${al*0.5+boost*0.5})`);
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
           ctx.strokeStyle = g; ctx.lineWidth = 0.8 + boost * 1.5; ctx.stroke();
         });
@@ -1172,12 +1228,12 @@
           const glow = Math.max(0, 1 - Math.hypot(mx-n.x, my-n.y)/180);
           if (glow > 0.05) {
             ctx.beginPath(); ctx.arc(n.x, n.y, n.r*2.5+glow*6, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(255,122,143,${glow*0.18})`; ctx.fill();
+            ctx.fillStyle = `rgba(${P.accent},${glow*0.18})`; ctx.fill();
           }
           const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r*2);
-          gr.addColorStop(0, `rgba(255,122,143,${0.85+glow*0.15})`); gr.addColorStop(1, 'rgba(255,184,168,0)');
+          gr.addColorStop(0, `rgba(${P.accent},${0.85+glow*0.15})`); gr.addColorStop(1, `rgba(${P.halo},0)`);
           ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fillStyle = gr; ctx.fill();
-          ctx.beginPath(); ctx.arc(n.x, n.y, n.r*0.45, 0, Math.PI*2); ctx.fillStyle = 'rgba(255,122,143,1)'; ctx.fill();
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r*0.45, 0, Math.PI*2); ctx.fillStyle = `rgba(${P.accent},1)`; ctx.fill();
         });
         requestAnimationFrame(draw);
       }

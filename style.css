@@ -33,6 +33,12 @@
   --tertiary: #b783ff;
   --accent: #ff7a8f;
   --accent-rgb: 255, 122, 143;
+  --bg-deep-rgb: 255, 87, 112;
+  --bg-warm-rgb: 255, 203, 178;
+  --orb-a-rgb: 255, 98, 128;
+  --orb-b-rgb: 255, 171, 153;
+  --hero-card-a-rgb: 37, 10, 22;
+  --hero-card-b-rgb: 16, 4, 11;
   --shadow: 0 20px 70px rgba(2, 6, 23, 0.35);
   --radius-s: 16px;
   --radius-m: 24px;
@@ -49,8 +55,8 @@ body {
   font-family: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
   background:
     radial-gradient(circle at 16% 8%, rgba(var(--accent-rgb), 0.18), transparent 22%),
-    radial-gradient(circle at 84% 14%, rgba(255, 87, 112, 0.14), transparent 24%),
-    radial-gradient(circle at 50% 0%, rgba(255, 203, 178, 0.08), transparent 28%),
+    radial-gradient(circle at 84% 14%, rgba(var(--bg-deep-rgb), 0.14), transparent 24%),
+    radial-gradient(circle at 50% 0%, rgba(var(--bg-warm-rgb), 0.08), transparent 28%),
     linear-gradient(180deg, #0b0210 0%, var(--bg) 48%, #050108 100%);
   color: var(--text);
   overflow-x: hidden;
@@ -135,11 +141,11 @@ canvas { display: block; }
   opacity: 0.65;
 }
 .orb--a {
-  background: radial-gradient(circle, rgba(255, 98, 128, 0.58) 0%, transparent 55%);
+  background: radial-gradient(circle, rgba(var(--orb-a-rgb), 0.58) 0%, transparent 55%);
   transform: translate(-8%, -10%);
 }
 .orb--b {
-  background: radial-gradient(circle, rgba(255, 171, 153, 0.42) 0%, transparent 50%);
+  background: radial-gradient(circle, rgba(var(--orb-b-rgb), 0.42) 0%, transparent 50%);
   transform: translate(52%, 6%);
 }
 
@@ -268,7 +274,7 @@ h1 {
   padding: 1.35rem;
   border-radius: var(--radius-l);
   border: 1px solid var(--line-strong);
-  background: linear-gradient(180deg, rgba(37, 10, 22, 0.84), rgba(16, 4, 11, 0.94));
+  background: linear-gradient(180deg, rgba(var(--hero-card-a-rgb), 0.84), rgba(var(--hero-card-b-rgb), 0.94));
   box-shadow: var(--shadow);
 }
 
