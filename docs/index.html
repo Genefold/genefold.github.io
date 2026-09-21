@@ -1,0 +1,69 @@
+---
+layout: default
+title: "Documentation"
+description: "Genefold documentation: definitions and methods for spectral vector search, graph Laplacian retrieval, embedding drift, and out-of-distribution monitoring."
+permalink: /docs/
+section: Documentation
+type: TechArticle
+image: /assets/og/genefold-default.png
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero doc-hero--section">
+  <h1>Documentation</h1>
+  <p class="doc-hero__lede">
+    Definitions and methods behind Genefold&rsquo;s spectral approach to embedding
+    retrieval and monitoring. Each page opens with a direct definition, states its
+    assumptions, and links to the primary evidence.
+  </p>
+</div>
+
+<div class="doc-page">
+  <div class="doc-grid">
+    <a class="doc-card" href="/docs/spectral-intelligence/">
+      <span class="doc-card__kicker">Definition</span>
+      <h2>Spectral intelligence</h2>
+      <p>Using eigenvalues, eigenvectors, and graph operators to describe structure in embedding spaces for retrieval and monitoring.</p>
+    </a>
+    <a class="doc-card" href="/docs/spectral-vector-search/">
+      <span class="doc-card__kicker">Method</span>
+      <h2>Spectral vector search</h2>
+      <p>Ranking embeddings with graph structure and bounded spectral scores, combined with cosine similarity at query time.</p>
+    </a>
+    <a class="doc-card" href="/docs/graph-laplacian-retrieval/">
+      <span class="doc-card__kicker">Method</span>
+      <h2>Graph Laplacian retrieval</h2>
+      <p>The mathematical formulation: feature-space graphs, Rayleigh quotients, graph wiring, and bounded spectral scores.</p>
+    </a>
+    <a class="doc-card" href="/docs/embedding-drift/">
+      <span class="doc-card__kicker">Operations</span>
+      <h2>Embedding drift</h2>
+      <p>Detecting distribution shift in embedding streams, and what spectral signals add to embedding-level statistics.</p>
+    </a>
+    <a class="doc-card" href="/docs/ood-vector-retrieval/">
+      <span class="doc-card__kicker">Monitoring</span>
+      <h2>Out-of-distribution vector retrieval</h2>
+      <p>How queries outside the corpus manifold behave, and which diagnostics expose them before they mislead retrieval.</p>
+    </a>
+    <a class="doc-card" href="/docs/spectral-search-vs-hnsw/">
+      <span class="doc-card__kicker">Comparison</span>
+      <h2>Spectral search vs HNSW</h2>
+      <p>A qualitative comparison of signals, index structures, long-tail behaviour, and build costs against standard ANN indexes.</p>
+    </a>
+    <a class="doc-card" href="/docs/glossary/">
+      <span class="doc-card__kicker">Reference</span>
+      <h2>Glossary</h2>
+      <p>Canonical, short definitions of the core terms used across Genefold documentation and papers.</p>
+    </a>
+  </div>
+
+  <section class="related-links">
+    <h2>Start here</h2>
+    <ul>
+      <li>New to the field? Read <a href="/docs/spectral-intelligence/">what spectral intelligence is</a>, then <a href="/docs/spectral-vector-search/">how spectral vector search works</a>.</li>
+      <li>For the published evidence, see <a href="/engineering/001.html">Engineering note 001: designing ArrowSpace and graph wiring</a>.</li>
+      <li>For a machine-readable index of this site, fetch <a href="/llms.txt">llms.txt</a>.</li>
+    </ul>
+  </section>
+</div>

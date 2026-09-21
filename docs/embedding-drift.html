@@ -1,0 +1,94 @@
+---
+layout: default
+title: "Embedding Drift Detection in Production"
+description: "A practical introduction to embedding drift detection: distribution shift, spectral drift signals, and monitoring policies for embedding pipelines in production."
+permalink: /docs/embedding-drift/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-embedding-drift.png
+og_image_alt: "Two embedding distributions drifting apart over time"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Embedding drift detection</h1>
+  <p class="doc-hero__lede">
+    What embedding drift is, why embedding-level statistics alone miss part of the
+    picture, and how spectral signals support production monitoring.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>Embedding drift</strong> is a change over time in the distribution of
+    embeddings produced for the same input population, caused by model updates,
+    upstream preprocessing changes, or shifts in the incoming data. It degrades
+    retrieval quality and downstream decisions before it is visible in raw metrics.
+  </p>
+
+  <h2>Why drift matters for retrieval systems</h2>
+  <p>
+    Embedding search quality depends on the compatibility of three layers: the
+    embedding model, the corpus, and the query distribution. When any layer moves,
+    distances that used to separate relevant from irrelevant items stop doing so.
+    Typical triggers include:
+  </p>
+  <ul>
+    <li><strong>Model updates.</strong> Re-embedding with a new model version changes the geometry of the whole space; indexes built on the old geometry silently decay.</li>
+    <li><strong>Corpus growth.</strong> New documents change manifold density and can invalidate calibration done on the original dataset.</li>
+    <li><strong>Upstream changes.</strong> Text preprocessing, chunking, or tokenisation changes alter what the same model produces for identical inputs.</li>
+    <li><strong>Domain shift.</strong> The user population or topics genuinely move away from the indexed content.</li>
+  </ul>
+
+  <h2>Signals: embedding-level and spectral</h2>
+  <p>
+    Common monitoring tracks embedding-level statistics: mean pooling distances,
+    cluster assignments, or nearest-neighbour distance distributions between time
+    windows. These catch coarse shifts but say little about how the structure of
+    the corpus changes.
+  </p>
+  <p>
+    <strong>Spectral drift</strong> signals compare distributions of
+    Laplacian-derived quantities between windows: the eigenvalue distribution of
+    the corpus graph, and per-item bounded spectral scores
+    (&lambda;&tau;, see <a href="/docs/graph-laplacian-retrieval/">graph Laplacian
+    retrieval</a>). Because these scores are bounded and comparable across model
+    updates, they can flag structural change that raw embedding statistics miss.
+    The capability is part of the
+    <a href="/docs/spectral-intelligence/">spectral intelligence</a> platform:
+    one Laplacian artifact serving both search and monitoring.
+  </p>
+
+  <h2>A monitoring policy</h2>
+  <ol>
+    <li>Compute spectral descriptors per window (eigenvalue distribution, &lambda;&tau; histograms) on a fixed sampling scheme.</li>
+    <li>Compare each new window against a calibrated baseline using the same wiring parameters.</li>
+    <li>Alert on sustained distributional change, not single-window noise.</li>
+    <li>On alert: inspect which regions of the manifold moved, then decide between recalibration, partial reindex, or full rebuild.</li>
+  </ol>
+
+  <section class="callout">
+    <h3>Qualifications</h3>
+    <p>
+      Spectral drift signals are indicative, not conclusive: thresholds and
+      sensitivity depend on sampling, graph wiring, and workload. Validate any
+      alerting policy against labelled incidents on your own deployment. For
+      handling individual queries that fall outside the corpus, see
+      <a href="/docs/ood-vector-retrieval/">out-of-distribution vector retrieval</a>.
+    </p>
+  </section>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/spectral-intelligence/">Spectral intelligence</a> — the concept behind spectral monitoring.</li>
+      <li><a href="/docs/graph-laplacian-retrieval/">Graph Laplacian retrieval</a> — where spectral descriptors come from.</li>
+      <li><a href="/products/arrowspace/">ArrowSpace</a> — software producing bounded spectral artifacts.</li>
+    </ul>
+  </section>
+</div>

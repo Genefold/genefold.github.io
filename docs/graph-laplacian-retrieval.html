@@ -1,0 +1,109 @@
+---
+layout: default
+title: "Graph Laplacian Retrieval for Embedding Search"
+description: "Mathematical formulation of graph Laplacian retrieval: feature-space graphs, Rayleigh quotient smoothness, graph wiring, and bounded spectral scores."
+permalink: /docs/graph-laplacian-retrieval/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-graph-laplacian-retrieval.png
+og_image_alt: "Feature-space graph and its Laplacian used for embedding retrieval"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Graph Laplacian retrieval</h1>
+  <p class="doc-hero__lede">
+    The mathematics behind spectral retrieval: how a graph over embeddings yields
+    smoothness energies, and how those energies become bounded ranking scores.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>Graph Laplacian retrieval</strong> builds a graph over feature-space
+    vectors, forms its graph Laplacian L = D &minus; A, and uses the Rayleigh
+    quotient R(x) = xᵀLx / xᵀx as a smoothness energy of each item relative to
+    the graph. A bounded ratio turns this energy into a comparable score used for
+    retrieval and diagnostics.
+  </p>
+
+  <h2>Setup and notation</h2>
+  <p>
+    Let X = {x&#8321;, &hellip;, x&#8345;} be a set of embedding vectors. Build a weighted,
+    undirected graph G = (V, E, A) whose vertices are the items and whose
+    adjacency matrix A encodes local relationships, typically k-nearest
+    neighbours with similarity-based weights. D is the degree matrix of A, and
+    the graph Laplacian is
+  </p>
+  <div class="formula">L = D &minus; A</div>
+  <p>
+    This Laplacian is computed on the graph of data items in feature space. It is
+    distinct from the Laplacians used in graph neural networks over message-passing
+    graphs; here the graph is built from the embedding geometry itself.
+  </p>
+
+  <h2>Smoothness energy</h2>
+  <p>
+    For a vector x with unit-scale energy, the Rayleigh quotient
+  </p>
+  <div class="formula">R(x) = xᵀLx / xᵀx</div>
+  <p>
+    measures how strongly x is connected relative to its neighbourhood: low
+    values mean the item sits in a smooth, well-connected region; high values
+    mean it is inconsistent with its neighbourhood or weakly connected.
+  </p>
+  <p>
+    ArrowSpace converts this unbounded energy into a bounded, comparable score by
+    normalising with a small constant &epsilon; (Engineering 001):
+  </p>
+  <div class="formula">&lambda;&tau;<sup>x</sup> = R(x) / (R(x) + &epsilon;) &isin; [0, 1)</div>
+  <p>
+    The bound holds regardless of the corpus energy scale, which is what makes
+    scores comparable across collections, time windows, and embedding model
+    updates. Edge-wise dispersion statistics from the graph complement the
+    Rayleigh quotient in the full <em>taumode</em> score described in the
+    <a href="/research/arrowspace/">ArrowSpace paper</a>.
+  </p>
+
+  <h2>Graph wiring</h2>
+  <p>
+    The results depend on how edges are chosen and weighted, which the literature
+    calls graph construction and Genefold calls <strong>graph wiring</strong>.
+    Wiring parameters (neighbourhood size, weighting scheme, and dispersion-based
+    edge selection) control which structure the Laplacian sees. The empirical
+    study <a href="/research/epiplexity-graph-wiring/">Epiplexity and Graph Wiring</a>
+    evaluates how construction choices affect retrieval behaviour, and
+    <a href="/engineering/001.html">Engineering 001</a> documents the practical
+    pipeline.
+  </p>
+
+  <h2>From energies to retrieval</h2>
+  <p>
+    The bounded scores enter retrieval as a second signal: the spectral
+    difference between query and item is combined with cosine similarity through
+    a runtime blend parameter. The full formulation and its evaluation are in
+    <a href="/docs/spectral-vector-search/">spectral vector search</a>.
+  </p>
+
+  <h2>Assumptions and limitations</h2>
+  <ul>
+    <li>The graph must reflect real neighbourhood structure; poor wiring produces misleading spectral signals.</li>
+    <li>Building and storing the graph costs compute and memory proportional to corpus size and neighbourhood parameters.</li>
+    <li>Smoothness is a property of the chosen graph and weights, not of the embedding model alone; results are dataset-specific.</li>
+    <li>The method complements geometric similarity; it does not replace it.</li>
+  </ul>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">Spectral vector search</a> — how the scores are used at query time.</li>
+      <li><a href="/docs/ood-vector-retrieval/">OOD vector retrieval</a> — diagnostics built on these energies.</li>
+      <li><a href="/docs/glossary/#graph-laplacian">Glossary: graph Laplacian</a> and <a href="/docs/glossary/#eigenvalue-distribution">eigenvalue distribution</a>.</li>
+    </ul>
+  </section>
+</div>

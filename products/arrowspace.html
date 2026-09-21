@@ -1,0 +1,108 @@
+---
+layout: default
+title: "ArrowSpace — Spectral Vector Search in Python and Rust"
+description: "ArrowSpace is an open-source spectral retrieval library: graph analysis, bounded lambda-tau scores, and tau-modulated search, available via pip and cargo."
+permalink: /products/arrowspace/
+section: Products
+type: TechArticle
+image: /assets/og/products-arrowspace.png
+og_image_alt: "ArrowSpace: spectral retrieval in Python and Rust"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>ArrowSpace</h1>
+  <p class="doc-hero__lede">
+    An open-source library for spectral vector search: it indexes embeddings with
+    bounded spectral scores derived from a graph Laplacian, and answers queries
+    by blending geometric similarity with corpus structure.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Python · Rust</span>
+    <span>Open source</span>
+    <span>Apache-2.0 (arrowspace-rs)</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>ArrowSpace</strong> implements spectral indexing for vector similarity
+    search: it builds a graph over embeddings, computes bounded spectral scores
+    (&lambda;&tau; in [0, 1)) from Laplacian smoothness and dispersion statistics, and
+    retrieves with a runtime blend of cosine similarity and spectral signal. See
+    <a href="/docs/spectral-vector-search/">spectral vector search</a> for the method.
+  </p>
+
+  <h2>Installation</h2>
+  <p>Python (pyarrowspace):</p>
+  <div class="formula">pip install arrowspace</div>
+  <p>Rust (arrowspace-rs):</p>
+  <div class="formula">cargo add arrowspace</div>
+  <p>
+    Versions, release notes, and platform support are published on the
+    repositories; consult them before pinning a version.
+  </p>
+
+  <h2>Capabilities</h2>
+  <ul>
+    <li><strong>Graph analysis and spectral indexing</strong> over embedding datasets, with parameterised graph wiring.</li>
+    <li><strong>Bounded spectral scores</strong> (&lambda;&tau; in [0, 1)) per item, comparable across collections and model updates.</li>
+    <li><strong>Tau-modulation</strong> at query time to blend spectral and cosine-like behaviour.</li>
+    <li><strong>Energy-distribution statistics</strong> that support re-ranking, thresholding, and monitoring workflows.</li>
+  </ul>
+
+  <h2>Evidence and evaluation</h2>
+  <p>
+    The method is published academically in the
+    <a href="/research/arrowspace/">ArrowSpace paper</a> and the
+    <a href="/research/energy-dispersion-networks/">Energy Dispersion Networks paper</a>.
+    Retrieval quality is evaluated against cosine baselines with a published
+    protocol in <a href="/engineering/001.html">Engineering 001</a> (CVE corpus and
+    TREC-COVID). A live industrial deployment is the
+    <a href="https://cve-search-engine.genefold.ai/" rel="noopener">CVE Search Engine demo</a>.
+  </p>
+
+  <h2>Repository</h2>
+  <div class="doc-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Distribution</th><th>Language</th><th>Install</th><th>Repository</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>pyarrowspace</td>
+          <td>Python</td>
+          <td><code>pip install arrowspace</code></td>
+          <td><a href="https://github.com/tuned-org-uk/pyarrowspace" rel="noopener">tuned-org-uk/pyarrowspace</a></td>
+        </tr>
+        <tr>
+          <td>arrowspace-rs</td>
+          <td>Rust</td>
+          <td><code>cargo add arrowspace</code></td>
+          <td><a href="https://github.com/tuned-org-uk/arrowspace-rs" rel="noopener">tuned-org-uk/arrowspace-rs</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="callout">
+    <h3>Positioning</h3>
+    <p>
+      ArrowSpace complements standard similarity search rather than replacing it.
+      It adds build and storage cost, and its benefit depends on graph
+      construction, data distribution, and query type; see
+      <a href="/docs/spectral-search-vs-hnsw/">spectral search vs HNSW</a> for the
+      trade-off discussion.
+    </p>
+  </section>
+
+  <section class="related-links">
+    <h2>Related pages</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">How spectral retrieval works</a>.</li>
+      <li><a href="/products/">All Genefold software</a>.</li>
+      <li>Community: <a href="https://github.com/Genefold" rel="noopener">github.com/Genefold</a> &middot; <a href="mailto:hello@genefold.ai?subject=ArrowSpace%20inquiry">hello@genefold.ai</a></li>
+    </ul>
+  </section>
+</div>
