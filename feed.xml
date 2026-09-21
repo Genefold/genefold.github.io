@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Genefold AI — Engineering</title>
+  <subtitle>Notes on systems, algorithms, and the engineering choices behind ArrowSpace and spectral intelligence at Genefold.</subtitle>
+  <link href="https://www.genefold.ai/engineering/" rel="alternate"/>
+  <link href="https://www.genefold.ai/feed.xml" rel="self"/>
+  <id>https://www.genefold.ai/engineering/</id>
+  <updated>2026-08-27T00:00:00Z</updated>
+  <author>
+    <name>Genefold AI</name>
+    <uri>https://www.genefold.ai/</uri>
+  </author>
+  <entry>
+    <title>Synthetic Data That Teaches: A Feedback Loop for Training Beyond Static Corpora</title>
+    <link href="https://www.genefold.ai/engineering/005.html" rel="alternate"/>
+    <id>https://www.genefold.ai/engineering/005.html</id>
+    <published>2026-08-27T00:00:00Z</published>
+    <updated>2026-08-27T00:00:00Z</updated>
+    <author><name>Tommaso Moriondo</name></author>
+    <summary>Data selection cannot create new training signal once the corpus is exhausted. This note proposes rewarding a synthetic-data generator for one thing only: whether its batches improve a learner on a fixed, held-out reference buffer.</summary>
+  </entry>
+  <entry>
+    <title>Genefold First Principles: The Curriculum Engine</title>
+    <link href="https://www.genefold.ai/engineering/004.html" rel="alternate"/>
+    <id>https://www.genefold.ai/engineering/004.html</id>
+    <published>2026-08-24T00:00:00Z</published>
+    <updated>2026-08-24T00:00:00Z</updated>
+    <author><name>Tommaso Moriondo</name></author>
+    <summary>Once the pipes are fast enough, the bottleneck stops moving bytes and starts moving meaning. Measure what each data domain teaches, forecast its marginal return, and steer the sampler.</summary>
+  </entry>
+  <entry>
+    <title>Genefold First Principles: From Entropy to Epiplexity</title>
+    <link href="https://www.genefold.ai/engineering/003.html" rel="alternate"/>
+    <id>https://www.genefold.ai/engineering/003.html</id>
+    <published>2026-08-24T00:00:00Z</published>
+    <updated>2026-08-24T00:00:00Z</updated>
+    <author><name>Lorenzo Moriondo and Tommaso Moriondo</name></author>
+    <summary>Entropy measures uncertainty. But not all uncertainty is learnable. When compute is finite, the question shifts from how much uncertainty exists to how much structure we can extract per FLOP.</summary>
+  </entry>
+  <entry>
+    <title>Genefold First Principles: Depletion of Uncertainty</title>
+    <link href="https://www.genefold.ai/engineering/002.html" rel="alternate"/>
+    <id>https://www.genefold.ai/engineering/002.html</id>
+    <published>2026-07-15T00:00:00Z</published>
+    <updated>2026-07-15T00:00:00Z</updated>
+    <author><name>Lorenzo Moriondo and Tommaso Moriondo</name></author>
+    <summary>Entropy is the irreducible uncertainty from the data source. Cross-entropy measures how close the model's distribution is to the truth; training depletes the KL divergence between the two.</summary>
+  </entry>
+  <entry>
+    <title>Designing ArrowSpace and graph wiring</title>
+    <link href="https://www.genefold.ai/engineering/001.html" rel="alternate"/>
+    <id>https://www.genefold.ai/engineering/001.html</id>
+    <published>2026-07-08T00:00:00Z</published>
+    <updated>2026-07-08T00:00:00Z</updated>
+    <author><name>Lorenzo Moriondo</name></author>
+    <summary>How graph wiring in the feature-space Laplacian powers spectral indexing (SPIN) for vector retrieval, and what the experimental evidence shows on CVE and TREC-COVID.</summary>
+  </entry>
+</feed>

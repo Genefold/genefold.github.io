@@ -1,1 +1,75 @@
 repository: Genefold/genefold.github.io
+
+title: Genefold AI
+tagline: Spectral intelligence for embedding search and monitoring
+description: >-
+  Genefold develops spectral methods for embedding retrieval, graph analysis,
+  drift detection, and out-of-distribution monitoring.
+url: https://www.genefold.ai
+baseurl: ""
+lang: en
+locale: en_US
+timezone: Europe/Rome
+
+logo: /favicon.ico
+image: /assets/og/genefold-default.png
+
+author:
+  name: Genefold AI
+  url: https://www.genefold.ai/
+
+social:
+  name: Genefold AI
+  links:
+    - https://github.com/Genefold
+    - https://www.linkedin.com/company/genefold-ai
+
+github:
+  username: Genefold
+
+twitter:
+  card: summary_large_image
+
+permalink: pretty
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - node_modules/
+  - README.md
+  - AGENTS.md
+  - scripts/
+  - reports/
+  - tests/
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      lang: en
+      image: /assets/og/genefold-default.png
+  - scope:
+      path: "engineering"
+    values:
+      type: article
+      section: Engineering
+  - scope:
+      path: "docs"
+    values:
+      type: TechArticle
+      section: Documentation
+  - scope:
+      path: "research"
+    values:
+      type: scholarly_article
+      section: Research

@@ -1,0 +1,20 @@
+# humans.txt — https://www.genefold.ai
+
+Genefold AI LTD, UK.
+We build spectral methods for embedding retrieval, graph analysis,
+drift detection, and out-of-distribution monitoring.
+
+Site: https://www.genefold.ai/
+Contact: hello@genefold.ai
+Code: https://github.com/Genefold
+LinkedIn: https://www.linkedin.com/company/genefold-ai
+
+Team:
+  Lorenzo Moriondo -- research and engineering
+  Tommaso Moriondo -- research and engineering
+
+Software:
+  ArrowSpace (Python): https://github.com/tuned-org-uk/pyarrowspace
+  ArrowSpace (Rust): https://github.com/tuned-org-uk/arrowspace-rs
+
+Built with Jekyll, hosted on GitHub Pages.
