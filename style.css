@@ -108,8 +108,8 @@ canvas { display: block; }
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 1.5rem;
-  align-items: end;
-  min-height: 90vh;
+  align-items: center;
+  min-height: 78vh;
   padding: 2rem 0;
 }
 
@@ -182,7 +182,8 @@ canvas { display: block; }
 h1, h2 {
   margin: 0;
   font-family: 'Space Grotesk', 'Inter', sans-serif;
-  line-height: 0.98;
+  line-height: 1.02;
+  text-wrap: balance;
 }
 h3 {
   margin: 0;
@@ -191,9 +192,9 @@ h3 {
 }
 
 h1 {
-  max-width: 10ch;
-  font-size: clamp(3.4rem, 8vw, 7.4rem);
-  letter-spacing: -0.05em;
+  max-width: 18ch;
+  font-size: clamp(3rem, 5.2vw, 5.4rem);
+  letter-spacing: -0.04em;
 }
 
 .hero__lede,
