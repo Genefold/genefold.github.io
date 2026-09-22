@@ -134,74 +134,25 @@
 
     .eng-root .site-shell { padding-bottom: 2rem; }
 
-    /* ── Engineering nav ─────────────────────────────────────── */
-    .eng-nav {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.85rem 1.25rem;
-      margin: 0 -1rem;
-      border-bottom: 1px solid var(--eng-line);
-      background: rgba(10, 16, 32, 0.82);
-      backdrop-filter: blur(16px);
+    /* ── Home utility ────────────────────────────────────────── */
+    .eng-home {
+      padding: 1.05rem 0 0;
     }
 
-    .eng-nav__brand {
+    .eng-home a {
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-
-    .eng-nav__brand a {
-      color: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--eng-muted);
       text-decoration: none;
       transition: color 0.15s;
     }
 
-    .eng-nav__brand a:hover { color: var(--primary); }
-
-    .eng-nav__brand svg { color: var(--accent); }
-
-    .eng-nav__brand span {
-      opacity: 0.55;
-      font-weight: 500;
-      margin: 0 0.35rem;
-    }
-
-    .eng-nav__links {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .eng-nav__links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--eng-muted);
-      text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-    }
-
-    .eng-nav__links a:hover,
-    .eng-nav__links a[aria-current="page"] {
+    .eng-home a:hover,
+    .eng-home a:focus-visible {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
     }
 
     /* ── Article header ──────────────────────────────────────── */
@@ -518,8 +469,6 @@
 
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 640px) {
-      .eng-nav { flex-wrap: wrap; }
-      .eng-nav__links { width: 100%; overflow-x: auto; padding-bottom: 0.25rem; }
       .eng-article { padding: 2rem 0 3rem; }
       .eng-article__meta { gap: 0.75rem; }
       .eng-author { flex-direction: column; align-items: center; text-align: center; }
@@ -531,24 +480,8 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="site-shell">
-    <nav class="eng-nav" aria-label="Engineering">
-      <div class="eng-nav__brand">
-        <a href="/" aria-label="Genefold home">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-          </svg>
-        </a>
-        <a href="/">Genefold</a>
-        <span>/</span>
-        <a href="/engineering">Engineering</a>
-      </div>
-      <ul class="eng-nav__links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/engineering" aria-current="page">Blog</a></li>
-        <li><a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open source</a></li>
-        <li><a href="mailto:hello@genefold.ai?subject=Engineering%20inquiry">Contact</a></li>
-      </ul>
+    <nav class="eng-home" aria-label="Home">
+      <a href="/">&#8592; Home</a>
     </nav>
 
     <main id="main">
