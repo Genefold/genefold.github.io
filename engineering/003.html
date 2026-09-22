@@ -114,7 +114,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <link rel="stylesheet" href="../style.css?v=20260922-1" />
   <script>
     MathJax = {
       tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
@@ -122,8 +122,9 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <link rel="stylesheet" href="engineering.css?v=20260922-1" />
   <style>
-    /* ── Engineering blog tokens & overrides ─────────────────── */
+    /* ── Engineering blog tokens & overrides ─────────────────────── */
     .eng-root {
       --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --eng-line: rgba(156, 181, 255, 0.12);
@@ -132,66 +133,7 @@
       --eng-max-width: 720px;
     }
 
-    .eng-root .site-shell { padding-bottom: 2rem; }
-
-    /* ── Home utility ────────────────────────────────────────── */
-    .eng-home {
-      padding: 1.05rem 0 0;
-    }
-
-    .eng-home a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--eng-muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .eng-home a:hover,
-    .eng-home a:focus-visible {
-      color: var(--text);
-    }
-
-    /* ── Article header ──────────────────────────────────────── */
-    .eng-article {
-      max-width: var(--eng-max-width);
-      margin: 0 auto;
-      padding: 3rem 0 4rem;
-    }
-
-    .eng-article__back {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.85rem;
-      color: var(--eng-muted);
-      text-decoration: none;
-      margin-bottom: 2rem;
-      transition: color 0.15s;
-    }
-
-    .eng-article__back:hover { color: var(--primary); }
-
-    .eng-article__eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: var(--eng-mono);
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--primary);
-      border: 1px solid rgba(104, 240, 211, 0.2);
-      background: rgba(104, 240, 211, 0.08);
-      border-radius: 999px;
-      padding: 0.25rem 0.7rem;
-      margin-bottom: 1.25rem;
-    }
-
+    /* ── Article header ──────────────────────────────────────────── */
     .eng-article__title {
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(2rem, 5vw, 3.2rem);
@@ -202,140 +144,7 @@
       margin: 0 0 1.25rem;
     }
 
-    .eng-article__lede {
-      font-size: 1.15rem;
-      line-height: 1.65;
-      color: var(--eng-muted);
-      margin: 0 0 1.5rem;
-      max-width: 60ch;
-    }
-
-    .eng-article__meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-top: 1px solid var(--eng-line);
-      border-bottom: 1px solid var(--eng-line);
-      font-family: var(--eng-mono);
-      font-size: 0.78rem;
-      color: var(--eng-muted);
-    }
-
-    .eng-article__meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    /* ── Article body ────────────────────────────────────────── */
-    .eng-article__body { padding-top: 2.5rem; }
-
-    .eng-article__body h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.4rem, 3vw, 1.85rem);
-      font-weight: 700;
-      line-height: 1.25;
-      color: var(--text);
-      margin: 2.5rem 0 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .eng-article__body h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 2rem 0 0.75rem;
-    }
-
-    .eng-article__body p {
-      font-size: 1.05rem;
-      line-height: 1.75;
-      color: var(--eng-muted);
-      margin: 0 0 1.25rem;
-    }
-
-    .eng-article__body p strong { color: var(--text); font-weight: 600; }
-    .eng-article__body em { color: var(--secondary); font-style: italic; }
-
-    .eng-article__body a {
-      color: var(--primary);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      transition: color 0.15s;
-    }
-    .eng-article__body a:hover { color: var(--text); }
-
-    .eng-article__body ul,
-    .eng-article__body ol {
-      margin: 0 0 1.5rem;
-      padding-left: 1.5rem;
-      color: var(--eng-muted);
-    }
-
-    .eng-article__body li {
-      font-size: 1.05rem;
-      line-height: 1.7;
-      margin-bottom: 0.5rem;
-    }
-    .eng-article__body li::marker { color: var(--primary); }
-
-    .eng-article__body code {
-      font-family: var(--eng-mono);
-      font-size: 0.9em;
-      padding: 0.15rem 0.35rem;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-    }
-
-    .eng-article__body pre {
-      padding: 1.25rem;
-      border-radius: var(--radius-s);
-      border: 1px solid var(--eng-line);
-      background: rgba(0, 0, 0, 0.28);
-      overflow-x: auto;
-      margin: 0 0 1.5rem;
-    }
-
-    .eng-article__body pre code {
-      display: block;
-      padding: 0;
-      background: transparent;
-      font-size: 0.85rem;
-      line-height: 1.65;
-      color: var(--eng-muted);
-    }
-
-    .eng-article__body pre.mermaid {
-      display: flex;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.18);
-    }
-
-    .eng-article__body blockquote {
-      margin: 0 0 1.5rem;
-      padding: 1rem 1.25rem;
-      border-left: 3px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      background: rgba(255, 122, 143, 0.06);
-    }
-
-    .eng-article__body blockquote p {
-      margin: 0;
-      font-size: 1rem;
-      color: var(--text);
-    }
-
-    .eng-article__body hr {
-      border: none;
-      border-top: 1px solid var(--eng-line);
-      margin: 2.5rem 0;
-    }
-
-    /* ── Tables (literature) ─────────────────────────────────── */
+    /* ── Tables (literature) ─────────────────────────────────────── */
     .eng-article__body table {
       width: 100%;
       border-collapse: collapse;
@@ -343,8 +152,7 @@
       font-size: 0.92rem;
     }
 
-    .eng-article__body th,
-    .eng-article__body td {
+    .eng-article__body th, .eng-article__body td {
       text-align: left;
       vertical-align: top;
       padding: 0.7rem 0.75rem;
@@ -362,20 +170,7 @@
       color: var(--text);
     }
 
-    .eng-article__body table code { white-space: nowrap; }
-
-    /* ── Author bio ──────────────────────────────────────────── */
-    .eng-author {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-top: 3rem;
-      padding: 1.25rem;
-      border: 1px solid var(--eng-line);
-      border-radius: var(--radius-m);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    }
-
+    /* ── Author bio ──────────────────────────────────────────────── */
     .eng-author__avatar {
       width: 52px;
       height: 52px;
@@ -384,95 +179,6 @@
       flex-shrink: 0;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
     }
-
-    .eng-author__copy { display: flex; flex-direction: column; gap: 0.25rem; }
-
-    .eng-author__name {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text);
-      margin: 0;
-    }
-
-    .eng-author__role {
-      font-family: var(--eng-mono);
-      font-size: 0.75rem;
-      color: var(--eng-muted);
-      margin: 0;
-    }
-
-    .eng-author__bio {
-      font-size: 0.92rem;
-      line-height: 1.6;
-      color: var(--eng-muted);
-      margin: 0.4rem 0 0;
-      max-width: 55ch;
-    }
-
-    /* ── Related posts ───────────────────────────────────────── */
-    .eng-related {
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--eng-line);
-    }
-
-    .eng-related__title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 1rem;
-    }
-
-    .eng-related__list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .eng-related__list a {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      padding: 0.9rem 1rem;
-      border: 1px solid var(--eng-line);
-      border-radius: 12px;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.03);
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .eng-related__list a:hover,
-    .eng-related__list a:focus-visible {
-      border-color: var(--eng-line-strong);
-      background: rgba(255, 255, 255, 0.06);
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    .eng-related__list h4 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      margin: 0;
-    }
-
-    .eng-related__list span {
-      font-family: var(--eng-mono);
-      font-size: 0.72rem;
-      color: var(--eng-muted);
-    }
-
-    /* ── Responsive ──────────────────────────────────────────── */
-    @media (max-width: 640px) {
-      .eng-article { padding: 2rem 0 3rem; }
-      .eng-article__meta { gap: 0.75rem; }
-      .eng-author { flex-direction: column; align-items: center; text-align: center; }
-    }
   </style>
 </head>
 <body class="eng-root">
@@ -480,9 +186,6 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="site-shell">
-    <nav class="eng-home" aria-label="Home">
-      <a href="/">&#8592; Home</a>
-    </nav>
 
     <main id="main">
       <article class="eng-article">
@@ -949,18 +652,6 @@ test_epiplexity_estimator()</code></pre>
     </footer>
   </div>
 
-  <script>
-    (() => {
-      const yearEl = document.getElementById('footer-year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('is-visible');
-        });
-      }, { threshold: 0.12 });
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    })();
-  </script>
+  <script src="engineering.js?v=20260922-1"></script>
 </body>
 </html>

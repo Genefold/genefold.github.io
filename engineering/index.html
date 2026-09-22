@@ -89,9 +89,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <link rel="stylesheet" href="../style.css?v=20260922-1" />
+    <link rel="stylesheet" href="engineering.css?v=20260922-1" />
   <style>
-    /* ── Engineering blog tokens & overrides ─────────────────── */
+    /* ── Engineering blog tokens & overrides ─────────────────────── */
     .eng-root {
       --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --eng-line: rgba(156, 181, 255, 0.12);
@@ -100,39 +101,12 @@
       --eng-muted: #8a9cc4;
     }
 
-    .eng-root .site-shell {
-      padding-bottom: 2rem;
-    }
-
-    /* ── Home utility ────────────────────────────────────────── */
-    .eng-home {
-      padding: 1.05rem 0 0;
-    }
-
-    .eng-home a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--eng-muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .eng-home a:hover,
-    .eng-home a:focus-visible {
-      color: var(--text);
-    }
-
-    /* ── Hero ────────────────────────────────────────────────── */
+    /* ── Hero ────────────────────────────────────────────────────── */
     .eng-hero {
       position: relative;
       padding: 4rem 0 3rem;
       border-bottom: 1px solid var(--eng-line);
     }
-
-
 
     .eng-hero h1 {
       max-width: 16ch;
@@ -168,7 +142,7 @@
       gap: 0.4rem;
     }
 
-    /* ── Layout: sidebar + feed ──────────────────────────────── */
+    /* ── Layout: sidebar + feed ──────────────────────────────────── */
     .eng-layout {
       display: grid;
       grid-template-columns: 220px 1fr;
@@ -214,8 +188,7 @@
       transition: color 0.15s, background 0.15s;
     }
 
-    .eng-topics a:hover,
-    .eng-topics a[aria-current="true"] {
+    .eng-topics a:hover, .eng-topics a[aria-current="true"] {
       color: var(--text);
       background: rgba(255, 255, 255, 0.05);
     }
@@ -235,7 +208,7 @@
       gap: 1.5rem;
     }
 
-    /* ── Post cards (specimen entries) ───────────────────────── */
+    /* ── Post cards (specimen entries) ───────────────────────────── */
     .eng-card {
       display: grid;
       grid-template-columns: 130px 1fr;
@@ -248,8 +221,7 @@
       transition: border-color 0.2s ease, background 0.2s ease, translate 0.2s ease;
     }
 
-    .eng-card:hover,
-    .eng-card:focus-visible {
+    .eng-card:hover, .eng-card:focus-visible {
       border-color: var(--eng-line-strong);
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
       translate: 0 -2px;
@@ -355,7 +327,7 @@
       gap: 0.35rem;
     }
 
-    /* ── Featured post ───────────────────────────────────────── */
+    /* ── Featured post ───────────────────────────────────────────── */
     .eng-featured {
       grid-column: 1 / -1;
       display: grid;
@@ -369,8 +341,7 @@
       transition: border-color 0.2s ease, translate 0.2s ease;
     }
 
-    .eng-featured:hover,
-    .eng-featured:focus-visible {
+    .eng-featured:hover, .eng-featured:focus-visible {
       border-color: rgba(104, 240, 211, 0.35);
       translate: 0 -2px;
       outline: 2px solid var(--primary);
@@ -445,7 +416,7 @@
       opacity: 0.7;
     }
 
-    /* ── Empty state ─────────────────────────────────────────── */
+    /* ── Empty state ─────────────────────────────────────────────── */
     .eng-empty {
       padding: 3rem 1.5rem;
       text-align: center;
@@ -467,7 +438,7 @@
       line-height: 1.6;
     }
 
-    /* ── Footer note ─────────────────────────────────────────── */
+    /* ── Footer note ─────────────────────────────────────────────── */
     .eng-footer-note {
       margin-top: 2rem;
       padding-top: 1.5rem;
@@ -487,47 +458,37 @@
       color: var(--primary);
     }
 
-    /* ── Responsive ──────────────────────────────────────────── */
+    /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 920px) {
       .eng-layout {
         grid-template-columns: 1fr;
       }
-
       .eng-sidebar {
         position: static;
       }
-
       .eng-topics {
         flex-direction: row;
         flex-wrap: wrap;
       }
-
       .eng-topics a {
         white-space: nowrap;
       }
-
       .eng-featured {
         grid-template-columns: 1fr;
       }
-
       .eng-featured__visual {
         order: -1;
         min-height: 160px;
       }
     }
-
     @media (max-width: 640px) {
-
-
       .eng-hero {
         padding: 2.5rem 0 2rem;
       }
-
       .eng-card {
         grid-template-columns: 1fr;
         gap: 0.9rem;
       }
-
       .eng-card__rail {
         flex-direction: row;
         align-items: center;
@@ -730,18 +691,6 @@
     </footer>
   </div>
 
-  <script>
-    (() => {
-      const yearEl = document.getElementById('footer-year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('is-visible');
-        });
-      }, { threshold: 0.12 });
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    })();
-  </script>
+  <script src="engineering.js?v=20260922-1"></script>
 </body>
 </html>
