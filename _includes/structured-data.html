@@ -1,0 +1,86 @@
+{% comment %}
+  JSON-LD: one graph per page. Describes only content present on the page.
+  Author attribution uses the Genefold AI organisation, matching visible bylines.
+{% endcomment %}
+{% assign page_url = page.url | replace: 'index.html', '' | absolute_url %}
+{% assign page_title = page.title | default: site.title %}
+{% assign page_description = page.description | default: site.description %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{ site.url }}/#organization",
+      "name": "Genefold AI",
+      "url": "{{ site.url }}/",
+      "logo": "{{ site.url }}/favicon.ico",
+      "description": "Genefold AI develops spectral methods for embedding retrieval, graph analysis, drift detection, and out-of-distribution monitoring.",
+      "sameAs": [
+        "https://github.com/Genefold",
+        "https://www.linkedin.com/company/genefold-ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ site.url }}/#website",
+      "url": "{{ site.url }}/",
+      "name": "Genefold AI",
+      "publisher": { "@id": "{{ site.url }}/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "{{ page_url }}#webpage",
+      "url": "{{ page_url }}",
+      "name": {{ page_title | jsonify }},
+      "description": {{ page_description | jsonify }},
+      "isPartOf": { "@id": "{{ site.url }}/#website" },
+      "about": { "@id": "{{ site.url }}/#organization" },
+      "inLanguage": "en"
+    }
+    {% if page.type == 'TechArticle' or page.type == 'article' %}
+    ,{
+      "@type": "TechArticle",
+      "@id": "{{ page_url }}#article",
+      "headline": {{ page_title | jsonify }},
+      "description": {{ page_description | jsonify }},
+      "url": "{{ page_url }}",
+      {% if page.date_published %}"datePublished": "{{ page.date_published | date_to_xmlschema }}",{% endif %}
+      {% if page.last_modified %}"dateModified": "{{ page.last_modified | date_to_xmlschema }}",{% endif %}
+      "inLanguage": "en",
+      "author": { "@type": "Organization", "name": "Genefold AI", "url": "{{ site.url }}/" },
+      "publisher": { "@type": "Organization", "name": "Genefold AI", "url": "{{ site.url }}/" },
+      "isPartOf": { "@id": "{{ site.url }}/#website" }
+    }
+    {% elsif page.type == 'scholarly_article' %}
+    ,{
+      "@type": "ScholarlyArticle",
+      "@id": "{{ page_url }}#article",
+      "headline": {{ page_title | jsonify }},
+      "description": {{ page_description | jsonify }},
+      "url": "{{ page_url }}",
+      {% if page.date_published %}"datePublished": "{{ page.date_published | date_to_xmlschema }}",{% endif %}
+      {% if page.last_modified %}"dateModified": "{{ page.last_modified | date_to_xmlschema }}",{% endif %}
+      "inLanguage": "en",
+      "publisher": { "@type": "Organization", "name": "Genefold AI", "url": "{{ site.url }}/" },
+      "isPartOf": { "@id": "{{ site.url }}/#website" }
+      {% if page.doi %},"identifier": "{{ page.doi }}"{% endif %}
+    }
+    {% endif %}
+    {% if page.section %}
+    ,{
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site.url }}/" }
+        {% if page.section == 'Engineering' %},{ "item": "{{ site.url }}/engineering/", "name": "Engineering", "position": 2 }{% endif %}
+        {% if page.section == 'Documentation' %},{ "item": "{{ site.url }}/docs/", "name": "Documentation", "position": 2 }{% endif %}
+        {% if page.section == 'Research' %},{ "item": "{{ site.url }}/research/", "name": "Research", "position": 2 }{% endif %}
+        {% if page.section == 'Products' %},{ "item": "{{ site.url }}/products/", "name": "Products", "position": 2 }{% endif %}
+        ,{ "item": "{{ page_url }}", "name": {{ page_title | jsonify }}, "position": 3 }
+      ]
+    }
+    {% endif %}
+  ]
+}
+</script>

@@ -1,0 +1,102 @@
+---
+layout: default
+title: "Spectral Intelligence for Embeddings"
+description: "Spectral intelligence uses eigenvalues, eigenvectors, and graph operators to describe embedding structure for retrieval, drift detection, and monitoring."
+permalink: /docs/spectral-intelligence/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-spectral-intelligence.png
+og_image_alt: "Spectral descriptors of an embedding manifold"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Spectral intelligence for embeddings</h1>
+  <p class="doc-hero__lede">
+    What &ldquo;spectral intelligence&rdquo; means as a technical term, what it adds
+    to purely geometric similarity, and where it applies.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>Spectral intelligence</strong> is the use of eigenvalues, eigenvectors,
+    and related graph operators to describe structure in embedding spaces for
+    retrieval, monitoring, and analysis. Where cosine similarity measures pairwise
+    vector angles, spectral descriptors capture manifold geometry, redundancy, and
+    global topology of the corpus.
+  </p>
+
+  <h2>Why pairwise similarity is not enough</h2>
+  <p>
+    A cosine index answers one question: which stored vector points in the same
+    direction as the query. This is a <em>local</em> signal. It discards corpus-level
+    facts such as how tightly a cluster is connected, how redundant a region is, or
+    whether a query sits on the manifold at all. Those facts are exactly what
+    production systems need for <a href="/docs/ood-vector-retrieval/">out-of-distribution
+    detection</a> and <a href="/docs/embedding-drift/">drift monitoring</a>.
+  </p>
+  <p>
+    Spectral methods recover some of this structure by building a graph over the
+    embedding space and studying its <a href="/docs/graph-laplacian-retrieval/">graph
+    Laplacian</a>. The spectrum of that graph summarises how the corpus is shaped:
+    connectedness, cluster separation, and smoothness of items relative to their
+    neighbourhoods.
+  </p>
+
+  <h2>Key properties</h2>
+  <ul>
+    <li><strong>Corpus-level signal.</strong> Spectral quantities are computed over the graph of the dataset, not per query pair, so they encode context that pairwise metrics cannot.</li>
+    <li><strong>Bounded, comparable scores.</strong> In ArrowSpace, per-item spectral scores are bounded to [0, 1), which keeps them comparable across collections, time windows, and model updates.</li>
+    <li><strong>One artifact, many operations.</strong> The same Laplacian-derived structure supports search, drift monitoring, anomaly detection, and diagnostics.</li>
+    <li><strong>Interpretability.</strong> Smoothness energy and dispersion components give auditable reasons for why items rank together.</li>
+  </ul>
+
+  <h2>How it works</h2>
+  <ol>
+    <li>Embed the corpus with the model of your choice; spectral methods are agnostic to the embedding model.</li>
+    <li>Build a graph over the vectors (graph wiring); the construction is parameterised and evaluated in the <a href="/research/epiplexity-graph-wiring/">graph-wiring study</a>.</li>
+    <li>Form the graph Laplacian and compute spectral descriptors: smoothness energy per item and dispersion statistics.</li>
+    <li>Use those descriptors where cosine alone is insufficient: ranking, drift signals, and OOD diagnostics.</li>
+  </ol>
+
+  <h2>Evidence</h2>
+  <p>
+    The engineering note <a href="/engineering/001.html">Designing ArrowSpace and graph
+    wiring</a> reports the evaluation protocol and results of spectral indexing
+    (SPIN) against cosine baselines on the CVE vulnerability corpus and TREC-COVID.
+    The method is described academically in
+    <a href="/research/energy-dispersion-networks/">From Embedding Geometry to Spectral
+    Search</a> and in the <a href="/research/arrowspace/">ArrowSpace paper</a>.
+  </p>
+  <p>
+    You can try the approach on the live
+    <a href="https://cve-search-engine.genefold.ai/" rel="noopener">CVE search demo</a>,
+    which indexes the National Vulnerability Database with ArrowSpace.
+  </p>
+
+  <section class="callout">
+    <h3>What spectral intelligence does not claim</h3>
+    <p>
+      It does not replace geometric similarity. Published comparisons are against
+      cosine baselines on specific datasets; the benefit depends on graph
+      construction, data distribution, and query type. See
+      <a href="/docs/spectral-search-vs-hnsw/">spectral search vs HNSW</a> for a
+      discussion of trade-offs against standard ANN indexes.
+    </p>
+  </section>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">Spectral vector search</a> — the retrieval method built on these ideas.</li>
+      <li><a href="/docs/graph-laplacian-retrieval/">Graph Laplacian retrieval</a> — the mathematical formulation.</li>
+      <li><a href="/docs/glossary/">Glossary</a> — canonical definitions of all core terms.</li>
+    </ul>
+  </section>
+</div>

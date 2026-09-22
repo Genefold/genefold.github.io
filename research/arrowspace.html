@@ -1,0 +1,89 @@
+---
+layout: default
+title: "ArrowSpace: Spectral Search for Embeddings and Graph Analysis"
+description: "Paper page for ArrowSpace: spectral indexing of embeddings using taumode (lambda-tau), with links, reproducibility material, and BibTeX."
+permalink: /research/arrowspace/
+section: Research
+type: scholarly_article
+image: /assets/og/research-arrowspace.png
+og_image_alt: "ArrowSpace paper cover"
+date_published: 2025-08-28
+last_modified: 2026-09-21
+doi: "10.21105/joss.09002"
+---
+
+<div class="doc-hero">
+  <h1>ArrowSpace: Spectral Search for Embeddings and Graph Analysis</h1>
+  <p class="doc-hero__lede">
+    The paper describing the ArrowSpace library: a spectral indexing approach for
+    vector similarity search that combines traditional semantic similarity with
+    graph-based spectral properties.
+  </p>
+  <div class="doc-hero__meta">
+    <span>2025</span>
+    <span>by Lorenzo Moriondo</span>
+    <span>DOI 10.21105/joss.09002</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <section class="related-links" style="margin-top:0;">
+    <h2>Primary sources</h2>
+    <ul>
+      <li>Paper page and PDF: <a href="https://www.tuned.org.uk/arrowspace-paper" rel="noopener">tuned.org.uk/arrowspace-paper</a></li>
+      <li>DOI (published): <a href="https://doi.org/10.21105/joss.09002" rel="noopener">10.21105/joss.09002</a></li>
+      <li>Preprint DOI: 10.36227/techrxiv.175751921.18542359/v1 (August 28, 2025)</li>
+    </ul>
+  </section>
+
+  <h2>Abstract</h2>
+  <p>
+    <em>arrowspace</em> is a library that implements a novel spectral indexing
+    approach for vector similarity search, combining traditional semantic
+    similarity with graph-based spectral properties. The library introduces
+    taumode (&lambda;&tau;) indexing, which blends Rayleigh-quotient smoothness
+    energy from graph Laplacians with edge-wise dispersion statistics to create
+    bounded, comparable spectral scores. This enables similarity search that
+    considers both semantic content and spectral characteristics of
+    high-dimensional vector datasets.
+  </p>
+  <p>
+    The bound matters operationally: scores remain comparable across collections,
+    time windows, and model updates, which supports re-ranking and thresholding
+    in production pipelines and gives interpretable rationales for why items
+    rank together.
+  </p>
+
+  <h2>Contributions</h2>
+  <ul>
+    <li>A spectral indexing scheme combining Rayleigh-quotient smoothness energy from graph Laplacians with edge-wise dispersion statistics.</li>
+    <li>Bounded (&lambda;&tau;) scores per item, in [0, 1), enabling calibration across datasets.</li>
+    <li>An implementation of the approach in a maintained open-source library.</li>
+  </ul>
+
+  <h2>Reproducibility</h2>
+  <ul>
+    <li>Core library (Rust): <a href="https://github.com/tuned-org-uk/arrowspace-rs" rel="noopener">tuned-org-uk/arrowspace-rs</a>, Apache-2.0.</li>
+    <li>Python bindings: <a href="https://github.com/tuned-org-uk/pyarrowspace" rel="noopener">tuned-org-uk/pyarrowspace</a> (<code>pip install arrowspace</code>).</li>
+    <li>Worked examples live in the repository&rsquo;s <code>examples/</code> directory.</li>
+    <li>A live industrial setting is the <a href="https://cve-search-engine.genefold.ai/" rel="noopener">CVE search demo</a> over the NVD corpus.</li>
+  </ul>
+
+  <h2>BibTeX</h2>
+  <pre><code>@article{moriondo2025arrowspace,
+  title   = {ArrowSpace: Spectral Search For Embeddings and Graph Analysis},
+  author  = {Moriondo, Lorenzo},
+  year    = {2025},
+  doi     = {10.21105/joss.09002},
+  url     = {https://doi.org/10.21105/joss.09002}
+}</code></pre>
+
+  <section class="related-links">
+    <h2>Related pages</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">How the scores are used in retrieval</a>.</li>
+      <li><a href="/engineering/001.html">Engineering 001</a> — the evaluation of spectral indexing on CVE and TREC-COVID.</li>
+      <li><a href="/products/arrowspace/">ArrowSpace product page</a>.</li>
+    </ul>
+  </section>
+</div>

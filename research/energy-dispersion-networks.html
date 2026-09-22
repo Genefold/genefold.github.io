@@ -1,0 +1,97 @@
+---
+layout: default
+title: "From Embedding Geometry to Spectral Search: Energy Dispersion Networks For Vector Retrieval"
+description: "Paper page for the arXiv study introducing Graph Wiring, Spectral Indexing (SPIN), tau-modulation, and epiplexity for vector retrieval, with BibTeX."
+permalink: /research/energy-dispersion-networks/
+section: Research
+type: scholarly_article
+image: /assets/og/research-energy-dispersion.png
+og_image_alt: "Energy Dispersion Networks paper cover"
+date_published: 2026-06-19
+last_modified: 2026-09-21
+doi: "10.48550/arXiv.2606.21535"
+---
+
+<div class="doc-hero">
+  <h1>From Embedding Geometry to Spectral Search: Energy Dispersion Networks For Vector Retrieval</h1>
+  <p class="doc-hero__lede">
+    The arXiv paper formalising Graph Wiring, Spectral Indexing (SPIN), and
+    tau-modulation for retrieval-augmented pipelines.
+  </p>
+  <div class="doc-hero__meta">
+    <span>arXiv 2606.21535 (cs.IR)</span>
+    <span>by Lorenzo Moriondo and Ilias Azizi</span>
+    <span>v1 June 2026, v2 July 2026</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <section class="related-links" style="margin-top:0;">
+    <h2>Primary sources</h2>
+    <ul>
+      <li>Abstract page: <a href="https://arxiv.org/abs/2606.21535" rel="noopener">arxiv.org/abs/2606.21535</a></li>
+      <li>DOI: <a href="https://doi.org/10.48550/arXiv.2606.21535" rel="noopener">10.48550/arXiv.2606.21535</a></li>
+      <li>Licence: CC BY 4.0.</li>
+    </ul>
+  </section>
+
+  <h2>Abstract</h2>
+  <blockquote>
+    <p>
+      High-dimensional vector spaces, particularly embedding spaces with dense
+      semantic structure, are often interpreted primarily leveraging solely
+      geometric relationships. In this work, we show that they can also be viewed
+      as spectral energy networks induced by the topology of their underlying
+      feature-space manifold with relevant improvements for downstream tasks.
+      Building on this perspective, we introduce Graph Wiring, a general framework
+      for exploiting feature-space spectral structure, together with Spectral
+      Indexing, its task-specific instantiation for vector search. By coupling
+      geometric similarity with spectral information, the proposed method improves
+      Head-Tail coherence and semantic alignment relative to purely geometric
+      retrieval methods. It further supports adaptive search behavior through
+      tau-modulation, providing the flexibility increasingly required by modern
+      Retrieval-Augmented Generation (RAG) pipelines. We present the complete
+      algorithmic pipeline, establish its theoretical foundation through
+      epiplexity, and evaluate the approach across benchmark and industrial
+      settings using the open-source arrowspace library.
+    </p>
+    <p style="font-size:0.8rem;">&mdash; arXiv:2606.21535, used under CC BY 4.0.</p>
+  </blockquote>
+
+  <h2>Contributions</h2>
+  <ul>
+    <li><strong>Graph Wiring:</strong> a general framework for exploiting feature-space spectral structure.</li>
+    <li><strong>Spectral Indexing (SPIN):</strong> the task-specific instantiation for vector search, coupling geometric similarity with spectral information.</li>
+    <li><strong>Tau-modulation:</strong> adaptive search behaviour for modern RAG pipelines.</li>
+    <li><strong>Epiplexity:</strong> a theoretical foundation for the approach, and an evaluation across benchmark and industrial settings.</li>
+  </ul>
+
+  <h2>Reproducibility</h2>
+  <ul>
+    <li>Open-source implementation used in the evaluation: <a href="https://github.com/tuned-org-uk/arrowspace-rs" rel="noopener">arrowspace-rs</a> and <a href="https://github.com/tuned-org-uk/pyarrowspace" rel="noopener">pyarrowspace</a>.</li>
+    <li>Applied evaluation with protocol and tables: <a href="/engineering/001.html">Engineering 001</a> (CVE and TREC-COVID).</li>
+    <li>Industrial deployment: the <a href="https://cve-search-engine.genefold.ai/" rel="noopener">CVE search demo</a> over the NVD corpus.</li>
+  </ul>
+
+  <h2>BibTeX</h2>
+  <pre><code>@misc{moriondo2026energy,
+  title         = {From Embedding Geometry to Spectral Search: Energy
+                   Dispersion Networks For Vector Retrieval},
+  author        = {Moriondo, Lorenzo and Azizi, Ilias},
+  year          = {2026},
+  eprint        = {2606.21535},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.IR},
+  doi           = {10.48550/arXiv.2606.21535},
+  url           = {https://arxiv.org/abs/2606.21535}
+}</code></pre>
+
+  <section class="related-links">
+    <h2>Related pages</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">Spectral vector search</a> — the method in documentation form.</li>
+      <li><a href="/docs/glossary/#graph-wiring">Glossary: graph wiring</a> and <a href="/docs/glossary/#epiplexity">epiplexity</a>.</li>
+      <li><a href="/research/arrowspace/">ArrowSpace paper page</a>.</li>
+    </ul>
+  </section>
+</div>

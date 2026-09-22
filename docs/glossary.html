@@ -1,0 +1,232 @@
+---
+layout: default
+title: "Spectral Retrieval Glossary"
+description: "Canonical definitions of spectral retrieval terms: graph Laplacian, lambda-tau scores, tau-modulation, graph wiring, epiplexity, HNSW, and cosine similarity."
+permalink: /docs/glossary/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-glossary.png
+og_image_alt: "Glossary of spectral retrieval terminology"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Spectral retrieval glossary</h1>
+  <p class="doc-hero__lede">
+    Canonical, short definitions of the terms used across Genefold documentation.
+    Each entry is self-contained and links to a page covering the concept in depth.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <section class="glossary-term" id="spectral-intelligence">
+    <h2>Spectral intelligence</h2>
+    <p>
+      Spectral intelligence is the use of eigenvalues, eigenvectors, and related
+      graph operators to describe structure in embedding spaces for retrieval,
+      monitoring, and analysis. It differs from purely geometric similarity by
+      capturing corpus-level structure such as manifold shape, redundancy, and
+      connectivity.
+    </p>
+    <p class="glossary-see">See <a href="/docs/spectral-intelligence/">the full definition</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="spectral-vector-search">
+    <h2>Spectral vector search</h2>
+    <p>
+      Spectral vector search ranks embedding candidates using the structure of a
+      graph built over the embedding space, combined with direct geometric
+      similarity. In ArrowSpace this means blending cosine similarity with a
+      bounded spectral score difference at query time.
+    </p>
+    <p class="glossary-see">See <a href="/docs/spectral-vector-search/">spectral vector search</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="graph-laplacian">
+    <h2>Graph Laplacian</h2>
+    <p>
+      The matrix L = D &minus; A formed from a graph&rsquo;s degree matrix D and
+      adjacency matrix A. Its quadratic form measures how strongly a vector
+      disagrees with its neighbourhood, which retrieval methods use as smoothness
+      energy. Distinct from the Laplacians used in graph neural networks, because
+      the graph is built over the embedding geometry itself.
+    </p>
+    <p class="glossary-see">See <a href="/docs/graph-laplacian-retrieval/">graph Laplacian retrieval</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="laplacian-spectrum">
+    <h2>Laplacian spectrum</h2>
+    <p>
+      The set of eigenvalues and eigenvectors of a graph Laplacian. The spectrum
+      summarises global graph properties: connectivity, cluster separation, and
+      the frequency structure of the data. It is the source of the per-item
+      scores used in spectral retrieval.
+    </p>
+    <p class="glossary-see">See <a href="/docs/graph-laplacian-retrieval/">graph Laplacian retrieval</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="eigenvalue-distribution">
+    <h2>Eigenvalue distribution</h2>
+    <p>
+      The distribution of a Laplacian&rsquo;s eigenvalues over a corpus. Used as a
+      compact structural summary of the dataset: changes in this distribution
+      between time windows are a spectral <a href="/docs/embedding-drift/">drift
+      signal</a>.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="embedding-manifold">
+    <h2>Embedding manifold</h2>
+    <p>
+      The region of high-dimensional space where a corpus&rsquo; embeddings
+      concentrate. Retrieval and monitoring quality depend on whether queries and
+      indexed items lie on the same manifold. See also
+      <a href="#out-of-distribution-retrieval">out-of-distribution retrieval</a>.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="manifold-aware-retrieval">
+    <h2>Manifold-aware retrieval</h2>
+    <p>
+      Retrieval that ranks candidates using the geometry of the embedding
+      manifold, not only pairwise distances. Spectral retrieval is a
+      manifold-aware method: its scores derive from the graph over the data.
+      Contrast with pure nearest-neighbour ranking, which uses only local
+      proximity.
+    </p>
+    <p class="glossary-see">See <a href="/docs/spectral-vector-search/">spectral vector search</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="long-tail-retrieval">
+    <h2>Long-tail retrieval</h2>
+    <p>
+      Retrieval performance on infrequent or peripheral items, away from dense
+      cluster centres. Standard similarity signals degrade on the tail because
+      local neighbourhoods are sparse; spectral ranking is evaluated specifically
+      on tail behaviour (Engineering 001 reports tail-shape metrics on CVE).
+    </p>
+    <p class="glossary-see">See <a href="/engineering/001.html">Engineering 001</a> for the protocol.</p>
+  </section>
+
+  <section class="glossary-term" id="out-of-distribution-retrieval">
+    <h2>Out-of-distribution retrieval</h2>
+    <p>
+      Retrieval behaviour when a query falls outside the support of the corpus
+      manifold. Standard indexes still return nearest items, so the failure is
+      silent; spectral diagnostics expose structural symptoms that can trigger
+      abstention or rerouting.
+    </p>
+    <p class="glossary-see">See <a href="/docs/ood-vector-retrieval/">OOD vector retrieval</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="embedding-drift">
+    <h2>Embedding drift</h2>
+    <p>
+      A change over time in the distribution of embeddings for the same input
+      population, caused by model updates, preprocessing changes, or data shift.
+      Monitored with embedding-level statistics and with spectral signals such as
+      eigenvalue-distribution change.
+    </p>
+    <p class="glossary-see">See <a href="/docs/embedding-drift/">embedding drift detection</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="spectral-drift">
+    <h2>Spectral drift</h2>
+    <p>
+      A change over time in Laplacian-derived quantities (eigenvalue
+      distributions, bounded spectral scores) of a corpus graph. A structural
+      counterpart to embedding-level drift indicators.
+    </p>
+    <p class="glossary-see">See <a href="/docs/embedding-drift/">embedding drift detection</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="tau-modulation">
+    <h2>Tau-modulation</h2>
+    <p>
+      The runtime adjustment of the parameter blending geometric similarity and
+      spectral signal during retrieval. In the SPIN formulation, &tau; = 1.0 is
+      pure cosine retrieval and &tau; &rarr; 0 is fully spectral retrieval.
+      Implementations may parameterise the blend differently.
+    </p>
+    <p class="glossary-see">See <a href="/docs/spectral-vector-search/#tau-modulation">tau-modulation in spectral vector search</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="lambda-tau">
+    <h2>Lambda-tau (&lambda;&tau;, taumode)</h2>
+    <p>
+      The bounded per-item spectral score in ArrowSpace, computed from graph
+      Laplacian smoothness (Rayleigh quotient) and edge-wise dispersion, and
+      normalised to [0, 1). Boundedness keeps scores comparable across
+      collections, windows, and model updates.
+    </p>
+    <p class="glossary-see">See <a href="/docs/graph-laplacian-retrieval/">graph Laplacian retrieval</a>.</p>
+  </section>
+
+  <section class="glossary-term" id="spin">
+    <h2>SPIN (SPectral INdexing)</h2>
+    <p>
+      The task-specific instantiation of spectral indexing for vector search in
+      ArrowSpace: items indexed with &lambda;&tau; scores, queries answered with a
+      blend of cosine and spectral signals. Introduced in the
+      <a href="/research/energy-dispersion-networks/">Energy Dispersion Networks
+      paper</a>.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="graph-wiring">
+    <h2>Graph wiring</h2>
+    <p>
+      The parameterised construction of edges in a feature-space graph (neighbour
+      selection and weighting) before computing the Laplacian. Wiring choices
+      determine which structure the spectral signal sees; studied empirically in
+      the <a href="/research/epiplexity-graph-wiring/">Epiplexity and Graph Wiring
+      paper</a>.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="epiplexity">
+    <h2>Epiplexity</h2>
+    <p>
+      The structural information a dataset generates, as defined in Genefold&rsquo;s
+      research line on first principles. Used to reason about how much learnable
+      structure a corpus yields per unit of compute, and to guide graph
+      construction. See <a href="/engineering/003.html">Engineering 003</a> for
+      the framing.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="hnsw">
+    <h2>HNSW</h2>
+    <p>
+      Hierarchical Navigable Small World: a standard approximate
+      nearest-neighbour index built on a hierarchical proximity graph, optimised
+      for low-latency top-k lookup. It does not expose corpus-structure
+      diagnostics by itself. See <a href="/docs/spectral-search-vs-hnsw/">spectral
+      search vs HNSW</a>.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="cosine-similarity">
+    <h2>Cosine similarity</h2>
+    <p>
+      The cosine of the angle between two vectors: a pairwise, local similarity
+      signal insensitive to vector magnitude. The baseline signal in embedding
+      retrieval; spectral retrieval uses it as one of two signals rather than
+      replacing it.
+    </p>
+  </section>
+
+  <section class="glossary-term" id="ann">
+    <h2>Approximate nearest neighbour search</h2>
+    <p>
+      The family of algorithms (HNSW, IVF, LSH and relatives) that trade exact
+      recall for query latency on large vector collections. Their indexes encode
+      proximity for lookup, not corpus structure for diagnostics.
+    </p>
+  </section>
+</div>

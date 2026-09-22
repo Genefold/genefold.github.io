@@ -1,0 +1,137 @@
+---
+layout: default
+title: "Spectral Vector Search for Embeddings"
+description: "How spectral vector search ranks embeddings using graph Laplacian structure and bounded lambda-tau scores, blending cosine similarity with corpus structure."
+permalink: /docs/spectral-vector-search/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-spectral-vector-search.png
+og_image_alt: "Diagram of graph-aware spectral retrieval over embeddings"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Spectral vector search for embeddings</h1>
+  <p class="doc-hero__lede">
+    How spectral vector search ranks candidates, what the bounded spectral score
+    contributes, and how tau-modulation switches retrieval behaviour at runtime.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>Spectral vector search</strong> ranks embedding candidates using the
+    structure of a graph built over the embedding space and the spectrum of its
+    graph Laplacian, in addition to direct geometric similarity. It is designed to
+    preserve structural information that pure cosine ranking does not represent.
+  </p>
+
+  <h2>Key properties</h2>
+  <ul>
+    <li><strong>Bounded spectral score.</strong> Each item carries a score <em>lambda-tau</em> (&lambda;<sub>&tau;</sub>) in [0, 1), computed from graph Laplacian smoothness energy and edge-wise dispersion. Bounded scores stay comparable across collections and model updates.</li>
+    <li><strong>Two signals at query time.</strong> Retrieval combines cosine similarity with the spectral score difference; the blend is a runtime parameter, not a fixed index property.</li>
+    <li><strong>Runtime adaptability.</strong> Tau-modulation changes the blend during a session, supporting pipelines that need different behaviour for exploration and for focused evidence gathering.</li>
+    <li><strong>Structural diagnostics.</strong> Because scores derive from corpus structure, the same artifacts expose <a href="/docs/ood-vector-retrieval/">OOD behaviour</a> and <a href="/docs/embedding-drift/">drift signals</a>.</li>
+  </ul>
+
+  <h2>How it works</h2>
+  <ol>
+    <li>Embed the corpus.</li>
+    <li>Construct a graph over the vectors with a parameterised wiring strategy (see <a href="/docs/graph-laplacian-retrieval/">graph Laplacian retrieval</a>).</li>
+    <li>Compute each item&rsquo;s bounded spectral score &lambda;<sub>&tau;</sub> from the Laplacian.</li>
+    <li>At query time, score each candidate with a blend of cosine similarity and spectral difference.</li>
+    <li>Rank and return; optionally modulate &tau; between query phases.</li>
+  </ol>
+
+  <h2>Mathematical formulation</h2>
+  <p>
+    The spectral difference between query and item is the difference of their
+    bounded scores (Engineering 001):
+  </p>
+  <div class="formula">sim_&lambda;(q, i) = &lambda;&tau;<sup>q</sup> &minus; &lambda;&tau;<sup>i</sup></div>
+  <p>
+    where &lambda;&tau;<sup>x</sup> = R(x) / (R(x) + &epsilon;) &isin; [0, 1) and R(x) is the
+    Rayleigh quotient of the item on the graph Laplacian. The combined distance is
+  </p>
+  <div class="formula">dist<sub>SPIN</sub> = &tau; &middot; sim<sub>cos</sub>(q, i) + (1 &minus; &tau;) &middot; sim<sub>&lambda;</sub>(q, i)</div>
+  <p>
+    In this parameterisation &tau; = 1.0 is pure cosine retrieval, &tau; &rarr; 0 is fully
+    spectral retrieval, and intermediate values mix the two. Other implementations
+    may parameterise the same blend differently; check the library documentation.
+  </p>
+
+  <h2 id="tau-modulation">Tau-modulation</h2>
+  <p>
+    The blend parameter is a runtime control, not a one-off hyperparameter. In
+    long-context retrieval pipelines, an early phase with &tau; close to 1.0 leans on
+    geometric similarity to establish context; later phases with lower &tau; embed
+    more spectral signal to filter against corpus structure. Engineering 001
+    reports &tau; = 0.42 as the strongest taumode configuration on the CVE dataset
+    under its protocol, and gains on TREC-COVID concentrated around hybrid
+    settings &tau; &asymp; 0.65&ndash;0.80.
+  </p>
+
+  <h2>Comparison with cosine-only ranking</h2>
+  <div class="doc-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Property</th><th>Cosine similarity</th><th>Spectral retrieval (SPIN)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Primary signal</td><td>Pairwise vector angle</td><td>Graph and spectral structure plus vector angle</td></tr>
+        <tr><td>Index structure</td><td>Vector index</td><td>Graph-derived spectral artifacts</td></tr>
+        <tr><td>Score range</td><td>Unbounded depends on model</td><td>Bounded [0, 1) for &lambda;&tau;</td></tr>
+        <tr><td>Runtime control</td><td>None</td><td>Tau-modulation blend</td></tr>
+        <tr><td>Extra cost</td><td>None</td><td>Graph build and spectral artifacts</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Evidence</h2>
+  <p>
+    Engineering 001 evaluates SPIN against cosine (tau = 1.0), hybrid
+    (&tau; = 0.72), and taumode (&tau; = 0.42) configurations on the CVE corpus
+    (347,113 reports) and TREC-COVID (about 171,000 scientific articles). On CVE,
+    taumode achieved 29.9% lower tail coefficient of variation at the evaluated
+    setting; on TREC-COVID, intermediate &tau; values improved Relevance Recall and
+    NDCG at k = 10 over cosine. Consult
+    <a href="/engineering/001.html">the full note</a> for the evaluation protocol,
+    tables, and the exact configurations before reusing these numbers.
+  </p>
+  <p>
+    A live implementation over the NVD corpus is available in the
+    <a href="https://cve-search-engine.genefold.ai/" rel="noopener">CVE search demo</a>.
+  </p>
+
+  <h2>Implementation</h2>
+  <ul>
+    <li>Python: <a href="https://github.com/tuned-org-uk/pyarrowspace" rel="noopener">pyarrowspace</a> (<code>pip install arrowspace</code>).</li>
+    <li>Rust: <a href="https://github.com/tuned-org-uk/arrowspace-rs" rel="noopener">arrowspace-rs</a> (<code>cargo add arrowspace</code>).</li>
+    <li>LLM agents: <a href="https://github.com/Genefold/arrowspace-mcp" rel="noopener">arrowspace-mcp</a> exposes spectral search to models.</li>
+  </ul>
+
+  <section class="callout">
+    <h3>Limitations</h3>
+    <p>
+      Spectral retrieval adds build and storage cost, and its benefit depends on
+      graph construction, data distribution, evaluation protocol, and query type.
+      Published evidence compares it against cosine baselines on specific datasets;
+      comparisons with HNSW-class indexes are qualitative (see
+      <a href="/docs/spectral-search-vs-hnsw/">spectral search vs HNSW</a>).
+    </p>
+  </section>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/graph-laplacian-retrieval/">Graph Laplacian retrieval</a> — the underlying mathematics.</li>
+      <li><a href="/docs/spectral-intelligence/">Spectral intelligence</a> — the broader concept.</li>
+      <li><a href="/products/arrowspace/">ArrowSpace product page</a> — versions, licences, and installation.</li>
+    </ul>
+  </section>
+</div>

@@ -1,0 +1,88 @@
+---
+layout: default
+title: "Out-of-Distribution Vector Retrieval"
+description: "How out-of-distribution queries behave in vector retrieval, which spectral diagnostics expose them, and how to design fallbacks for OOD vector search."
+permalink: /docs/ood-vector-retrieval/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-ood-vector-retrieval.png
+og_image_alt: "A query landing outside the corpus manifold in embedding space"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Out-of-distribution vector retrieval</h1>
+  <p class="doc-hero__lede">
+    What happens when a query lands outside the corpus manifold, why standard
+    similarity search hides the problem, and which spectral diagnostics expose it.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>Out-of-distribution (OOD) vector retrieval</strong> concerns queries
+    that fall outside the support of the corpus manifold: no stored item is a
+    genuinely relevant neighbour. Cosine-based search still returns a nearest
+    item with a plausible-looking score, which makes OOD queries fail silently.
+    Spectral retrieval can expose this failure through structural diagnostics.
+  </p>
+
+  <h2>Why OOD queries are dangerous</h2>
+  <p>
+    A nearest-neighbour index always returns something: the closest item exists
+    even when nothing relevant is stored. The returned score reflects relative
+    proximity, not absolute relevance, so a confidently ranked result can be an
+    irrelevant item pulled from a distant cluster. In RAG pipelines this is the
+    mechanism behind confident hallucinated grounding.
+  </p>
+
+  <h2>What spectral structure adds</h2>
+  <p>
+    Because spectral retrieval computes per-item smoothness energy and dispersion
+    on the corpus graph (see <a href="/docs/graph-laplacian-retrieval/">graph
+    Laplacian retrieval</a>), a query that sits outside the manifold tends to
+    produce measurable symptoms:
+  </p>
+  <ul>
+    <li><strong>High smoothness energy relative to the corpus baseline</strong> — the query is inconsistent with its nearest neighbourhood.</li>
+    <li><strong>Atypical dispersion</strong> — its local edge statistics deviate from the corpus distribution.</li>
+    <li><strong>Unstable spectral scores</strong> — &lambda;&tau; values that do not match any corpus region pattern.</li>
+  </ul>
+  <p>
+    These diagnostics give an auditable signal for &ldquo;this query does not sit on
+    the data&rdquo;, instead of only a ranked list. They are indicators to be
+    calibrated per workload, not a guaranteed OOD classifier.
+  </p>
+
+  <h2>Handling OOD queries</h2>
+  <ol>
+    <li><strong>Expose diagnostics.</strong> Return spectral indicators alongside results so callers can react.</li>
+    <li><strong>Abstain or reroute.</strong> Route suspected OOD queries to a fallback: clarification, wider corpus, or human review.</li>
+    <li><strong>Adjust the blend.</strong> Tau-modulation (see <a href="/docs/spectral-vector-search/">spectral vector search</a>) changes the geometric/spectral mix at runtime; low-confidence situations can weight the two signals differently.</li>
+    <li><strong>Feed monitoring.</strong> Aggregate OOD indicators over time as <a href="/docs/embedding-drift/">drift signals</a>.</li>
+  </ol>
+
+  <section class="callout">
+    <h3>Limitations</h3>
+    <p>
+      Spectral diagnostics depend on graph quality and calibration; an OOD query
+      close to a dense off-topic cluster may still look in-distribution. Evaluate
+      detection behaviour on your own data and queries before relying on it, and
+      keep the fallback path explicit in the application.
+    </p>
+  </section>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">Spectral vector search</a> — the retrieval method providing these diagnostics.</li>
+      <li><a href="/docs/embedding-drift/">Embedding drift</a> — the time-dimension counterpart.</li>
+      <li><a href="/docs/glossary/#out-of-distribution-retrieval">Glossary: out-of-distribution retrieval</a>.</li>
+    </ul>
+  </section>
+</div>
