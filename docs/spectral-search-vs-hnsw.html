@@ -1,0 +1,136 @@
+---
+layout: default
+title: "Spectral Search vs HNSW: Comparing Retrieval Approaches"
+description: "A qualitative comparison of spectral vector search and HNSW: signals, index structures, long-tail behaviour, diagnostics, and build cost trade-offs."
+permalink: /docs/spectral-search-vs-hnsw/
+section: Documentation
+type: TechArticle
+image: /assets/og/docs-spectral-search-vs-hnsw.png
+og_image_alt: "Side-by-side comparison of spectral retrieval and HNSW graph traversal"
+date_published: 2026-09-21
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Spectral search vs HNSW</h1>
+  <p class="doc-hero__lede">
+    A comparison of spectral retrieval and hierarchical navigable small-world
+    (HNSW) indexes: what each signal captures, what each costs, and where they
+    fit in a production stack.
+  </p>
+  <div class="doc-hero__meta">
+    <span>Published 2026-09-21</span>
+    <span>by Genefold AI</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <p class="definition">
+    <strong>HNSW</strong> is an approximate nearest-neighbour index that traverses
+    a hierarchical proximity graph for fast top-k lookup. <strong>Spectral
+    search</strong> (ArrowSpace/SPIN) combines geometric similarity with
+    graph-Laplacian spectral scores. They solve overlapping but different
+    problems: HNSW optimises fast approximate recall; spectral retrieval adds
+    corpus-structure signals and diagnostics.
+  </p>
+
+  <h2>Comparison</h2>
+  <div class="doc-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Property</th><th>Cosine similarity</th><th>HNSW</th><th>ArrowSpace spectral retrieval</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary signal</td>
+          <td>Pairwise vector angle</td>
+          <td>Approximate graph traversal over a proximity graph</td>
+          <td>Graph and spectral structure plus vector angle</td>
+        </tr>
+        <tr>
+          <td>Index structure</td>
+          <td>Flat vector index</td>
+          <td>Navigable small-world graph with hierarchy</td>
+          <td>Graph-derived spectral artifacts</td>
+        </tr>
+        <tr>
+          <td>Query-time behaviour</td>
+          <td>Exhaustive scan (small corpora)</td>
+          <td>Approximate traversal, very low latency</td>
+          <td>Blend of cosine and spectral signal; runtime &tau; control</td>
+        </tr>
+        <tr>
+          <td>Long-tail behaviour</td>
+          <td>Depends on local similarity</td>
+          <td>Depends on graph connectivity in sparse regions</td>
+          <td>Depends on graph and spectral ranking; Engineering 001 reports flatter score tails on CVE</td>
+        </tr>
+        <tr>
+          <td>OOD handling</td>
+          <td>Requires external monitoring</td>
+          <td>Requires external monitoring</td>
+          <td>Can expose spectral diagnostics per query</td>
+        </tr>
+        <tr>
+          <td>Drift/monitoring support</td>
+          <td>None built in</td>
+          <td>None built in</td>
+          <td>Spectral artifacts support distribution monitoring</td>
+        </tr>
+        <tr>
+          <td>Main trade-off</td>
+          <td>Simple and fast</td>
+          <td>Fast approximate search at scale</td>
+          <td>Additional build and storage cost; smaller published track record</td>
+        </tr>
+        <tr>
+          <td>Evidence required</td>
+          <td>Dataset-specific</td>
+          <td>Extensive, dataset-specific</td>
+          <td>Dataset-specific; published vs cosine baselines</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How to read the comparison honestly</h2>
+  <ul>
+    <li>
+      <strong>Evidence status.</strong> The published evaluation
+      (<a href="/engineering/001.html">Engineering 001</a>) compares spectral
+      retrieval against cosine configurations on CVE and TREC-COVID under a stated
+      protocol. No published head-to-head benchmark against HNSW is cited here;
+      the HNSW column describes its documented behaviour as an ANN index, not a
+      measured comparison.
+    </li>
+    <li>
+      <strong>Preserved structure.</strong> No retrieval method preserves every
+      property of an embedding space. Spectral retrieval preserves information
+      captured by the Laplacian of the specific graph built by its wiring
+      parameters, measurable as smoothness and dispersion; HNSW preserves
+      proximity reachability. Which preservation matters is a per-dataset question.
+    </li>
+    <li>
+      <strong>Complementarity.</strong> The approaches can coexist: HNSW or flat
+      cosine for high-throughput top-k, with spectral artifacts for diagnostics,
+      re-ranking, and monitoring. ArrowSpace does not implement HNSW traversal
+      internally.
+    </li>
+  </ul>
+
+  <h2>Choosing between them</h2>
+  <ol>
+    <li>Need maximum query throughput on large corpora with well-documented ANN behaviour? Start with an established HNSW implementation.</li>
+    <li>Need domain-tuned ranking, bounded comparable scores, or structural diagnostics (OOD, drift)? Add spectral retrieval.</li>
+    <li>Need both? Keep the baseline for recall and use spectral signals for monitoring and re-ranking; measure before committing either to a full rebuild.</li>
+  </ol>
+
+  <section class="related-links">
+    <h2>Related documentation</h2>
+    <ul>
+      <li><a href="/docs/spectral-vector-search/">Spectral vector search</a> — the method being compared.</li>
+      <li><a href="/docs/ood-vector-retrieval/">OOD vector retrieval</a> — diagnostics absent from standard ANN indexes.</li>
+      <li><a href="/engineering/001.html">Engineering 001</a> — the published evaluation protocol.</li>
+    </ul>
+  </section>
+</div>

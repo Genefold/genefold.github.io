@@ -1,0 +1,70 @@
+---
+layout: default
+title: "Epiplexity and Graph Wiring: An Empirical Study for the Design of a Generic Algorithm"
+description: "Paper page for the Epiplexity and Graph Wiring empirical study, linking the canonical publication and the software it informs."
+permalink: /research/epiplexity-graph-wiring/
+section: Research
+type: scholarly_article
+image: /assets/og/genefold-default.png
+last_modified: 2026-09-21
+---
+
+<div class="doc-hero">
+  <h1>Epiplexity and Graph Wiring: An Empirical Study for the Design of a Generic Algorithm</h1>
+  <p class="doc-hero__lede">
+    An empirical study of how graph-construction parameters shape the design of a
+    generic spectral algorithm over embedding data.
+  </p>
+  <div class="doc-hero__meta">
+    <span>2026</span>
+    <span>Published on Authorea</span>
+  </div>
+</div>
+
+<div class="doc-page">
+  <section class="related-links" style="margin-top:0;">
+    <h2>Primary source</h2>
+    <ul>
+      <li>
+        <a href="https://www.authorea.com/users/685780/articles/1397239-epiplexity-and-graph-wiring-an-empirical-study-for-the-design-of-a-generic-algorithm" rel="noopener">Read the paper on Authorea</a>
+        (canonical version, authors and citation details on the publisher page).
+      </li>
+    </ul>
+  </section>
+
+  <h2>What the study is about</h2>
+  <p>
+    The study examines how the parameters that wire a feature-space graph
+    (neighbour selection and weighting) determine the behaviour of spectral
+    algorithms built on that graph. Its guiding claim, quoted from the paper&rsquo;s
+    listing: <em>&ldquo;Every dataset generates information, every manifold draws a
+    unique surface.&rdquo;</em>
+  </p>
+  <p>
+    In the terminology of this site, the study evaluates
+    <a href="/docs/glossary/#graph-wiring">graph wiring</a> choices — how edges
+    are selected and weighted before the Laplacian is computed — and grounds the
+    concept of <a href="/docs/glossary/#epiplexity">epiplexity</a>: the structural
+    information a dataset generates. These construction choices are the inputs
+    that the bounded spectral scores used in
+    <a href="/docs/spectral-vector-search/">spectral vector search</a> are built
+    on.
+  </p>
+
+  <h2>Relation to other work</h2>
+  <ul>
+    <li><a href="/research/arrowspace/">ArrowSpace paper</a> — the library that implements the resulting algorithm.</li>
+    <li><a href="/research/energy-dispersion-networks/">Energy Dispersion Networks</a> — the later arXiv paper formalising Graph Wiring and SPIN.</li>
+    <li><a href="/engineering/001.html">Engineering 001</a> — the practical pipeline and benchmark evaluation.</li>
+  </ul>
+
+  <section class="callout">
+    <h3>Note on citation metadata</h3>
+    <p>
+      This page deliberately repeats only metadata visible from Genefold&rsquo;s own
+      pages. Author list, abstract, and DOI are available on the publisher page
+      linked above; no BibTeX is quoted here to avoid propagating unverified
+      fields.
+    </p>
+  </section>
+</div>

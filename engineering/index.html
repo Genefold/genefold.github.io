@@ -5,12 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Engineering — Genefold</title>
   <meta name="description" content="Notes on systems, algorithms, and the engineering choices behind ArrowSpace and spectral intelligence at Genefold." />
+  <link rel="canonical" href="https://www.genefold.ai/engineering/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Genefold AI" />
+  <meta property="og:title" content="Engineering — Genefold" />
+  <meta property="og:description" content="Notes on systems, algorithms, and the engineering choices behind ArrowSpace and spectral intelligence at Genefold." />
+  <meta property="og:url" content="https://www.genefold.ai/engineering/" />
+  <meta property="og:image" content="https://www.genefold.ai/assets/og/genefold-default.png" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Engineering — Genefold" />
+  <meta name="twitter:description" content="Notes on systems, algorithms, and the engineering choices behind ArrowSpace and spectral intelligence at Genefold." />
+  <meta name="twitter:image" content="https://www.genefold.ai/assets/og/genefold-default.png" />
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.genefold.ai/#organization",
+      "name": "Genefold AI",
+      "url": "https://www.genefold.ai/",
+      "logo": "https://www.genefold.ai/favicon.ico",
+      "description": "Genefold AI develops spectral methods for embedding retrieval, graph analysis, drift detection, and out-of-distribution monitoring.",
+      "sameAs": [
+        "https://github.com/Genefold",
+        "https://www.linkedin.com/company/genefold-ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.genefold.ai/#website",
+      "url": "https://www.genefold.ai/",
+      "name": "Genefold AI",
+      "publisher": {
+        "@id": "https://www.genefold.ai/#organization"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.genefold.ai/engineering/#webpage",
+      "url": "https://www.genefold.ai/engineering/",
+      "name": "Engineering \u2014 Genefold",
+      "description": "Notes on systems, algorithms, and the engineering choices behind ArrowSpace and spectral intelligence at Genefold.",
+      "isPartOf": {
+        "@id": "https://www.genefold.ai/#website"
+      },
+      "about": {
+        "@id": "https://www.genefold.ai/#organization"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.genefold.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Engineering",
+          "item": "https://www.genefold.ai/engineering/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Engineering \u2014 Genefold",
+          "item": "https://www.genefold.ai/engineering/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css?v=20260604-3" />
+  <link rel="stylesheet" href="../style.css?v=20260922-1" />
+    <link rel="stylesheet" href="engineering.css?v=20260922-1" />
   <style>
-    /* ── Engineering blog tokens & overrides ─────────────────── */
+    /* ── Engineering blog tokens & overrides ─────────────────────── */
     .eng-root {
       --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       --eng-line: rgba(156, 181, 255, 0.12);
@@ -19,115 +101,11 @@
       --eng-muted: #8a9cc4;
     }
 
-    .eng-root .site-shell {
-      padding-bottom: 2rem;
-    }
-
-    /* ── Engineering nav ─────────────────────────────────────── */
-    .eng-nav {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.85rem 1.25rem;
-      margin: 0 -1rem;
-      border-bottom: 1px solid var(--eng-line);
-      background: rgba(10, 16, 32, 0.82);
-      backdrop-filter: blur(16px);
-    }
-
-    .eng-nav__brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .eng-nav__brand svg {
-      color: var(--accent);
-    }
-
-    .eng-nav__brand a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .eng-nav__brand a:hover {
-      color: var(--primary);
-    }
-
-    .eng-nav__brand span {
-      opacity: 0.55;
-      font-weight: 500;
-      margin: 0 0.35rem;
-    }
-
-    .eng-nav__links {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .eng-nav__links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--eng-muted);
-      text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-    }
-
-    .eng-nav__links a:hover,
-    .eng-nav__links a[aria-current="page"] {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* ── Hero ────────────────────────────────────────────────── */
+    /* ── Hero ────────────────────────────────────────────────────── */
     .eng-hero {
       position: relative;
       padding: 4rem 0 3rem;
       border-bottom: 1px solid var(--eng-line);
-    }
-
-    .eng-hero__badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-family: var(--eng-mono);
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--primary);
-      background: rgba(104, 240, 211, 0.08);
-      border: 1px solid rgba(104, 240, 211, 0.2);
-      border-radius: 999px;
-      padding: 0.3rem 0.85rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .eng-hero__badge-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--primary);
-      border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
     }
 
     .eng-hero h1 {
@@ -164,7 +142,7 @@
       gap: 0.4rem;
     }
 
-    /* ── Layout: sidebar + feed ──────────────────────────────── */
+    /* ── Layout: sidebar + feed ──────────────────────────────────── */
     .eng-layout {
       display: grid;
       grid-template-columns: 220px 1fr;
@@ -210,8 +188,7 @@
       transition: color 0.15s, background 0.15s;
     }
 
-    .eng-topics a:hover,
-    .eng-topics a[aria-current="true"] {
+    .eng-topics a:hover, .eng-topics a[aria-current="true"] {
       color: var(--text);
       background: rgba(255, 255, 255, 0.05);
     }
@@ -231,7 +208,7 @@
       gap: 1.5rem;
     }
 
-    /* ── Post cards (specimen entries) ───────────────────────── */
+    /* ── Post cards (specimen entries) ───────────────────────────── */
     .eng-card {
       display: grid;
       grid-template-columns: 130px 1fr;
@@ -244,8 +221,7 @@
       transition: border-color 0.2s ease, background 0.2s ease, translate 0.2s ease;
     }
 
-    .eng-card:hover,
-    .eng-card:focus-visible {
+    .eng-card:hover, .eng-card:focus-visible {
       border-color: var(--eng-line-strong);
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
       translate: 0 -2px;
@@ -351,7 +327,7 @@
       gap: 0.35rem;
     }
 
-    /* ── Featured post ───────────────────────────────────────── */
+    /* ── Featured post ───────────────────────────────────────────── */
     .eng-featured {
       grid-column: 1 / -1;
       display: grid;
@@ -365,8 +341,7 @@
       transition: border-color 0.2s ease, translate 0.2s ease;
     }
 
-    .eng-featured:hover,
-    .eng-featured:focus-visible {
+    .eng-featured:hover, .eng-featured:focus-visible {
       border-color: rgba(104, 240, 211, 0.35);
       translate: 0 -2px;
       outline: 2px solid var(--primary);
@@ -441,7 +416,7 @@
       opacity: 0.7;
     }
 
-    /* ── Empty state ─────────────────────────────────────────── */
+    /* ── Empty state ─────────────────────────────────────────────── */
     .eng-empty {
       padding: 3rem 1.5rem;
       text-align: center;
@@ -463,7 +438,7 @@
       line-height: 1.6;
     }
 
-    /* ── Footer note ─────────────────────────────────────────── */
+    /* ── Footer note ─────────────────────────────────────────────── */
     .eng-footer-note {
       margin-top: 2rem;
       padding-top: 1.5rem;
@@ -483,55 +458,37 @@
       color: var(--primary);
     }
 
-    /* ── Responsive ──────────────────────────────────────────── */
+    /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 920px) {
       .eng-layout {
         grid-template-columns: 1fr;
       }
-
       .eng-sidebar {
         position: static;
       }
-
       .eng-topics {
         flex-direction: row;
         flex-wrap: wrap;
       }
-
       .eng-topics a {
         white-space: nowrap;
       }
-
       .eng-featured {
         grid-template-columns: 1fr;
       }
-
       .eng-featured__visual {
         order: -1;
         min-height: 160px;
       }
     }
-
     @media (max-width: 640px) {
-      .eng-nav {
-        flex-wrap: wrap;
-      }
-
-      .eng-nav__links {
-        width: 100%;
-        overflow-x: auto;
-        padding-bottom: 0.25rem;
-      }
-
       .eng-hero {
         padding: 2.5rem 0 2rem;
       }
-
       .eng-card {
         grid-template-columns: 1fr;
         gap: 0.9rem;
       }
-
       .eng-card__rail {
         flex-direction: row;
         align-items: center;
@@ -541,48 +498,16 @@
   </style>
 </head>
 <body class="eng-root">
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="site-shell">
-    <header class="site-social" aria-label="Social links">
-      <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
-        </svg>
-      </a>
-      <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
-        </svg>
-      </a>
-    </header>
-
-    <nav class="eng-nav" aria-label="Engineering">
-      <div class="eng-nav__brand">
-        <a href="/" aria-label="Genefold home">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-          </svg>
-        </a>
-        <a href="/">Genefold</a>
-        <span>/</span>
-        <a href="/engineering">Engineering</a>
-      </div>
-      <ul class="eng-nav__links">
-        <li><a href="/" aria-current="false">Home</a></li>
-        <li><a href="/engineering" aria-current="page">Blog</a></li>
-        <li><a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open source</a></li>
-        <li><a href="mailto:hello@genefold.ai?subject=Engineering%20inquiry">Contact</a></li>
-      </ul>
+    <nav class="eng-home" aria-label="Home">
+      <a href="/">&#8592; Home</a>
     </nav>
 
     <main id="main">
       <section class="eng-hero reveal" aria-labelledby="eng-title">
-        <div class="eng-hero__badge">
-          <span class="eng-hero__badge-dot"></span>
-          Build log
-        </div>
         <h1 id="eng-title">How we build spectral intelligence.</h1>
         <p class="eng-hero__lede">
           Notes on systems, algorithms, and the engineering choices behind ArrowSpace.
@@ -766,18 +691,6 @@
     </footer>
   </div>
 
-  <script>
-    (() => {
-      const yearEl = document.getElementById('footer-year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('is-visible');
-        });
-      }, { threshold: 0.12 });
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    })();
-  </script>
+  <script src="engineering.js?v=20260922-1"></script>
 </body>
 </html>

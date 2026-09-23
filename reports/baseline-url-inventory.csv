@@ -1,0 +1,29 @@
+url,status,verified_at,note
+https://www.genefold.ai/,not_measured_local,,Deployed-site check pending first deploy of this branch
+https://www.genefold.ai/robots.txt,pending,2026-09-21,New file: must return 200 and reference sitemap after deploy
+https://www.genefold.ai/sitemap.xml,pending,2026-09-21,New file: 24 canonical URLs
+https://www.genefold.ai/feed.xml,pending,2026-09-21,New static Atom feed (engineering)
+https://www.genefold.ai/llms.txt,pending,2026-09-21,New file
+https://www.genefold.ai/llms-full.txt,pending,2026-09-21,New file
+https://www.genefold.ai/docs/,new,2026-09-21,Pillar index
+https://www.genefold.ai/docs/spectral-intelligence/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/spectral-vector-search/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/graph-laplacian-retrieval/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/embedding-drift/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/ood-vector-retrieval/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/spectral-search-vs-hnsw/,new,2026-09-21,Pillar page
+https://www.genefold.ai/docs/glossary/,new,2026-09-21,19 canonical term definitions
+https://www.genefold.ai/research/,new,2026-09-21,Paper index
+https://www.genefold.ai/research/arrowspace/,new,2026-09-21,JOSS DOI 10.21105/joss.09002
+https://www.genefold.ai/research/epiplexity-graph-wiring/,new,2026-09-21,Authorea link (403 to bots; page exists)
+https://www.genefold.ai/research/energy-dispersion-networks/,new,2026-09-21,arXiv 2606.21535 (verified 200)
+https://www.genefold.ai/products/,new,2026-09-21,Software index
+https://www.genefold.ai/products/arrowspace/,new,2026-09-21,Product page
+https://www.genefold.ai/about.html,new,2026-09-21,About page
+https://www.genefold.ai/engineering/,existing,2026-09-21,Metadata injected
+https://www.genefold.ai/engineering/001.html,existing,2026-09-21,Metadata + TechArticle JSON-LD injected
+https://www.genefold.ai/engineering/002.html,existing,2026-09-21,Metadata + TechArticle JSON-LD injected
+https://www.genefold.ai/engineering/003.html,existing,2026-09-21,Metadata + TechArticle JSON-LD injected
+https://www.genefold.ai/engineering/004.html,existing,2026-09-21,Metadata + TechArticle JSON-LD injected
+https://www.genefold.ai/engineering/005.html,existing,2026-09-21,Metadata + TechArticle JSON-LD injected
+https://www.genefold.ai/privacy.html,existing,2026-09-21,Metadata injected

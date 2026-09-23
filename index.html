@@ -5,9 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Genefold — Spectral Intelligence for Embeddings</title>
   <meta name="description" content="Genefold turns embedding corpora into reusable structural artifacts for search, diagnostics, drift detection, and data valuation." />
+  <link rel="canonical" href="https://www.genefold.ai/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Genefold AI" />
+  <meta property="og:title" content="Genefold — Spectral Intelligence for Embeddings" />
+  <meta property="og:description" content="Genefold turns embedding corpora into reusable structural artifacts for search, diagnostics, drift detection, and data valuation." />
+  <meta property="og:url" content="https://www.genefold.ai/" />
+  <meta property="og:image" content="https://www.genefold.ai/assets/og/genefold-default.png" />
+  <meta property="og:image:alt" content="Genefold — spectral intelligence for embedding search and monitoring" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Genefold — Spectral Intelligence for Embeddings" />
+  <meta name="twitter:description" content="Genefold turns embedding corpora into reusable structural artifacts for search, diagnostics, drift detection, and data valuation." />
+  <meta name="twitter:image" content="https://www.genefold.ai/assets/og/genefold-default.png" />
+  <link rel="alternate" type="application/atom+xml" title="Genefold AI — Engineering" href="/feed.xml" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.genefold.ai/#organization",
+        "name": "Genefold AI",
+        "url": "https://www.genefold.ai/",
+        "logo": "https://www.genefold.ai/favicon.ico",
+        "description": "Genefold AI develops spectral methods for embedding retrieval, graph analysis, drift detection, and out-of-distribution monitoring.",
+        "sameAs": [
+          "https://github.com/Genefold",
+          "https://www.linkedin.com/company/genefold-ai"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.genefold.ai/#website",
+        "url": "https://www.genefold.ai/",
+        "name": "Genefold AI",
+        "publisher": { "@id": "https://www.genefold.ai/#organization" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.genefold.ai/#webpage",
+        "url": "https://www.genefold.ai/",
+        "name": "Genefold — Spectral Intelligence for Embeddings",
+        "description": "Genefold turns embedding corpora into reusable structural artifacts for search, diagnostics, drift detection, and data valuation.",
+        "isPartOf": { "@id": "https://www.genefold.ai/#website" },
+        "about": { "@id": "https://www.genefold.ai/#organization" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://www.genefold.ai/#pyarrowspace",
+        "name": "pyarrowspace",
+        "description": "Spectral retrieval library for Python: graph analysis, bounded lambda-tau spectral scores, and vector search over embeddings.",
+        "codeRepository": "https://github.com/tuned-org-uk/pyarrowspace",
+        "programmingLanguage": "Python",
+        "installUrl": "https://pypi.org/project/arrowspace/",
+        "creator": { "@id": "https://www.genefold.ai/#organization" }
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://www.genefold.ai/#arrowspace-rs",
+        "description": "Spectral retrieval library for Rust: graph analysis, vector search, and energy-distribution statistics.",
+        "name": "arrowspace-rs",
+        "codeRepository": "https://github.com/tuned-org-uk/arrowspace-rs",
+        "programmingLanguage": "Rust",
+        "license": "https://spdx.org/licenses/Apache-2.0.html",
+        "creator": { "@id": "https://www.genefold.ai/#organization" }
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20260921-4" />
   <style>
     /* ── OSS Section ───────────────────────────────────────────── */
@@ -242,31 +316,6 @@
     }
 
     /* ── Hero compaction ───────────────────────────────────────── */
-    .hero__badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .45rem;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background: rgba(var(--accent-rgb),.1);
-      border: 1px solid rgba(var(--accent-rgb),.22);
-      border-radius: 999px;
-      padding: .3rem .85rem;
-      margin-bottom: 1.1rem;
-    }
-    .hero__badge-dot {
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity:1; transform:scale(1); }
-      50% { opacity:.4; transform:scale(.7); }
-    }
 
     /* ── Hero stats card (inside hero-card aside) ──────────────── */
     .hero__stats--card {
@@ -317,20 +366,62 @@
     }
     .waitlist-privacy-inline a:hover { text-decoration: underline; }
 
-    /* ── Footer contact strip ──────────────────────────────────── */
-    .footer-contact-strip {
-      text-align: center;
-      font-size: .8rem;
-      color: #9a8e8e;
-      margin-bottom: .75rem;
+    /* ── Top utility (social) ──────────────────────────────────── */
+    .top-utility {
+      position: absolute;
+      top: 1.15rem;
+      right: 1.5rem;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .footer-contact-strip a {
-      color: #b5abab;
+    .top-utility .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: rgba(10, 16, 32, 0.55);
+      backdrop-filter: blur(8px);
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .top-utility .social-icon:hover,
+    .top-utility .social-icon:focus-visible {
+      color: var(--text);
+      background: rgba(var(--accent-rgb), 0.12);
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+      outline: none;
+    }
+    .concepts-strip {
+      margin-top: 2.5rem;
+      padding: 1.3rem 1.6rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .concepts-strip .concepts-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.4rem;
+      margin: 0.6rem 0 0;
+      font-size: 0.88rem;
+    }
+    .concepts-strip .concepts-links a {
+      color: var(--primary);
       text-decoration: none;
       transition: color .15s;
     }
-    .footer-contact-strip a:hover { color: #f2eded; }
-  </style>
+    .concepts-strip .concepts-links a:hover { color: #ffaabc; text-decoration: underline; }
+    @media (max-width: 640px) {
+      .top-utility { top: 0.9rem; right: 1rem; }
+    }
+
+    </style>
   <script>
     (() => {
       const rotations = { red: 0, blue: 216, green: 156, orange: 36 };
@@ -388,21 +479,23 @@
   </script>
 </head>
 <body>
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
   <a class="skip-link" href="#main">Skip to content</a>
 
+      <nav class="top-utility" aria-label="Social links">
+        <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+        <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+        </a>
+      </nav>
+
   <div class="site-shell">
-    <header class="site-social" aria-label="Social links">
-      <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/>
-        </svg>
-      </a>
-      <a class="social-icon" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer" aria-label="Genefold on GitHub">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
-        </svg>
-      </a>
-    </header>
 
     <main id="main">
 
@@ -416,27 +509,20 @@
         </div>
 
         <div class="hero__content reveal">
-          <!-- Compact badge replaces the verbose eyebrow question -->
-          <div class="hero__badge">
-            <span class="hero__badge-dot"></span>
-            Spectral Intelligence Platform
-          </div>
-          <h1>AI-native data operations — at structural depth.</h1>
+          <h1>AI-native data operations at structural depth.</h1>
           <p class="hero__lede">
             Genefold transforms vector spaces into compact spectral artifacts that power
             search, drift detection, OOD monitoring, and data valuation across ML and LLM workflows.
           </p>
           <div class="hero__actions">
             <a class="button button--primary" href="#waitlist">Join the Waitlist</a>
-            <a class="button button--ghost" href="#papers">Read the science</a>
+            <a class="button button--ghost" href="/docs/">Read the docs</a>
+            <a class="button button--ghost" href="/research/">Read the science</a>
           </div>
         </div>
 
         <aside class="hero-card reveal" aria-label="Founder proposition highlight">
-          <div class="hero-card__head">
-            <span class="badge">Next-gen data operations</span>
-            <span class="pulse-dot"></span>
-          </div>
+          <h2>Software for embedding intelligence.</h2>
           <p>
             Datasets and pipelines are the structural memory of your company: compact,
             inspectable, reusable, and productizable.
@@ -479,6 +565,19 @@
         </p>
         <div class="hero__actions">
           <a class="button button--primary" href="#waitlist">Be first to know</a>
+        </div>
+
+        <div class="concepts-strip reveal">
+          <p class="eyebrow" style="margin:0;">Core concepts</p>
+          <div class="concepts-links">
+            <a href="/docs/spectral-intelligence/">Spectral intelligence</a>
+            <a href="/docs/spectral-vector-search/">Spectral vector search</a>
+            <a href="/docs/graph-laplacian-retrieval/">Graph Laplacian retrieval</a>
+            <a href="/docs/embedding-drift/">Embedding drift</a>
+            <a href="/docs/ood-vector-retrieval/">Out-of-distribution retrieval</a>
+            <a href="/docs/spectral-search-vs-hnsw/">Spectral search vs HNSW</a>
+            <a href="/docs/glossary/">Glossary</a>
+          </div>
         </div>
       </section>
 
@@ -692,7 +791,6 @@
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
             </div>
           </a>
-
           <!-- arro-nlp-frontend -->
           <a class="repo-card" href="https://github.com/Genefold/arro-nlp-frontend" target="_blank" rel="noopener noreferrer" aria-label="arro-nlp-frontend repository">
             <span class="repo-card__name">
@@ -707,7 +805,6 @@
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
             </div>
           </a>
-
           <!-- pygenestore -->
           <a class="repo-card" href="https://github.com/Genefold/pygenestore" target="_blank" rel="noopener noreferrer" aria-label="pygenestore repository">
             <span class="repo-card__name">
@@ -722,6 +819,7 @@
               <span><span class="lang-dot" style="background:#3572A5;"></span>Python</span>
             </div>
           </a>
+
 
           <!-- arrowspace-skills -->
           <a class="repo-card" href="https://github.com/Genefold/arrowspace-skills" target="_blank" rel="noopener noreferrer" aria-label="arrowspace-skills repository">
@@ -784,8 +882,6 @@
 
         <p class="oss-contributor-cta">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          Found a bug? <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">Open an issue</a>
-          &nbsp;&middot;&nbsp; Want to contribute? <a href="https://github.com/Genefold/arro-server/blob/main/.github/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Read the contributing guide</a>
         </p>
 
         <a class="oss-org-link" href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">
@@ -1053,14 +1149,6 @@
     </main>
 
     <footer class="site-footer">
-      <!-- Compact contact strip replaces full Contact section -->
-      <p class="footer-contact-strip">
-        Building retrieval, monitoring, or evals for embedding-heavy systems?
-        <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">hello@genefold.ai</a>
-        &nbsp;&middot;&nbsp;
-        <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </p>
-
       <div class="site-footer__social" aria-label="Social links">
         <a class="social-icon" href="https://www.linkedin.com/company/genefold-ai" target="_blank" rel="noopener noreferrer" aria-label="Genefold on LinkedIn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
@@ -1076,6 +1164,8 @@
 
       <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
       <p style="font-size:0.75rem; margin-top:0.4rem;">
+        <a href="/docs/" style="color: inherit; opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">Docs</a>
+        &nbsp;&middot;&nbsp;
         <a href="/privacy.html" style="color: inherit; opacity: 0.65; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">Privacy Policy &amp; Terms</a>
         &nbsp;&middot;&nbsp;
         <a href="#" id="cookie-settings-link" style="color: inherit; opacity: 0.55; text-decoration: none; transition: opacity .15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='0.55'">Cookie settings</a>
