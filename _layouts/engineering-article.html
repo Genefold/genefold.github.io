@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title | escape }} — Genefold Engineering</title>
+  <meta name="description" content="{{ page.description | escape }}" />
+  <link rel="canonical" href="{{ page.url | absolute_url }}" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Genefold AI" />
+  <meta property="og:title" content="{{ page.title | escape }}" />
+  <meta property="og:description" content="{{ page.description | escape }}" />
+  <meta property="og:url" content="{{ page.url | absolute_url }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ '/style.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/engineering/engineering.css' | relative_url }}" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <style>
+    .eng-root {
+      --eng-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --eng-line: rgba(156, 181, 255, 0.12);
+      --eng-line-strong: rgba(156, 181, 255, 0.28);
+      --eng-muted: #8a9cc4;
+      --eng-max-width: 720px;
+    }
+    .eng-article__title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin: 0 0 0.75rem;
+    }
+    .eng-article__subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--eng-muted);
+      max-width: 62ch;
+      margin: 0 0 1.5rem;
+    }
+    .eng-article__body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 1.5rem;
+      font-size: 0.92rem;
+    }
+    .eng-article__body th, .eng-article__body td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--eng-line);
+      line-height: 1.55;
+      color: var(--eng-muted);
+    }
+    .eng-article__body th {
+      font-family: var(--eng-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .eng-author__avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--eng-line-strong);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+    }
+  </style>
+</head>
+<body class="eng-root">
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="site-shell">
+    <main id="main">
+      <article class="eng-article">
+        <a class="eng-article__back" href="{{ '/engineering/' | relative_url }}">&larr; All engineering notes</a>
+        <header>
+          <span class="eng-article__eyebrow">006 &mdash; {{ page.category | default: 'Engineering' | escape }}</span>
+          <h1 class="eng-article__title">{{ page.title | escape }}</h1>
+          <p class="eng-article__subtitle">{{ page.description | escape }}</p>
+          <div class="eng-article__meta">
+            <span>{{ page.author | escape }}</span>
+            <span>{{ page.date | date: '%-d %b %Y' }}</span>
+            <span>Research Note</span>
+            <span>Draft preview</span>
+          </div>
+        </header>
+
+        {{ content }}
+
+        <aside class="eng-author">
+          <span class="eng-author__avatar" aria-hidden="true"></span>
+          <div class="eng-author__copy">
+            <p class="eng-author__name">{{ page.author | escape }}</p>
+            <p class="eng-author__role">Genefold AI &middot; Engineering</p>
+            <p class="eng-author__bio">Writing about the foundations of information, structure, and intelligence that guide Genefold's engineering choices.</p>
+          </div>
+        </aside>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-contact-strip">
+        Building retrieval, monitoring, or evals for embedding-heavy systems?
+        <a href="mailto:hello@genefold.ai?subject=Genefold%20inquiry">hello@genefold.ai</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://github.com/Genefold" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </p>
+      <p class="site-footer__copy">&copy; <span id="footer-year">2026</span> Genefold AI LTD, UK. All rights reserved.</p>
+    </footer>
+  </div>
+  <script src="{{ '/engineering/engineering.js' | relative_url }}"></script>
+</body>
+</html>
