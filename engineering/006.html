@@ -21,7 +21,7 @@ tags:
 
 <p>In <a href="https://zenodo.org/records/23686688"><em>Graph Wiring: Accessing more information via Feature-Space. A Constructive Separation and Conditional Coding Analysis</em></a>, I construct two corpus/query states with identical complete row Gram matrices but different feature-space relationships. A predictor combining cosine similarity with graph-based energy proximity distinguishes those states. Under the paper’s specified noisy relevance law, that distinction improves expected Top-1 accuracy from one half to seven eighths.</p>
 
-<p>This article follows that distinction through to a concrete accounting question:</p>
+<p>This article follows that distinction through to a concrete accounting question. Here, “charging for the predictor” means including the number of bits needed to describe the prediction method in the total, rather than comparing only how many bits are needed to encode the labels it gets wrong.</p>
 
 <blockquote>
   <p>Does the improvement still pay when we charge for the predictor that makes it possible?</p>
@@ -165,6 +165,8 @@ Y=Z\oplus B.\]
   <li>1 model bit to the uniform predictor;</li>
   <li>65 model bits to the dual-space predictor.</li>
 </ul>
+
+<p>The 65 bits are the dual-space predictor’s model cost under this article’s specified coding scheme; they do not represent the size of its software implementation.</p>
 
 <p>For \(m\) labels, the ideal expected totals are</p>
 
