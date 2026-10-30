@@ -5,7 +5,7 @@ layout: engineering-article
 permalink: /engineering/006.html
 author: "Lorenzo Moriondo"
 date: "2026-10-26"
-published: false
+published: true
 category: "Research Note"
 tags:
   - Information Theory
@@ -19,7 +19,7 @@ tags:
 
 <p>It tells us how its rows relate through inner products, lengths, angles, and distances. It does not, in general, determine the relationships among its labelled feature coordinates.</p>
 
-<p>In <a href="https://zenodo.org/records/23544271"><em>Graph Wiring: Accessing more information via Feature-Space. A Constructive Separation and Conditional Coding Analysis</em></a>, I construct two corpus/query states with identical complete row Gram matrices but different feature-space relationships. A predictor combining cosine similarity with graph-based energy proximity distinguishes those states. Under the paper’s specified noisy relevance law, that distinction improves expected Top-1 accuracy from one half to seven eighths.</p>
+<p>In <a href="https://zenodo.org/records/23686688"><em>Graph Wiring: Accessing more information via Feature-Space. A Constructive Separation and Conditional Coding Analysis</em></a>, I construct two corpus/query states with identical complete row Gram matrices but different feature-space relationships. A predictor combining cosine similarity with graph-based energy proximity distinguishes those states. Under the paper’s specified noisy relevance law, that distinction improves expected Top-1 accuracy from one half to seven eighths.</p>
 
 <p>This article follows that distinction through to a concrete accounting question:</p>
 
@@ -53,7 +53,7 @@ tags:
 
 <p>Consequently, an observer given only that matrix cannot distinguish the original state from the transformed state. This is stronger than saying that a particular nearest-neighbour search or cosine ranking fails: every function of the same Gram matrix receives identical input.</p>
 
-<p>The feature coordinates, however, remain labelled. Their relationships can change under the transformation even though the complete row geometry does not. That is the distinction the <a href="https://zenodo.org/records/23544271">paper</a> exploits.</p>
+<p>The feature coordinates, however, remain labelled. Their relationships can change under the transformation even though the complete row geometry does not. That is the distinction the <a href="https://zenodo.org/records/23686688">paper</a> exploits.</p>
 
 <p>The invariant can be checked with a standalone Python example using only the standard library. These toy vectors illustrate Gram preservation; they are not the paper’s relevance fixture.</p>
 
@@ -115,7 +115,7 @@ tags:
 
 <p>Graph construction and energy evaluation sit outside this snippet. Its output is a ranking score; calibrated label probabilities come from the relevance law in the next section.</p>
 
-<p>The important point is not simply that the score changes. It is that the feature-space readout can distinguish states that the complete row Gram matrix cannot distinguish. The construction and its assumptions are given in the <a href="https://zenodo.org/records/23544271">public paper</a>.</p>
+<p>The important point is not simply that the score changes. It is that the feature-space readout can distinguish states that the complete row Gram matrix cannot distinguish. The construction and its assumptions are given in the <a href="https://zenodo.org/records/23686688">public paper</a>.</p>
 
 <p>This does not create information from nothing. A program with unrestricted access to the original coordinates could reconstruct and simulate the feature-space computation. The separation concerns what remains accessible after the observation is restricted to row geometry.</p>
 
@@ -151,7 +151,7 @@ Y=Z\oplus B.\]
 
 \[1-h_2(1/8)\approx0.456436\]
 
-<p>bits per label, matching the <a href="https://zenodo.org/records/23544271">paper’s conditional log-loss analysis</a>.</p>
+<p>bits per label, matching the <a href="https://zenodo.org/records/23686688">paper’s conditional log-loss analysis</a>.</p>
 
 <p>These labels are a deliberately specified synthetic target. They are not evidence, by themselves, that the same improvement holds for arbitrary semantic relevance judgments.</p>
 
@@ -174,7 +174,7 @@ Y=Z\oplus B.\]
 
 \[L_{\mathrm{dual}}(m)=65+m\,h_2(1/8).\]
 
-<p>These are costs within the specified conditional coding scheme—not claims that the complete software implementation occupies 65 bits. The model headers and shared-decoder assumptions belong to the finite coding construction described in the <a href="https://zenodo.org/records/23544271">paper</a>.</p>
+<p>These are costs within the specified conditional coding scheme—not claims that the complete software implementation occupies 65 bits. The model headers and shared-decoder assumptions belong to the finite coding construction described in the <a href="https://zenodo.org/records/23686688">paper</a>.</p>
 
 <p>The entropy term is an ideal expected residual length. The companion implementation uses an exact dyadic interval code whose finite-code overhead is less than two bits per nonempty block. Its expected encoded length therefore includes that overhead in addition to the ideal total above.</p>
 
@@ -330,7 +330,7 @@ m\left(1-h_2(1/8)\right)-64.\]
     <span class="n">check_prediction</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>The <a href="https://zenodo.org/records/23544271">paper</a> reports that a fixed feature-graph control also succeeds at the selected cosine weight of 0.60. Its conclusion is therefore access beyond row geometry—not the necessity of adaptive graph learning.</p>
+<p>The <a href="https://zenodo.org/records/23686688">paper</a> reports that a fixed feature-graph control also succeeds at the selected cosine weight of 0.60. Its conclusion is therefore access beyond row geometry—not the necessity of adaptive graph learning.</p>
 
 <p>The companion implementation checks this distinction explicitly: the graph frozen from the original corpus fails to distinguish the two states at 0.72, but succeeds at 0.60. The coding fixture uses the corpus-derived graph predictor at 0.72.</p>
 
