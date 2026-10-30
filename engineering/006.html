@@ -166,7 +166,7 @@ Y=Z\oplus B.\]
   <li>65 model bits to the dual-space predictor.</li>
 </ul>
 
-<p>The 65 bits are the dual-space predictor’s model cost under this article’s specified coding scheme; they do not represent the size of its software implementation.</p>
+<p>In the specified coding scheme, 1 bit selects the dual-space predictor rather than the uniform predictor, and 64 bits encode its configuration: the version, graph and spectral rules, blend weights, noise parameters, and root-certification precision. The 65 bits are a stipulated model cost, not the size of the software implementation or a theoretical minimum; a different coding scheme could describe the predictor in fewer bits.</p>
 
 <p>For \(m\) labels, the ideal expected totals are</p>
 
