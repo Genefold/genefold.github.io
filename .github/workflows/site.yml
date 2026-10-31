@@ -60,10 +60,9 @@ jobs:
       - name: Validate metadata, links, and sitemap
         run: python3 scripts/check_meta.py
 
-      - name: Check for broken internal references (htmlproofer)
+      - name: Check internal links and assets (htmlproofer)
         run: |
           gem install html-proofer -v 5 --no-document
           htmlproofer ./_site \
             --disable-external \
-            --check-html \
             --allow-hash-href
