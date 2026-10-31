@@ -4,12 +4,14 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
 
 permissions:
   contents: read
 
 jobs:
   build:
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
     steps:
@@ -49,7 +51,7 @@ jobs:
           test -f _site/feed.xml
 
       - name: Check absolute URL configuration
-        run: grep -q '^url: https://www.genefold.ai' _config.yaml
+        run: "grep -q '^url: https://www.genefold.ai' _config.yaml"
 
       - name: Check for accidental localhost URLs
         run: |
@@ -58,10 +60,9 @@ jobs:
       - name: Validate metadata, links, and sitemap
         run: python3 scripts/check_meta.py
 
-      - name: Check for broken internal references (htmlproofer)
+      - name: Check internal links and assets (htmlproofer)
         run: |
-          gem install htmlproofer -v 5 --no-document
+          gem install html-proofer -v 5 --no-document
           htmlproofer ./_site \
             --disable-external \
-            --check-html \
             --allow-hash-href

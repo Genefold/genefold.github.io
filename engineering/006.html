@@ -1,0 +1,378 @@
+---
+title: "Beyond Row Geometry: Computing the Coding Advantage of Feature-Space Structure"
+description: "A constructive feature-space separation and a conditional coding comparison: charge for the predictor, encode the same labels, and compute when the residual saving outweighs the model cost."
+layout: engineering-article
+permalink: /engineering/006.html
+author: "Lorenzo Moriondo"
+date: "2026-11-01"
+published: true
+category: "Research Note"
+tags:
+  - Information Theory
+  - Spectral Methods
+  - Graph Wiring
+  - ArrowSpace
+  - LLM Operations
+---
+<div class="eng-article__body">
+<p>Complete pairwise geometry does not tell us everything about a matrix.</p>
+
+<p>It tells us how its rows relate through inner products, lengths, angles, and distances. It does not, in general, determine the relationships among its labelled feature coordinates.</p>
+
+<p>In <a href="https://zenodo.org/records/23686688"><em>Graph Wiring: Accessing more information via Feature-Space. A Constructive Separation and Conditional Coding Analysis</em></a>, I construct two corpus/query states with identical complete row Gram matrices but different feature-space relationships. A predictor combining cosine similarity with graph-based energy proximity distinguishes those states. Under the paper’s specified noisy relevance law, that distinction improves expected Top-1 accuracy from one half to seven eighths.</p>
+
+<p>This article follows that distinction through to a concrete accounting question. Here, “charging for the predictor” means including the number of bits needed to describe the prediction method in the total, rather than comparing only how many bits are needed to encode the labels it gets wrong.</p>
+
+<blockquote>
+  <p>Does the improvement still pay when we charge for the predictor that makes it possible?</p>
+</blockquote>
+
+<p>For the conditional coding comparison considered here, it does. At 1,024 relevance labels, the ideal expected model-plus-residual lengths are 1,025 bits for the uniform predictor and approximately 621.61 bits for the dual-space predictor. Residual means the information needed to encode the actual relevance labels after accounting for the predictor’s predictions. It is the remaining coding cost—not simply the number of incorrect predictions.</p>
+
+<p>The graph predictor costs more to describe. Its residual costs sufficiently less to compensate.</p>
+
+<blockquote>
+  <p>Scope: this is a constructive separation and a conditional finite-family coding comparison, not a general semantic-retrieval benchmark. We will try to establish further semantic relevance in future experiments, as done in <a href="https://arxiv.org/abs/2606.21535"><em>From Embedding Geometry to Spectral Search</em></a>. The Python snippets below are for illustrative purpose, written from the equations made available. The round-trip and graph-reuse blocks are illustrative pseudocode. None of these blocks is an excerpt from the private implementation or a public package API.</p>
+</blockquote>
+
+<h2 id="1-the-baseline-is-complete-row-geometrynot-just-cosine">1. The baseline is complete row geometry</h2>
+
+<p>Let \(A\) contain the candidate rows and the query. Its row Gram matrix is</p>
+
+\[G = AA^\top.\]
+
+<p>Now apply the same orthogonal transformation \(R\) to every row:</p>
+
+\[A' = AR,\qquad RR^\top=I.\]
+
+<p>Then</p>
+
+\[A'A'^\top = ARR^\top A^\top = AA^\top.\]
+
+<p>The complete row Gram matrix is unchanged.</p>
+
+<p>Consequently, an observer given only that matrix cannot distinguish the original state from the transformed state. This is stronger than saying that a particular nearest-neighbour search or cosine ranking fails: every function of the same Gram matrix receives identical input.</p>
+
+<p>The feature coordinates, however, remain labelled. Their relationships can change under the transformation even though the complete row geometry does not. That is the distinction the <a href="https://zenodo.org/records/23686688">paper</a> exploits.</p>
+
+<p>The invariant can be checked with a standalone Python example using only the standard library. These toy vectors illustrate Gram preservation; they are not the paper’s relevance fixture.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">isclose</span><span class="p">,</span> <span class="n">sin</span>
+
+
+<span class="k">def</span> <span class="nf">gram</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">rows</span>
+    <span class="p">]</span>
+
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)]</span>
+<span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="mf">0.4</span><span class="p">),</span> <span class="n">sin</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">rotated</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
+
+<span class="n">before</span><span class="p">,</span> <span class="n">after</span> <span class="o">=</span> <span class="n">gram</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="n">gram</span><span class="p">(</span><span class="n">rotated</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+    <span class="n">isclose</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">old_row</span><span class="p">,</span> <span class="n">new_row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">old_row</span><span class="p">,</span> <span class="n">new_row</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>This assertion establishes what the row-geometry observer cannot see. It does not yet establish a useful prediction advantage; that requires a target and a readout.</p>
+
+<h2 id="2-read-the-same-vectors-as-signals-on-a-feature-graph">2. Read the same vectors as signals on a feature graph</h2>
+
+<p>Graph Wiring supplies another view of the corpus: a graph whose nodes are features rather than items.</p>
+
+<p>With a feature-space Laplacian \(L\), a nonzero vector \(x\) can be evaluated through its Rayleigh energy:</p>
+
+\[E_L(x)=\frac{x^\top Lx}{x^\top x}.\]
+
+<p>The paper combines cosine similarity with proximity between the query’s energy and a candidate’s energy:</p>
+
+\[s_\alpha(q,x)
+=
+\alpha\,\operatorname{cos}(q,x)
++
+(1-\alpha)\frac{1}{1+|E_L(q)-E_L(x)|}.\]
+
+<p>Here \(\alpha\) weights cosine. The feature graph is constructed from the corpus, without using relevance labels. The companion implementation uses a cosine weight of 0.72 for the two-feature separation and the coded predictor; the frozen-graph control discussed below uses 0.60.</p>
+
+<p>The scalar blend is also small enough to illustrate directly. This standalone snippet accepts already-computed energies and translates the published score into Python:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">illustrative_score</span><span class="p">(</span><span class="n">cosine</span><span class="p">,</span> <span class="n">query_energy</span><span class="p">,</span> <span class="n">candidate_energy</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"alpha must lie in [0, 1]"</span><span class="p">)</span>
+    <span class="n">proximity</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">query_energy</span> <span class="o">-</span> <span class="n">candidate_energy</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">cosine</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">proximity</span>
+
+
+<span class="c1"># Toy inputs demonstrate the endpoints of the blend.
+</span><span class="k">assert</span> <span class="n">illustrative_score</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.8</span>
+<span class="k">assert</span> <span class="n">illustrative_score</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+</code></pre></div></div>
+
+<p>Graph construction and energy evaluation sit outside this snippet. Its output is a ranking score; calibrated label probabilities come from the relevance law in the next section.</p>
+
+<p>The important point is not simply that the score changes. It is that the feature-space readout can distinguish states that the complete row Gram matrix cannot distinguish. The construction and its assumptions are given in the <a href="https://zenodo.org/records/23686688">public paper</a>.</p>
+
+<p>This does not create information from nothing. A program with unrestricted access to the original coordinates could reconstruct and simulate the feature-space computation. The separation concerns what remains accessible after the observation is restricted to row geometry.</p>
+
+<p>That qualification matters: “beyond complete row geometry” is a precise claim. “Beyond all information in the embeddings” would be a different—and unsupported—claim.</p>
+
+<h2 id="3-connect-the-distinction-to-a-specified-prediction-task">3. Connect the distinction to a specified prediction task</h2>
+
+<p>The construction uses a synthetic relevance law.</p>
+
+<p>Let \(Z\) denote the state, with both states equally likely. Let \(B\) be an independent noise bit:</p>
+
+\[B\sim\operatorname{Bernoulli}(1/8),
+\qquad
+Y=Z\oplus B.\]
+
+<p>The relevance label agrees with the state with probability \(7/8\).</p>
+
+<p>An observer restricted to the row Gram cannot distinguish the states. Under this law, its optimal label probability is therefore \(1/2\).</p>
+
+<p>A dual-space observer that identifies the state can instead assign probability \(7/8\) to the corresponding label and \(1/8\) to the other label. This yields the paper’s expected Top-1 accuracy of \(7/8\), against \(1/2\) for every row-Gram-restricted observer.</p>
+
+<p>The distinction also appears in calibrated log loss. Define binary entropy as</p>
+
+\[h_2(p)=-p\log_2p-(1-p)\log_2(1-p).\]
+
+<p>The uniform predictor needs one ideal residual bit per label. The state-informed predictor needs</p>
+
+\[h_2(1/8)\approx0.543564\]
+
+<p>bits per label in expectation.</p>
+
+<p>The conditional predictive advantage is therefore</p>
+
+\[1-h_2(1/8)\approx0.456436\]
+
+<p>bits per label, matching the <a href="https://zenodo.org/records/23686688">paper’s conditional log-loss analysis</a>.</p>
+
+<p>These labels are a deliberately specified synthetic target. They are not evidence, by themselves, that the same improvement holds for arbitrary semantic relevance judgments.</p>
+
+<h2 id="4-charge-for-the-model-before-claiming-the-saving">4. Charge for the model before claiming the saving</h2>
+
+<p>A predictor with lower residual loss is not automatically the shorter description. Its model description must also be counted.</p>
+
+<p>The finite comparison used here assigns:</p>
+
+<ul>
+  <li>1 model bit to the uniform predictor;</li>
+  <li>65 model bits to the dual-space predictor.</li>
+</ul>
+
+<p>In the specified coding scheme, 1 bit selects the dual-space predictor rather than the uniform predictor, and 64 bits encode its configuration: the version, graph and spectral rules, blend weights, noise parameters, and root-certification precision. The 65 bits are a stipulated model cost, not the size of the software implementation or a theoretical minimum; a different coding scheme could describe the predictor in fewer bits.</p>
+
+<p>For \(m\) labels, the ideal expected totals are</p>
+
+\[L_{\mathrm{uniform}}(m)=1+m\]
+
+<p>and</p>
+
+\[L_{\mathrm{dual}}(m)=65+m\,h_2(1/8).\]
+
+<p>These are costs within the specified conditional coding scheme—not claims that the complete software implementation occupies 65 bits. The model headers and shared-decoder assumptions belong to the finite coding construction described in the <a href="https://zenodo.org/records/23686688">paper</a>.</p>
+
+<p>The entropy term is an ideal expected residual length. The companion implementation uses an exact dyadic interval code whose finite-code overhead is less than two bits per nonempty block. Its expected encoded length therefore includes that overhead in addition to the ideal total above.</p>
+
+<p>Here is a standalone calculation using only the Python standard library:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">log2</span>
+
+
+<span class="k">def</span> <span class="nf">binary_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"p must lie in [0, 1]"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">p</span> <span class="o">*</span> <span class="n">log2</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">log2</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+
+
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">8</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">1024</span>
+
+<span class="n">residual_rate</span> <span class="o">=</span> <span class="n">binary_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">uniform_bits</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">m</span>
+<span class="n">dual_bits</span> <span class="o">=</span> <span class="mi">65</span> <span class="o">+</span> <span class="n">m</span> <span class="o">*</span> <span class="n">residual_rate</span>
+<span class="n">saving_bits</span> <span class="o">=</span> <span class="n">uniform_bits</span> <span class="o">-</span> <span class="n">dual_bits</span>
+<span class="n">first_winning_m</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="mi">64</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">residual_rate</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Uniform: </span><span class="si">{</span><span class="n">uniform_bits</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> bits"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Dual:    </span><span class="si">{</span><span class="n">dual_bits</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> bits"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Saving:  </span><span class="si">{</span><span class="n">saving_bits</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s"> bits"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Saving:  </span><span class="si">{</span><span class="mi">100</span> <span class="o">*</span> <span class="n">saving_bits</span> <span class="o">/</span> <span class="n">uniform_bits</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">%"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"First winning label count: </span><span class="si">{</span><span class="n">first_winning_m</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Expected output:</p>
+
+<pre><code class="language-text">Uniform: 1025.00 bits
+Dual:    621.61 bits
+Saving:  403.39 bits
+Saving:  39.36%
+First winning label count: 141
+</code></pre>
+
+<p>The resulting comparison is:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right">Labels</th>
+      <th style="text-align: right">Uniform ideal expected bits</th>
+      <th style="text-align: right">Dual ideal expected bits</th>
+      <th>Shorter description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">140</td>
+      <td style="text-align: right">141.00</td>
+      <td style="text-align: right">141.10</td>
+      <td>Uniform</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">141</td>
+      <td style="text-align: right">142.00</td>
+      <td style="text-align: right">141.64</td>
+      <td>Dual</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1,024</td>
+      <td style="text-align: right">1,025.00</td>
+      <td style="text-align: right">621.61</td>
+      <td>Dual</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At 1,024 labels, the expected saving is approximately 403.39 bits, or 39.36%.</p>
+
+<p>The crossover has a straightforward explanation. The dual predictor incurs 64 additional model bits, then saves approximately 0.456436 residual bits per label:</p>
+
+\[L_{\mathrm{uniform}}-L_{\mathrm{dual}}
+=
+m\left(1-h_2(1/8)\right)-64.\]
+
+<p>The ideal expected description becomes shorter at 141 labels. This crossover does not include the finite residual codec’s overhead.</p>
+
+<h2 id="5-both-descriptions-must-recover-the-same-labels">5. Both descriptions must recover the same labels</h2>
+
+<p>An expected codelength calculation is useful, but an executable coding demonstration should also enforce recovery.</p>
+
+<p>Both decoders receive the same corpus/query side information and the same shared interpreter. Neither should receive hidden state identifiers or reference noise bits as an extra input. A decoder can recompute its prediction from the shared scene; an encoder can encode the difference between that prediction and the observed label.</p>
+
+<p>The required round-trip contract is:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Illustrative pseudocode, not executable package calls.
+# Each decoder receives the code and the same corpus/query scenes.
+</span><span class="n">uniform_code</span> <span class="o">=</span> <span class="n">encode_uniform</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scenes</span><span class="p">)</span>
+<span class="n">dual_code</span> <span class="o">=</span> <span class="n">encode_dual</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scenes</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">decode_uniform</span><span class="p">(</span><span class="n">uniform_code</span><span class="p">,</span> <span class="n">scenes</span><span class="p">)</span> <span class="o">==</span> <span class="n">labels</span>
+<span class="k">assert</span> <span class="n">decode_dual</span><span class="p">(</span><span class="n">dual_code</span><span class="p">,</span> <span class="n">scenes</span><span class="p">)</span> <span class="o">==</span> <span class="n">labels</span>
+</code></pre></div></div>
+
+<p>The companion implementation includes this check. Its fixed seed-3407, 1,024-label reference fixture has 123 flips and checks the following unpadded lengths:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th style="text-align: right">Model bits</th>
+      <th style="text-align: right">Residual bits</th>
+      <th style="text-align: right">Total bits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Uniform</td>
+      <td style="text-align: right">1</td>
+      <td style="text-align: right">1,024</td>
+      <td style="text-align: right">1,025</td>
+    </tr>
+    <tr>
+      <td>Dual-space</td>
+      <td style="text-align: right">65</td>
+      <td style="text-align: right">544</td>
+      <td style="text-align: right">609</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These are reference values checked by the implementation, not a separately reproduced public benchmark. The standalone Python calculation above verifies the expected-length comparison; it does not implement the residual codec or reproduce this fixture.</p>
+
+<p>The 609-bit fixture result and the 621.61-bit expectation answer different questions. The expectation averages over the stipulated noise distribution. An individual label sequence has its own residual realization and finite coding overhead. The fixture’s shorter result is not a replacement for the expectation.</p>
+
+<p>Logical bit lengths and byte-packed sizes must also be reported separately. For these reference lengths, byte padding gives 1,032 stored bits for the uniform description and 616 stored bits for the dual description. Padding is a storage detail, but it still matters when reporting an actual stored artifact.</p>
+
+<p>These packed sizes count the payload bytes only. The companion implementation supplies the logical bit length separately when unpacking; the number of labels comes from the shared scene list. Any framing metadata needed to transmit or store that logical bit length must be accounted for separately.</p>
+
+<h2 id="6-graph-reuse-is-a-separate-control">6. Graph reuse is a separate control</h2>
+
+<p>A feature-space advantage does not automatically establish that a new graph must be learned for every state.</p>
+
+<p>That is why the experiment includes frozen-graph controls: hold the graph fixed and evaluate the transformed signals against it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Illustrative pseudocode, not a public package API.
+</span><span class="n">fixed_graph</span> <span class="o">=</span> <span class="n">build_feature_graph</span><span class="p">(</span><span class="n">reference_corpus</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">corpus</span><span class="p">,</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">paired_states</span><span class="p">:</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">score_with_graph</span><span class="p">(</span>
+        <span class="n">corpus</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">,</span>
+        <span class="n">fixed_graph</span><span class="p">,</span>
+        <span class="n">cosine_weight</span><span class="o">=</span><span class="mf">0.60</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">check_prediction</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <a href="https://zenodo.org/records/23686688">paper</a> reports that a fixed feature-graph control also succeeds at the selected cosine weight of 0.60. Its conclusion is therefore access beyond row geometry—not the necessity of adaptive graph learning.</p>
+
+<p>The companion implementation checks this distinction explicitly: the graph frozen from the original corpus fails to distinguish the two states at 0.72, but succeeds at 0.60. The coding fixture uses the corpus-derived graph predictor at 0.72.</p>
+
+<p>There are also two distinct scaling checks to keep separate:</p>
+
+<ul>
+  <li>The companion example checks noiseless repeated prototypes, including graph reuse.</li>
+  <li>The paper reports a clustered Gaussian-contamination experiment with 768 items and 128–512 active features. At 384 features, the development-selected weight of 0.60 achieves expected Top-1 accuracy \(7/8\) on sixteen untouched paired instances.</li>
+</ul>
+
+<p>Repeating a prototype verifies a scaling identity. It is not the same experiment as testing robustness under contamination. Neither control, by itself, establishes indefinite reuse across arbitrary production drift.</p>
+
+<h2 id="7-what-the-coding-result-doesand-does-notestablish">7. What the coding result does—and does not—establish</h2>
+
+<p>The comparison establishes a shorter conditional description of the same relevance labels within the specified model family.</p>
+
+<p>Several boundaries are essential:</p>
+
+<ul>
+  <li>Corpus/query inputs are shared side information. Their transmission is not included in the reported totals.</li>
+  <li>The predictor header is charged, but the shared interpreter is not.</li>
+  <li>The target follows the stipulated synthetic relevance law.</li>
+  <li>The baseline is restricted to complete row geometry, not unrestricted coordinate access.</li>
+  <li>The result is a finite conditional coding comparison, not a measurement of universal Epiplexity or compression of an arbitrary executable.</li>
+</ul>
+
+<p>In particular, the labels remain marginally fair. There is no contradiction between their one-bit marginal entropy and a shorter description conditional on informative shared inputs.</p>
+
+<p>If those inputs must also be transmitted, their cost belongs in a different, larger accounting exercise. The conditional result must not be presented as unconditional compression of a fair label stream.</p>
+
+<h2 id="8-why-this-matters-for-genefold">8. Why this matters for Genefold</h2>
+
+<p>The practical direction is to treat feature-space structure as something that may repay its construction and description costs through better downstream predictions.</p>
+
+<p>This example demonstrates that repayment in a controlled setting. It makes the tradeoff explicit: a longer model, a shorter residual, and a calculable point where the latter outweighs the former.</p>
+
+<p>At <a href="https://www.genefold.ai/">Genefold AI</a>, our objective is to turn that principle into useful data- and LLM-operations infrastructure. The production question is whether the predictive benefit survives real workloads after accounting for graph construction, storage, scoring latency, maintenance, and drift.</p>
+
+<p>The public snippets expose the invariant, the scalar scoring rule, and the coding arithmetic. The pseudocode states the recovery and reuse contracts. Graph-building internals, numerical certification, residual encoding and decoding, and production integration remain in the private implementation.</p>
+
+<p>Once the advantage can be computed, the discussion becomes concrete: what information is available, what the predictor costs, and whether the residual saving survives that charge.</p>
+
+</div>
