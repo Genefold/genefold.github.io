@@ -4,7 +4,7 @@ description: "A constructive feature-space separation and a conditional coding c
 layout: engineering-article
 permalink: /engineering/006.html
 author: "Lorenzo Moriondo"
-date: "2026-10-26"
+date: "2026-11-01"
 published: true
 category: "Research Note"
 tags:
@@ -27,15 +27,15 @@ tags:
   <p>Does the improvement still pay when we charge for the predictor that makes it possible?</p>
 </blockquote>
 
-<p>For the conditional coding comparison considered here, it does. At 1,024 relevance labels, the ideal expected model-plus-residual lengths are 1,025 bits for the uniform predictor and approximately 621.61 bits for the dual-space predictor.</p>
+<p>For the conditional coding comparison considered here, it does. At 1,024 relevance labels, the ideal expected model-plus-residual lengths are 1,025 bits for the uniform predictor and approximately 621.61 bits for the dual-space predictor. Residual means the information needed to encode the actual relevance labels after accounting for the predictor’s predictions. It is the remaining coding cost—not simply the number of incorrect predictions.</p>
 
 <p>The graph predictor costs more to describe. Its residual costs sufficiently less to compensate.</p>
 
 <blockquote>
-  <p>Scope: this is a constructive separation and a conditional finite-family coding comparison, not a general semantic-retrieval benchmark. The standalone Python snippets are teaching examples written from the public mathematics. The round-trip and graph-reuse blocks are illustrative pseudocode. None of these blocks is an excerpt from the private implementation or a public package API.</p>
+  <p>Scope: this is a constructive separation and a conditional finite-family coding comparison, not a general semantic-retrieval benchmark. We will try to establish further semantic relevance in future experiments, as done in <a href="https://arxiv.org/abs/2606.21535"><em>From Embedding Geometry to Spectral Search</em></a>. The Python snippets below are for illustrative purpose, written from the equations made available. The round-trip and graph-reuse blocks are illustrative pseudocode. None of these blocks is an excerpt from the private implementation or a public package API.</p>
 </blockquote>
 
-<h2 id="1-the-baseline-is-complete-row-geometrynot-just-cosine">1. The baseline is complete row geometry—not just cosine</h2>
+<h2 id="1-the-baseline-is-complete-row-geometrynot-just-cosine">1. The baseline is complete row geometry</h2>
 
 <p>Let \(A\) contain the candidate rows and the query. Its row Gram matrix is</p>
 
