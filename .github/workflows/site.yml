@@ -62,7 +62,7 @@ jobs:
 
       - name: Check for broken internal references (htmlproofer)
         run: |
-          gem install htmlproofer -v 5 --no-document
+          gem install html-proofer -v 5 --no-document
           htmlproofer ./_site \
             --disable-external \
             --check-html \
